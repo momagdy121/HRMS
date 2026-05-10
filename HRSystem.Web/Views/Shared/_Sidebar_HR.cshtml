@@ -1,0 +1,85 @@
+@{
+    var activePage = ViewBag.ActivePage as string ?? "";
+}
+<nav id="sidebar" class="bg-[#1F4E79] text-white font-['Inter'] text-sm font-medium leading-tight fixed left-0 top-0 h-screen w-64 z-50 border-r border-slate-700/50 shadow-xl flex-col hidden md:flex">
+    <div class="px-6 py-8">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-sky-400 rounded-lg flex items-center justify-center text-[#1F4E79]">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">corporate_fare</span>
+            </div>
+            <div>
+                <h1 class="text-xl font-black tracking-tight text-white">HRMS Portal</h1>
+                <p class="text-[10px] uppercase tracking-widest text-sky-300/70 font-bold">Management Console</p>
+            </div>
+        </div>
+    </div>
+    <div class="flex-1 overflow-y-auto overflow-x-hidden py-4">
+        <ul class="space-y-1">
+            <li>
+                <a asp-area="HR" asp-controller="Dashboard" asp-action="Index"
+                   class="@(activePage == "Dashboard" ? "bg-white/10 border-l-4 border-sky-400 text-white font-semibold sidebar-active-gradient translate-x-1" : "text-slate-300 hover:bg-white/5 hover:text-white") flex items-center px-6 py-3 transition-all duration-200">
+                    <span class="material-symbols-outlined mr-3" style="@(activePage == "Dashboard" ? "font-variation-settings: 'FILL' 1;" : "")">dashboard</span>
+                    Dashboard
+                </a>
+            </li>
+            <li>
+                <a asp-area="HR" asp-controller="Employee" asp-action="Index"
+                   class="@(activePage == "Employees" ? "bg-white/10 border-l-4 border-sky-400 text-white font-semibold sidebar-active-gradient translate-x-1" : "text-slate-300 hover:bg-white/5 hover:text-white") flex items-center px-6 py-3 transition-all duration-200">
+                    <span class="material-symbols-outlined mr-3" style="@(activePage == "Employees" ? "font-variation-settings: 'FILL' 1;" : "")">badge</span>
+                    Employees
+                </a>
+            </li>
+            <li>
+                <a asp-area="HR" asp-controller="Department" asp-action="Index"
+                   class="@(activePage == "Departments" ? "bg-white/10 border-l-4 border-sky-400 text-white font-semibold sidebar-active-gradient translate-x-1" : "text-slate-300 hover:bg-white/5 hover:text-white") flex items-center px-6 py-3 transition-all duration-200">
+                    <span class="material-symbols-outlined mr-3" style="@(activePage == "Departments" ? "font-variation-settings: 'FILL' 1;" : "")">domain</span>
+                    Departments
+                </a>
+            </li>
+            <li>
+                <a asp-area="HR" asp-controller="Payroll" asp-action="Index"
+                   class="@(activePage == "Payroll" ? "bg-white/10 border-l-4 border-sky-400 text-white font-semibold sidebar-active-gradient translate-x-1" : "text-slate-300 hover:bg-white/5 hover:text-white") flex items-center px-6 py-3 transition-all duration-200">
+                    <span class="material-symbols-outlined mr-3" style="@(activePage == "Payroll" ? "font-variation-settings: 'FILL' 1;" : "")">payments</span>
+                    Payroll
+                </a>
+            </li>
+            <li>
+                <a asp-area="HR" asp-controller="Leave" asp-action="Index"
+                   class="@(activePage == "Leave" ? "bg-white/10 border-l-4 border-sky-400 text-white font-semibold sidebar-active-gradient translate-x-1" : "text-slate-300 hover:bg-white/5 hover:text-white") flex items-center px-6 py-3 transition-all duration-200">
+                    <span class="material-symbols-outlined mr-3" style="@(activePage == "Leave" ? "font-variation-settings: 'FILL' 1;" : "")">event_busy</span>
+                    Leave Requests
+                </a>
+            </li>
+            <li>
+                <a asp-area="HR" asp-controller="Attendance" asp-action="Index"
+                   class="@(activePage == "Attendance" ? "bg-white/10 border-l-4 border-sky-400 text-white font-semibold sidebar-active-gradient translate-x-1" : "text-slate-300 hover:bg-white/5 hover:text-white") flex items-center px-6 py-3 transition-all duration-200">
+                    <span class="material-symbols-outlined mr-3" style="@(activePage == "Attendance" ? "font-variation-settings: 'FILL' 1;" : "")">pending_actions</span>
+                    Attendance
+                </a>
+            </li>
+            <li>
+                <a asp-area="HR" asp-controller="UserAccount" asp-action="Index"
+                   class="@(activePage == "UserAccounts" ? "bg-white/10 border-l-4 border-sky-400 text-white font-semibold sidebar-active-gradient translate-x-1" : "text-slate-300 hover:bg-white/5 hover:text-white") flex items-center px-6 py-3 transition-all duration-200">
+                    <span class="material-symbols-outlined mr-3" style="@(activePage == "UserAccounts" ? "font-variation-settings: 'FILL' 1;" : "")">manage_accounts</span>
+                    User Accounts
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="mt-auto py-4">
+        <ul class="space-y-1">
+            <li>
+                <a href="#" class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all">
+                    <span class="material-symbols-outlined mr-3">settings</span>
+                    Settings
+                </a>
+            </li>
+            <li>
+                <a asp-controller="Account" asp-action="Logout" class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all">
+                    <span class="material-symbols-outlined mr-3">logout</span>
+                    Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>

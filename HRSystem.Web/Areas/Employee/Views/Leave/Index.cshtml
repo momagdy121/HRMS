@@ -1,0 +1,89 @@
+@{
+    ViewBag.Title = "My Leave - HRMS Portal";
+}
+
+<div class="max-w-7xl mx-auto space-y-6">
+    <div class="flex justify-between items-end">
+        <div><h2 class="font-h1 text-h1 text-on-surface">My Leave</h2><p class="font-body-md text-body-md text-on-surface-variant mt-1">Your leave history and balance</p></div>
+        <button onclick="openModal('requestLeaveModal')" class="bg-primary-container text-on-primary px-6 py-2.5 rounded-lg font-label-bold flex items-center gap-2 hover:bg-primary transition-colors shadow-sm">
+            <span class="material-symbols-outlined text-sm">add</span>Request Leave
+        </button>
+    </div>
+
+    <!-- Balance Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+        <div class="bg-white p-md rounded-xl shadow-sm border border-slate-100 flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center"><span class="material-symbols-outlined">event_available</span></div>
+            <div><p class="text-xs font-label-bold text-slate-500 uppercase">Annual Balance</p><p class="text-xl font-bold text-primary">12 days</p></div>
+        </div>
+        <div class="bg-white p-md rounded-xl shadow-sm border border-slate-100 flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-orange-50 text-orange-600 flex items-center justify-center"><span class="material-symbols-outlined">local_hospital</span></div>
+            <div><p class="text-xs font-label-bold text-slate-500 uppercase">Sick Balance</p><p class="text-xl font-bold text-primary">5 days</p></div>
+        </div>
+        <div class="bg-white p-md rounded-xl shadow-sm border border-slate-100 flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-green-50 text-green-600 flex items-center justify-center"><span class="material-symbols-outlined">check_circle</span></div>
+            <div><p class="text-xs font-label-bold text-slate-500 uppercase">Used This Year</p><p class="text-xl font-bold text-primary">8 days</p></div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+        <table class="w-full text-left border-collapse">
+            <thead class="bg-slate-50 border-b border-slate-100">
+                <tr>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Type</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Dates</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Reason</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Status</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-body-md text-on-surface">
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4"><span class="bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Annual</span></td>
+                    <td class="px-6 py-4 text-sm">Oct 28 - Nov 1, 2025</td>
+                    <td class="px-6 py-4 text-sm text-slate-500">Personal matters</td>
+                    <td class="px-6 py-4"><span class="bg-yellow-50 text-amber-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Pending</span></td>
+                </tr>
+                <tr class="bg-slate-50/30 hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4"><span class="bg-orange-50 text-orange-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Sick</span></td>
+                    <td class="px-6 py-4 text-sm">Sep 15, 2025</td>
+                    <td class="px-6 py-4 text-sm text-slate-500">Medical appointment</td>
+                    <td class="px-6 py-4"><span class="bg-green-50 text-green-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Approved</span></td>
+                </tr>
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4"><span class="bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Annual</span></td>
+                    <td class="px-6 py-4 text-sm">Aug 5 - 9, 2025</td>
+                    <td class="px-6 py-4 text-sm text-slate-500">Summer vacation</td>
+                    <td class="px-6 py-4"><span class="bg-green-50 text-green-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Approved</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Modals {
+    <div id="requestLeaveModal" class="modal-overlay">
+        <div class="modal-content w-full max-w-md mx-4 p-xl">
+            <div class="flex justify-between items-center mb-lg">
+                <h3 class="font-h2 text-h2 text-on-surface">Request Leave</h3>
+                <button onclick="closeModal('requestLeaveModal')" class="p-1 text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">close</span></button>
+            </div>
+            <!-- Balance Warning -->
+            <div class="bg-[#fef3c7] border border-[#f59e0b]/30 rounded-lg p-md flex gap-sm items-start mb-md">
+                <span class="material-symbols-outlined text-[#b45309] mt-0.5">info</span>
+                <p class="font-body-sm text-body-sm text-[#92400e]">You have <strong>12 annual</strong> and <strong>5 sick</strong> leave days remaining.</p>
+            </div>
+            <form class="space-y-md">
+                <div><label class="block font-label-bold text-on-surface-variant mb-xs">Leave Type</label><select class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md appearance-none"><option>Annual</option><option>Sick</option><option>Unpaid</option></select></div>
+                <div class="grid grid-cols-2 gap-md">
+                    <div><label class="block font-label-bold text-on-surface-variant mb-xs">Start Date</label><input type="date" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md" /></div>
+                    <div><label class="block font-label-bold text-on-surface-variant mb-xs">End Date</label><input type="date" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md" /></div>
+                </div>
+                <div><label class="block font-label-bold text-on-surface-variant mb-xs">Reason</label><textarea class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md h-20 resize-none" placeholder="Brief reason..."></textarea></div>
+                <div class="flex justify-end gap-md pt-md border-t border-outline-variant/30">
+                    <button type="button" onclick="closeModal('requestLeaveModal')" class="px-6 py-2 border border-outline-variant rounded-lg text-on-surface-variant font-label-bold">Cancel</button>
+                    <button type="button" class="px-6 py-2 bg-primary-container text-on-primary rounded-lg font-label-bold shadow-sm">Submit Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+}

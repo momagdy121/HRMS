@@ -1,0 +1,77 @@
+@{
+    ViewBag.Title = "My Tasks - HRMS Portal";
+}
+
+<div class="max-w-7xl mx-auto space-y-6">
+    <div>
+        <h2 class="font-h1 text-h1 text-on-surface">My Tasks</h2>
+        <p class="font-body-md text-body-md text-on-surface-variant mt-1">Your assigned tasks</p>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+        <table class="w-full text-left border-collapse">
+            <thead class="bg-slate-50 border-b border-slate-100">
+                <tr>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Task</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Assigned By</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Due Date</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Priority</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Status</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-body-md text-on-surface">
+                <tr class="striped-row hover:bg-slate-50/80 transition-colors">
+                    <td class="px-6 py-4"><p class="font-medium">Fix Login Bug</p><p class="text-body-sm text-slate-500">Authentication flow issue on mobile</p></td>
+                    <td class="px-6 py-4"><div class="flex items-center gap-2"><div class="w-7 h-7 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-xs">BJ</div><span>Bob Johnson</span></div></td>
+                    <td class="px-6 py-4"><span class="text-error font-medium">Oct 25, 2025</span></td>
+                    <td class="px-6 py-4"><span class="bg-red-50 text-red-700 px-2.5 py-0.5 rounded-full text-xs font-medium">High</span></td>
+                    <td class="px-6 py-4"><span class="bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-full text-xs font-medium">In Progress</span></td>
+                    <td class="px-6 py-4 text-right">
+                        <button onclick="openModal('updateStatusModal')" class="text-primary-container hover:underline text-sm font-medium">Update Status</button>
+                    </td>
+                </tr>
+                <tr class="striped-row hover:bg-slate-50/80 transition-colors">
+                    <td class="px-6 py-4"><p class="font-medium">Write Unit Tests</p><p class="text-body-sm text-slate-500">Payment module test coverage</p></td>
+                    <td class="px-6 py-4"><div class="flex items-center gap-2"><div class="w-7 h-7 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-xs">BJ</div><span>Bob Johnson</span></div></td>
+                    <td class="px-6 py-4">Nov 5, 2025</td>
+                    <td class="px-6 py-4"><span class="bg-yellow-50 text-amber-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Medium</span></td>
+                    <td class="px-6 py-4"><span class="bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded-full text-xs font-medium">Pending</span></td>
+                    <td class="px-6 py-4 text-right">
+                        <button class="text-primary-container hover:underline text-sm font-medium">Update Status</button>
+                    </td>
+                </tr>
+                <tr class="striped-row hover:bg-slate-50/80 transition-colors">
+                    <td class="px-6 py-4"><p class="font-medium">Design Review — Dashboard</p><p class="text-body-sm text-slate-500">Verify new dashboard UI components</p></td>
+                    <td class="px-6 py-4"><div class="flex items-center gap-2"><div class="w-7 h-7 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-xs">BJ</div><span>Bob Johnson</span></div></td>
+                    <td class="px-6 py-4">Oct 20, 2025</td>
+                    <td class="px-6 py-4"><span class="bg-green-50 text-green-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Low</span></td>
+                    <td class="px-6 py-4"><span class="bg-green-50 text-green-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Completed</span></td>
+                    <td class="px-6 py-4 text-right"><span class="text-slate-400 text-sm">Done</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Modals {
+    <div id="updateStatusModal" class="modal-overlay">
+        <div class="modal-content w-full max-w-sm mx-4 p-xl">
+            <div class="flex justify-between items-center mb-lg">
+                <h3 class="font-h2 text-h2 text-on-surface">Update Status</h3>
+                <button onclick="closeModal('updateStatusModal')" class="p-1 text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">close</span></button>
+            </div>
+            <p class="font-body-md text-on-surface-variant mb-md">Task: <strong>Fix Login Bug</strong></p>
+            <div class="mb-lg">
+                <label class="block font-label-bold text-on-surface-variant mb-xs">New Status</label>
+                <select class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md appearance-none">
+                    <option>Pending</option><option selected>In Progress</option><option>Completed</option>
+                </select>
+            </div>
+            <div class="flex justify-end gap-md">
+                <button onclick="closeModal('updateStatusModal')" class="px-6 py-2 border border-outline-variant rounded-lg text-on-surface-variant font-label-bold">Cancel</button>
+                <button class="px-6 py-2 bg-primary-container text-on-primary rounded-lg font-label-bold shadow-sm">Update</button>
+            </div>
+        </div>
+    </div>
+}

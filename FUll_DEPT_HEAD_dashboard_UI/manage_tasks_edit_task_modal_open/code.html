@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HRMS Portal - Manage Tasks</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface": "#1a1c1f",
+                        "secondary-fixed": "#d3e4fe",
+                        "primary-fixed": "#d1e4ff",
+                        "primary-container": "#1f4e79",
+                        "inverse-primary": "#a0cafc",
+                        "on-primary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#184974",
+                        "surface-container-low": "#f3f3f7",
+                        "outline": "#72777f",
+                        "on-error-container": "#93000a",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#c2c7d0",
+                        "inverse-surface": "#2f3034",
+                        "error": "#ba1a1a",
+                        "tertiary-container": "#494c4e",
+                        "background": "#f9f9fd",
+                        "surface": "#f9f9fd",
+                        "primary": "#00375e",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "inverse-on-surface": "#f0f0f4",
+                        "surface-variant": "#e2e2e6",
+                        "on-primary-container": "#95bff1",
+                        "secondary-container": "#d0e1fb",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "error-container": "#ffdad6",
+                        "surface-tint": "#35618d",
+                        "surface-container": "#ededf2",
+                        "surface-dim": "#d9dade",
+                        "on-error": "#ffffff",
+                        "primary-fixed-dim": "#a0cafc",
+                        "on-secondary-fixed": "#0b1c30",
+                        "surface-container-highest": "#e2e2e6",
+                        "surface-bright": "#f9f9fd",
+                        "secondary": "#505f76",
+                        "tertiary-fixed": "#e0e3e5",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "on-surface-variant": "#42474f",
+                        "tertiary": "#323537",
+                        "surface-container-high": "#e8e8ec",
+                        "on-tertiary-container": "#babcbe",
+                        "on-primary-fixed": "#001d35",
+                        "on-tertiary-fixed": "#191c1e",
+                        "on-secondary-container": "#54647a",
+                        "on-background": "#1a1c1f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "lg": "24px",
+                        "xl": "32px",
+                        "sidebar-width": "260px",
+                        "sm": "8px",
+                        "navbar-height": "64px",
+                        "base": "4px",
+                        "sidebar-collapsed": "72px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Inter"],
+                        "badge": ["Inter"],
+                        "h3": ["Inter"],
+                        "label-bold": ["Inter"],
+                        "h2": ["Inter"],
+                        "h1": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "badge": ["12px", {"lineHeight": "12px", "fontWeight": "500"}],
+                        "h3": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                        "h2": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "h1": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md h-screen flex overflow-hidden">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-screen w-[260px] z-50 bg-[#1F4E79] dark:bg-slate-950 border-r border-slate-700/50 shadow-xl flex flex-col font-['Inter'] text-sm font-medium leading-tight">
+<!-- Header -->
+<div class="px-6 py-8 border-b border-white/10">
+<h1 class="text-xl font-black tracking-tight text-white mb-1">HRMS Portal</h1>
+<p class="text-xs text-secondary-fixed-dim uppercase tracking-wider font-semibold">Management Console</p>
+</div>
+<!-- Navigation Tabs -->
+<nav class="flex-1 overflow-y-auto py-4">
+<ul class="space-y-1"><li>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3">dashboard</span>
+        Dashboard
+    </a>
+</li>
+<li>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3">groups</span>
+        My Department
+    </a>
+</li>
+<li>
+<a class="bg-white/10 border-l-4 border-sky-400 text-white font-semibold flex items-center px-6 py-3 transition-all translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3">assignment</span>
+        Manage Tasks
+    </a>
+</li>
+<li>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3">event_busy</span>
+        Team Leave
+    </a>
+</li>
+<li>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3">pending_actions</span>
+        Team Attendance
+    </a>
+</li>
+<li>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3">payments</span>
+        Department Payroll
+    </a>
+</li></ul>
+</nav>
+<!-- Footer Tabs -->
+<div class="border-t border-white/10 py-4">
+<ul class="space-y-1">
+<li>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3">settings</span>
+                        Settings
+                    </a>
+</li>
+<li>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3">logout</span>
+                        Logout
+                    </a>
+</li>
+</ul>
+</div>
+</aside>
+<!-- Main Content Wrapper -->
+<div class="flex-1 flex flex-col ml-[260px] h-screen overflow-hidden">
+<!-- TopNavBar -->
+<header class="sticky top-0 w-full z-40 bg-white/80 backdrop-blur-md dark:bg-slate-900/80 border-b border-slate-200 dark:border-slate-800 shadow-sm flex justify-between items-center px-8 py-3 font-['Inter'] text-sm tracking-wide h-[64px]">
+<!-- Left Side (Mobile Brand & Search) -->
+<div class="flex items-center flex-1">
+<span class="text-lg font-bold text-slate-900 dark:text-white lg:hidden mr-4">HRMS Portal</span>
+<div class="relative w-64 hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-full py-2 pl-10 pr-4 text-body-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors" placeholder="Search..." type="text"/>
+</div>
+</div>
+<!-- Right Side (Actions & Profile) -->
+<div class="flex items-center space-x-2">
+<button class="p-2 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg hover:scale-105 transition-transform duration-150">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg hover:scale-105 transition-transform duration-150">
+<span class="material-symbols-outlined">help</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg hover:scale-105 transition-transform duration-150 mr-4">
+<span class="material-symbols-outlined">apps</span>
+</button>
+<div class="h-8 w-px bg-slate-200 mx-2"></div>
+<div class="flex items-center space-x-3 cursor-pointer pl-2">
+<div class="flex flex-col items-end">
+<span class="font-label-bold text-on-surface">Bob Johnson</span>
+<span class="text-badge text-outline">Department Head — Engineering</span>
+</div>
+<img alt="User Avatar" class="w-10 h-10 rounded-full object-cover border-2 border-surface-container-high" data-alt="A professional corporate headshot of a middle-aged male executive, Bob Johnson, wearing a smart casual navy blazer. The lighting is soft and natural, emphasizing a modern corporate aesthetic. The background is a slightly blurred, bright, minimalist office setting to convey reliability and approachability." src="https://lh3.googleusercontent.com/aida/ADBb0uj0kK5tVKnlEe7Yo6fwE7ALyAuaLpHCCS3Nyv1p5B9bmY-jAWD-TRyFpkLdx9KhbQOfQ5Ua_KF1bsNMvSNVTn92DTA4zrBqrJcbbjXWQMdAkfqoQUA43fYJsxqQ3vMorFGsMrQ5TDMC6twmYRDkgUuoHZbHhmoNshLOfx_AARSrIYG5ZcVlMFEQIIdjLKS5odTm9RLReHJZjc9Y0Juo7DH9us6jll_H32G4XPmio_Ae-86lgpkMS0seuf3uJDam6q0qJBmzdw"/>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto bg-surface p-xl">
+<!-- Page Header Section -->
+<div class="flex justify-between items-end mb-lg">
+<div>
+<h1 class="font-h1 text-on-surface mb-xs">Manage Tasks</h1>
+<p class="font-body-md text-on-surface-variant">Assign and track tasks for your team</p>
+</div>
+<button class="bg-primary text-on-primary font-label-bold px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-on-primary-fixed-variant transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span>Assign Task</span>
+</button>
+</div>
+<!-- Controls (Sub-pills) -->
+<div class="flex space-x-sm mb-lg">
+<button class="bg-secondary-container text-on-secondary-fixed font-label-bold px-4 py-2 rounded-full border border-secondary-container transition-colors">
+                    Assigned Tasks
+                </button>
+<button class="bg-transparent text-secondary font-label-bold px-4 py-2 rounded-full border border-outline-variant hover:bg-surface-container transition-colors">
+                    Completed Tasks
+                </button>
+</div>
+<!-- Table Container (Card) -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] border border-surface-container-low overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low">
+<tr>
+<th class="py-3 px-4 font-label-bold text-on-surface-variant uppercase tracking-wider border-b border-surface-container">Task Title</th>
+<th class="py-3 px-4 font-label-bold text-on-surface-variant uppercase tracking-wider border-b border-surface-container">Assigned To</th>
+<th class="py-3 px-4 font-label-bold text-on-surface-variant uppercase tracking-wider border-b border-surface-container">Status</th>
+<th class="py-3 px-4 font-label-bold text-on-surface-variant uppercase tracking-wider border-b border-surface-container">Due Date</th>
+<th class="py-3 px-4 font-label-bold text-on-surface-variant uppercase tracking-wider border-b border-surface-container text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container font-body-sm">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="py-3 px-4 text-on-surface font-medium">Update API Documentation</td>
+<td class="py-3 px-4">
+<div class="flex items-center space-x-2">
+<img alt="Emily Wong Avatar" class="w-6 h-6 rounded-full object-cover" data-alt="A small, professional headshot avatar of a young Asian female software engineer, Emily Wong. Bright, clean corporate lighting, white background." src="https://lh3.googleusercontent.com/aida/ADBb0ugPImENDHZl17ARKbkYKDy_QpXrWp01Pk5aAFOIXrXh3ft2yI0UrnWnNvoEzBn6xfqpb8smuc1EiUC3qg0Gu8t7wU8LiwCRklDS66Q5GMo1QeV0asMaWkM0nZKXw0Xj7uuOxd9ZD-czTqb3yyCdsWBjMeqKFNk22SQLFadIHwyJZ8rQpR3ykbIkgwdtOhFBTXODHqYwdKz4MprI3a_BiyGk6nwMr7se6w2iCscJmdqXRyKcKkxhhpPg-ZUEQ9uxBdgA-V3ikLK6"/>
+<span class="text-on-surface">Emily Wong</span>
+</div>
+</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center px-2 py-1 rounded-full font-badge bg-secondary-fixed text-on-secondary-fixed-variant">
+                                    In Progress
+                                </span>
+</td>
+<td class="py-3 px-4 text-on-surface-variant">Oct 30, 2025</td>
+<td class="py-3 px-4 text-right">
+<div class="flex justify-end space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-outline hover:text-primary transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="text-outline hover:text-error transition-colors" title="Cancel">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="bg-[#F8FAFC]/50 hover:bg-surface-container-lowest transition-colors group">
+<td class="py-3 px-4 text-on-surface font-medium">Fix Login Bug</td>
+<td class="py-3 px-4">
+<div class="flex items-center space-x-2">
+<div class="w-6 h-6 rounded-full bg-tertiary-container text-on-tertiary flex items-center justify-center font-label-bold text-[10px]">SJ</div>
+<span class="text-on-surface">Sarah Jenkins</span>
+</div>
+</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center px-2 py-1 rounded-full font-badge bg-[#FEF3C7] text-[#92400E]">
+                                    Pending
+                                </span>
+</td>
+<td class="py-3 px-4 text-on-surface-variant">Oct 28, 2025</td>
+<td class="py-3 px-4 text-right">
+<div class="flex justify-end space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-outline hover:text-primary transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="text-outline hover:text-error transition-colors" title="Cancel">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="py-3 px-4 text-on-surface font-medium">Q3 Performance Review</td>
+<td class="py-3 px-4">
+<div class="flex items-center space-x-2">
+<div class="w-6 h-6 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-label-bold text-[10px]">DC</div>
+<span class="text-on-surface">David Chen</span>
+</div>
+</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center px-2 py-1 rounded-full font-badge bg-[#DCFCE7] text-[#166534]">
+                                    Completed
+                                </span>
+</td>
+<td class="py-3 px-4 text-on-surface-variant">Oct 20, 2025</td>
+<td class="py-3 px-4 text-right">
+<span class="text-outline">—</span>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="bg-[#F8FAFC]/50 hover:bg-surface-container-lowest transition-colors group">
+<td class="py-3 px-4 text-on-surface font-medium">Database Migration</td>
+<td class="py-3 px-4">
+<div class="flex items-center space-x-2">
+<img alt="Michael Ross Avatar" class="w-6 h-6 rounded-full object-cover" data-alt="A small, professional headshot avatar of a male IT professional, Michael Ross. Bright, clean corporate lighting, neutral grey background." src="https://lh3.googleusercontent.com/aida/ADBb0uhAXHQ2OEanHisZPrsKIcVJZw6FSyIy9tlRm8_7o2TQ0f5zpwff9eFigJBfneZPbiyDI4KGCkLkwrj6utupdWdiujqdsODnEIm7lbOWDw1bcSKiguwoVMOzjzCVshDXDF5kMimaWp9fZ05S9xzETGmbjsq2ZA74E9MKUi29DlaSrF4-6fCX0qxEcDDkC-mx0vYBK-D6vvvbhsbuMiaH7RlF1cdXvE6S9S2kGeK8kQHAbRfWJ5CxEsttSZfETP_NfrlQgh2CHzZj"/>
+<span class="text-on-surface">Michael Ross</span>
+</div>
+</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center px-2 py-1 rounded-full font-badge bg-[#FEF3C7] text-[#92400E]">
+                                    Pending
+                                </span>
+</td>
+<td class="py-3 px-4 text-on-surface-variant">Nov 05, 2025</td>
+<td class="py-3 px-4 text-right">
+<div class="flex justify-end space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-outline hover:text-primary transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="text-outline hover:text-error transition-colors" title="Cancel">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="py-3 px-4 text-on-surface font-medium">Code Review Sprint</td>
+<td class="py-3 px-4">
+<div class="flex items-center space-x-2">
+<img alt="Emily Wong Avatar" class="w-6 h-6 rounded-full object-cover" data-alt="A small, professional headshot avatar of a young Asian female software engineer, Emily Wong. Bright, clean corporate lighting, white background." src="https://lh3.googleusercontent.com/aida/ADBb0ugPImENDHZl17ARKbkYKDy_QpXrWp01Pk5aAFOIXrXh3ft2yI0UrnWnNvoEzBn6xfqpb8smuc1EiUC3qg0Gu8t7wU8LiwCRklDS66Q5GMo1QeV0asMaWkM0nZKXw0Xj7uuOxd9ZD-czTqb3yyCdsWBjMeqKFNk22SQLFadIHwyJZ8rQpR3ykbIkgwdtOhFBTXODHqYwdKz4MprI3a_BiyGk6nwMr7se6w2iCscJmdqXRyKcKkxhhpPg-ZUEQ9uxBdgA-V3ikLK6"/>
+<span class="text-on-surface">Emily Wong</span>
+</div>
+</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center px-2 py-1 rounded-full font-badge bg-[#FEF3C7] text-[#92400E]">
+                                    Pending
+                                </span>
+</td>
+<td class="py-3 px-4 text-on-surface-variant">Nov 02, 2025</td>
+<td class="py-3 px-4 text-right">
+<div class="flex justify-end space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-outline hover:text-primary transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="text-outline hover:text-error transition-colors" title="Cancel">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination Footer -->
+<div class="bg-surface-container-lowest px-4 py-3 border-t border-surface-container flex items-center justify-between sm:px-6">
+<div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+<div>
+<p class="font-body-sm text-on-surface-variant">
+                                Showing <span class="font-medium">1-5</span> of <span class="font-medium">12</span> tasks
+                            </p>
+</div>
+<div>
+<nav aria-label="Pagination" class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+<button class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-outline-variant bg-surface-container-lowest text-sm font-medium text-outline hover:bg-surface-container transition-colors">
+<span class="sr-only">Previous</span>
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="relative inline-flex items-center px-4 py-2 border border-outline-variant bg-secondary-container text-sm font-medium text-on-secondary-container">
+                                    1
+                                </button>
+<button class="relative inline-flex items-center px-4 py-2 border border-outline-variant bg-surface-container-lowest text-sm font-medium text-on-surface-variant hover:bg-surface-container transition-colors">
+                                    2
+                                </button>
+<button class="relative inline-flex items-center px-4 py-2 border border-outline-variant bg-surface-container-lowest text-sm font-medium text-on-surface-variant hover:bg-surface-container transition-colors">
+                                    3
+                                </button>
+<button class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-outline-variant bg-surface-container-lowest text-sm font-medium text-outline hover:bg-surface-container transition-colors">
+<span class="sr-only">Next</span>
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</nav>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Modal Overlay -->
+<div class="fixed inset-0 z-[60] bg-slate-900/40 flex items-center justify-center p-4">
+<!-- Modal Content -->
+<div class="bg-surface-container-lowest w-full max-w-lg rounded-xl shadow-2xl border border-outline-variant overflow-hidden flex flex-col">
+<!-- Modal Header -->
+<div class="px-6 py-4 border-b border-surface-container flex justify-between items-center">
+<h2 class="font-h2 text-on-surface">Edit Task — Fix Login Bug</h2>
+<button class="text-outline hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Modal Body (Form) -->
+<div class="p-6 space-y-4">
+<div>
+<label class="block font-label-bold text-on-surface-variant mb-1">Task Title</label>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg py-2 px-3 text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors" type="text" value="Fix Login Bug"/>
+</div>
+<div>
+<label class="block font-label-bold text-on-surface-variant mb-1">Description</label>
+<textarea class="w-full bg-surface-container-low border border-outline-variant rounded-lg py-2 px-3 text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors" rows="3">Resolve authentication timeout issue</textarea>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block font-label-bold text-on-surface-variant mb-1">Assigned To</label>
+<select class="w-full bg-surface-container-low border border-outline-variant rounded-lg py-2 px-3 text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors">
+<option>Emily Wong</option>
+<option selected="">Sarah Jenkins</option>
+<option>David Chen</option>
+<option>Michael Ross</option>
+</select>
+</div>
+<div>
+<label class="block font-label-bold text-on-surface-variant mb-1">Due Date</label>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg py-2 px-3 text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors" type="date" value="2025-10-28"/>
+</div>
+</div>
+</div>
+<!-- Modal Footer -->
+<div class="px-6 py-4 bg-surface-container-low border-t border-surface-container flex justify-end space-x-3">
+<button class="px-4 py-2 text-on-surface-variant font-label-bold hover:bg-surface-container-high rounded-lg transition-colors">
+                Cancel
+            </button>
+<button class="px-4 py-2 bg-primary text-on-primary font-label-bold rounded-lg hover:bg-on-primary-fixed-variant transition-colors shadow-sm">
+                Save Changes
+            </button>
+</div>
+</div>
+</div></body></html>

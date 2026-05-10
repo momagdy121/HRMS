@@ -1,0 +1,49 @@
+﻿@{
+    var activePage = ViewBag.ActivePage as string ?? "";
+}
+<aside id="sidebar" class="fixed left-0 top-0 h-screen w-sidebar-width bg-primary-container flex-col py-lg z-50 overflow-hidden hidden md:flex">
+    <!-- Brand -->
+    <div class="px-lg mb-xl">
+        <h2 class="font-h2 text-h2 text-on-primary-container">HRMS Portal</h2>
+    </div>
+    <!-- Main Navigation -->
+    <nav class="flex-1 px-md space-y-xs">
+        <a asp-area="Employee" asp-controller="Dashboard" asp-action="Index"
+           class="flex items-center gap-md px-md py-sm transition-colors duration-200 @(activePage == "Dashboard" ? "border-l-4 border-secondary-fixed text-secondary-fixed font-label-bold bg-on-primary-fixed-variant/20" : "text-on-primary-container/80 hover:bg-on-primary-fixed-variant/10 hover:text-on-primary-container")">
+            <span class="material-symbols-outlined">dashboard</span>
+            <span class="text-body-md @(activePage == "Dashboard" ? "font-label-bold" : "")">Dashboard</span>
+        </a>
+        <a asp-area="Employee" asp-controller="Task" asp-action="Index"
+           class="flex items-center gap-md px-md py-sm transition-colors duration-200 @(activePage == "Tasks" ? "border-l-4 border-secondary-fixed text-secondary-fixed font-label-bold bg-on-primary-fixed-variant/20" : "text-on-primary-container/80 hover:bg-on-primary-fixed-variant/10 hover:text-on-primary-container")">
+            <span class="material-symbols-outlined">assignment_turned_in</span>
+            <span class="text-body-md">My Tasks</span>
+        </a>
+        <a asp-area="Employee" asp-controller="Leave" asp-action="Index"
+           class="flex items-center gap-md px-md py-sm transition-colors duration-200 @(activePage == "Leave" ? "border-l-4 border-secondary-fixed text-secondary-fixed font-label-bold bg-on-primary-fixed-variant/20" : "text-on-primary-container/80 hover:bg-on-primary-fixed-variant/10 hover:text-on-primary-container")">
+            <span class="material-symbols-outlined">event_busy</span>
+            <span class="text-body-md">My Leave</span>
+        </a>
+        <a asp-area="Employee" asp-controller="Attendance" asp-action="Index"
+           class="flex items-center gap-md px-md py-sm transition-colors duration-200 @(activePage == "Attendance" ? "border-l-4 border-secondary-fixed text-secondary-fixed font-label-bold bg-on-primary-fixed-variant/20" : "text-on-primary-container/80 hover:bg-on-primary-fixed-variant/10 hover:text-on-primary-container")">
+            <span class="material-symbols-outlined">fingerprint</span>
+            <span class="text-body-md">My Attendance</span>
+        </a>
+        <a asp-area="Employee" asp-controller="Payroll" asp-action="Index"
+           class="flex items-center gap-md px-md py-sm transition-colors duration-200 @(activePage == "Payroll" ? "border-l-4 border-secondary-fixed text-secondary-fixed font-label-bold bg-on-primary-fixed-variant/20" : "text-on-primary-container/80 hover:bg-on-primary-fixed-variant/10 hover:text-on-primary-container")">
+            <span class="material-symbols-outlined">payments</span>
+            <span class="text-body-md">My Payslips</span>
+        </a>
+    </nav>
+    <!-- Footer Navigation -->
+    <nav class="px-md mt-auto space-y-xs">
+        <a href="#" class="flex items-center gap-md px-md py-sm transition-colors duration-200 text-on-primary-container/80 hover:bg-on-primary-fixed-variant/10 hover:text-on-primary-container">
+            <span class="material-symbols-outlined">settings</span>
+            <span class="text-body-md">Settings</span>
+        </a>
+        <a asp-controller="Account" asp-action="Logout" class="flex items-center gap-md px-md py-sm transition-colors duration-200 text-on-primary-container/80 hover:bg-on-primary-fixed-variant/10 hover:text-on-primary-container">
+            <span class="material-symbols-outlined">logout</span>
+            <span class="text-body-md">Logout</span>
+        </a>
+    </nav>
+</aside>
+

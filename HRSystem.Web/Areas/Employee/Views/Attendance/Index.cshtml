@@ -1,0 +1,82 @@
+@{
+    ViewBag.Title = "My Attendance - HRMS Portal";
+}
+
+<div class="max-w-7xl mx-auto space-y-6">
+    <div class="flex justify-between items-end">
+        <div><h2 class="font-h1 text-h1 text-on-surface">My Attendance</h2><p class="font-body-md text-body-md text-on-surface-variant mt-1">Your attendance history</p></div>
+        <button onclick="openModal('checkOutModal')" class="bg-[#b45309] text-white px-6 py-2.5 rounded-lg font-label-bold flex items-center gap-2 hover:bg-[#d97706] transition-colors shadow-sm">
+            <span class="material-symbols-outlined text-sm">logout</span>Check Out
+        </button>
+    </div>
+
+    <!-- Summary -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+        <div class="bg-white p-md rounded-xl shadow-sm border border-slate-100 flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-green-50 text-green-600 flex items-center justify-center"><span class="material-symbols-outlined">check_circle</span></div>
+            <div><p class="text-xs font-label-bold text-slate-500 uppercase">Present</p><p class="text-xl font-bold text-primary">22 days</p></div>
+        </div>
+        <div class="bg-white p-md rounded-xl shadow-sm border border-slate-100 flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-yellow-50 text-amber-600 flex items-center justify-center"><span class="material-symbols-outlined">schedule</span></div>
+            <div><p class="text-xs font-label-bold text-slate-500 uppercase">Late</p><p class="text-xl font-bold text-primary">2 days</p></div>
+        </div>
+        <div class="bg-white p-md rounded-xl shadow-sm border border-slate-100 flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-red-50 text-red-600 flex items-center justify-center"><span class="material-symbols-outlined">cancel</span></div>
+            <div><p class="text-xs font-label-bold text-slate-500 uppercase">Absent</p><p class="text-xl font-bold text-primary">1 day</p></div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+        <table class="w-full text-left border-collapse">
+            <thead class="bg-slate-50 border-b border-slate-100">
+                <tr>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Date</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Check In</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Check Out</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Hours</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Status</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-body-md text-on-surface">
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4 font-medium">Oct 24, 2025</td>
+                    <td class="px-6 py-4">08:50 AM</td><td class="px-6 py-4 text-slate-400">—</td>
+                    <td class="px-6 py-4 text-slate-400">In progress</td>
+                    <td class="px-6 py-4"><span class="bg-green-50 text-green-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Present</span></td>
+                </tr>
+                <tr class="bg-slate-50/30 hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4 font-medium">Oct 23, 2025</td>
+                    <td class="px-6 py-4">08:55 AM</td><td class="px-6 py-4">05:30 PM</td>
+                    <td class="px-6 py-4">8h 35m</td>
+                    <td class="px-6 py-4"><span class="bg-green-50 text-green-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Present</span></td>
+                </tr>
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4 font-medium">Oct 22, 2025</td>
+                    <td class="px-6 py-4">09:15 AM</td><td class="px-6 py-4">06:00 PM</td>
+                    <td class="px-6 py-4">8h 45m</td>
+                    <td class="px-6 py-4"><span class="bg-yellow-50 text-amber-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Late</span></td>
+                </tr>
+                <tr class="bg-slate-50/30 hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4 font-medium">Oct 21, 2025</td>
+                    <td class="px-6 py-4">08:40 AM</td><td class="px-6 py-4">05:20 PM</td>
+                    <td class="px-6 py-4">8h 40m</td>
+                    <td class="px-6 py-4"><span class="bg-green-50 text-green-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Present</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Modals {
+    <div id="checkOutModal" class="modal-overlay">
+        <div class="modal-content w-full max-w-sm mx-4 p-xl text-center">
+            <div class="w-16 h-16 rounded-full bg-[#fef3c7] text-[#b45309] flex items-center justify-center mx-auto mb-lg"><span class="material-symbols-outlined text-[32px]" style="font-variation-settings: 'FILL' 1;">logout</span></div>
+            <h3 class="font-h3 text-h3 text-on-surface mb-sm">Check Out?</h3>
+            <p class="font-body-md text-on-surface-variant mb-lg">Record your check-out time as <strong>now</strong>?</p>
+            <div class="flex justify-center gap-md">
+                <button onclick="closeModal('checkOutModal')" class="px-6 py-2 border border-outline-variant rounded-lg text-on-surface-variant font-label-bold">Cancel</button>
+                <button class="px-6 py-2 bg-[#b45309] text-white rounded-lg font-label-bold shadow-sm">Check Out</button>
+            </div>
+        </div>
+    </div>
+}

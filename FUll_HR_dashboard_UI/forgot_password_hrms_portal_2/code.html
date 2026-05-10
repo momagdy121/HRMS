@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Forgot Password - HRMS Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#f9f9fd",
+                        "tertiary-container": "#494c4e",
+                        "background": "#f9f9fd",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e2e2e6",
+                        "inverse-on-surface": "#f0f0f4",
+                        "primary": "#00375e",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#d0e1fb",
+                        "on-primary-container": "#95bff1",
+                        "secondary-fixed": "#d3e4fe",
+                        "primary-fixed": "#d1e4ff",
+                        "primary-container": "#1f4e79",
+                        "inverse-primary": "#a0cafc",
+                        "on-surface": "#1a1c1f",
+                        "surface-container-low": "#f3f3f7",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#184974",
+                        "on-primary": "#ffffff",
+                        "outline-variant": "#c2c7d0",
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "outline": "#72777f",
+                        "inverse-surface": "#2f3034",
+                        "surface-container-highest": "#e2e2e6",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "on-surface-variant": "#42474f",
+                        "tertiary-fixed": "#e0e3e5",
+                        "surface-bright": "#f9f9fd",
+                        "secondary": "#505f76",
+                        "on-tertiary-fixed": "#191c1e",
+                        "on-secondary-container": "#54647a",
+                        "on-background": "#1a1c1f",
+                        "surface-container-high": "#e8e8ec",
+                        "on-tertiary-container": "#babcbe",
+                        "on-primary-fixed": "#001d35",
+                        "tertiary": "#323537",
+                        "surface-tint": "#35618d",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "error-container": "#ffdad6",
+                        "surface-dim": "#d9dade",
+                        "surface-container": "#ededf2",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed": "#0b1c30",
+                        "primary-fixed-dim": "#a0cafc"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "md": "16px",
+                        "xl": "32px",
+                        "sidebar-width": "260px",
+                        "sm": "8px",
+                        "navbar-height": "64px",
+                        "base": "4px",
+                        "sidebar-collapsed": "72px",
+                        "xs": "4px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Inter"],
+                        "badge": ["Inter"],
+                        "h3": ["Inter"],
+                        "label-bold": ["Inter"],
+                        "h2": ["Inter"],
+                        "h1": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "badge": ["12px", {"lineHeight": "12px", "fontWeight": "500"}],
+                        "h3": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                        "h2": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "h1": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface-container-low text-on-surface min-h-screen flex items-center justify-center font-body-md p-md">
+<!-- Main Container -->
+<main class="w-full max-w-[440px] flex flex-col items-center">
+<!-- Brand Area -->
+<div class="flex items-center gap-sm mb-lg">
+<span class="material-symbols-outlined text-[32px] text-primary-container" style="font-variation-settings: 'FILL' 1;">domain</span>
+<span class="font-h2 text-h2 text-primary-container tracking-tight">HRMS Portal</span>
+</div>
+<!-- Card Container -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] border border-surface-variant w-full overflow-hidden flex flex-col">
+<div class="p-xl flex flex-col gap-lg">
+<!-- Header -->
+<div class="flex flex-col gap-sm text-center">
+<h1 class="font-h2 text-h2 text-on-surface">Forgot Password</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Enter your email and we'll send you a reset link.</p>
+</div>
+<!-- Form Area -->
+<form class="flex flex-col gap-md" onsubmit="event.preventDefault();">
+<div class="flex flex-col gap-xs">
+<label class="font-label-bold text-label-bold text-on-surface" for="email">Work Email</label>
+<input class="w-full h-10 px-sm py-xs bg-surface-container-lowest border border-outline-variant rounded text-on-surface font-body-md text-body-md focus:outline-none focus:ring-1 focus:ring-primary-container focus:border-primary-container transition-colors" id="email" name="email" placeholder="name@company.com" type="email" value="user@company.com"/>
+</div>
+<button class="w-full h-10 bg-primary-container hover:bg-primary text-on-primary font-label-bold text-label-bold rounded flex items-center justify-center transition-colors" type="submit">
+                        Send Reset Link
+                    </button>
+</form>
+<!-- Demo Success State -->
+<div class="flex flex-col gap-sm">
+<div class="bg-[#f0fdf4] border border-[#bbf7d0] rounded p-md flex gap-sm">
+<span class="material-symbols-outlined text-[#166534] shrink-0" style="font-variation-settings: 'FILL' 1;">info</span>
+<p class="font-body-sm text-body-sm text-[#166534]">A password reset link has been generated. In a production environment, this would be emailed to you. For this demo, use the link below:</p>
+</div>
+<div class="bg-surface-container rounded border border-surface-variant p-sm overflow-x-auto">
+<code class="font-body-sm text-body-sm text-on-surface-variant whitespace-nowrap">/Account/ResetPassword?email=user@company.com&amp;token=e9b4a8c2f1d6</code>
+</div>
+</div>
+<!-- Footer Links -->
+<div class="text-center mt-sm">
+<a class="font-body-sm text-body-sm text-primary-container hover:text-primary transition-colors" href="#">Remember your password? Sign in.</a>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Component Execution -->
+<footer class="w-full py-lg px-xl flex flex-col md:flex-row justify-center items-center gap-md bg-transparent docked full-width bottom-0 fixed font-body-sm text-body-sm text-secondary">
+<div class="flex flex-col md:flex-row items-center gap-md w-full max-w-[1200px] justify-between">
+<span class="font-h2 text-h2 font-bold text-primary dark:text-primary-fixed hidden">Brand Logo</span>
+<span class="">© 2024 Corporate Modernist HR. All rights reserved.</span>
+<div class="flex gap-md">
+<a class="text-secondary dark:text-secondary-fixed-dim hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">Privacy Policy</a>
+<a class="text-secondary dark:text-secondary-fixed-dim hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">Terms of Service</a>
+<a class="text-secondary dark:text-secondary-fixed-dim hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">Contact Support</a>
+</div>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Deleted Employees - HRMS Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-high": "#e8e8ec",
+                        "background": "#f9f9fd",
+                        "secondary": "#505f76",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-low": "#f3f3f7",
+                        "on-primary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "surface-bright": "#f9f9fd",
+                        "surface-dim": "#d9dade",
+                        "on-secondary-container": "#54647a",
+                        "on-background": "#1a1c1f",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e2e2e6",
+                        "primary-fixed-dim": "#a0cafc",
+                        "on-tertiary-fixed": "#191c1e",
+                        "surface-variant": "#e2e2e6",
+                        "error-container": "#ffdad6",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#ededf2",
+                        "on-surface-variant": "#42474f",
+                        "outline-variant": "#c2c7d0",
+                        "tertiary-fixed": "#e0e3e5",
+                        "primary-fixed": "#d1e4ff",
+                        "surface-tint": "#35618d",
+                        "surface": "#f9f9fd",
+                        "tertiary": "#323537",
+                        "on-tertiary-container": "#babcbe",
+                        "on-primary-fixed-variant": "#184974",
+                        "inverse-on-surface": "#f0f0f4",
+                        "primary-container": "#1f4e79",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "secondary-fixed": "#d3e4fe",
+                        "on-primary-container": "#95bff1",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "on-primary-fixed": "#001d35",
+                        "inverse-primary": "#a0cafc",
+                        "secondary-container": "#d0e1fb",
+                        "on-secondary-fixed": "#0b1c30",
+                        "on-error": "#ffffff",
+                        "error": "#ba1a1a",
+                        "tertiary-container": "#494c4e",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "inverse-surface": "#2f3034",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "primary": "#00375e",
+                        "outline": "#72777f",
+                        "on-surface": "#1a1c1f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "md": "16px",
+                        "navbar-height": "64px",
+                        "xl": "32px",
+                        "xs": "4px",
+                        "sidebar-width": "260px",
+                        "base": "4px",
+                        "sm": "8px",
+                        "sidebar-collapsed": "72px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "h2": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-bold": ["Inter"],
+                        "h3": ["Inter"],
+                        "h1": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "badge": ["Inter"]
+                    },
+                    "fontSize": {
+                        "h2": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-bold": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+                        "h3": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "h1": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "badge": ["12px", { "lineHeight": "12px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface font-body-md antialiased overflow-hidden flex h-screen">
+<!-- SideNavBar -->
+<nav class="bg-primary-container text-primary-fixed fixed left-0 top-0 h-screen w-sidebar-width z-50 border-r border-outline-variant flex flex-col pt-20 pb-6 transition-transform duration-200 ease-in-out hidden md:flex">
+<!-- Logo Area (usually injected from TopNavBar, but part of SideNavBar JSON for title) -->
+<div class="px-6 mb-8 absolute top-0 left-0 h-navbar-height flex items-center w-full border-b border-outline-variant/20 bg-primary-container">
+<span class="material-symbols-outlined text-on-primary mr-3 text-2xl" style="font-variation-settings: 'FILL' 1;">corporate_fare</span>
+<div>
+<div class="font-h2 text-on-primary text-h2 leading-none">Enterprise HR</div>
+<div class="font-body-sm text-body-sm text-primary-fixed-dim">Admin Console</div>
+</div>
+</div>
+<div class="px-4 mb-6">
+<button class="w-full bg-on-primary text-primary-container font-label-bold text-label-bold py-2 px-4 rounded flex items-center justify-center hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined mr-2 text-sm">add</span>
+                New Request
+            </button>
+</div>
+<div class="flex-1 overflow-y-auto w-full">
+<ul class="space-y-1">
+<li>
+<a class="text-primary-fixed-dim flex items-center px-6 py-3 hover:bg-primary/50 transition-all font-body-md text-body-md group" href="#">
+<span class="material-symbols-outlined mr-3 text-lg group-hover:text-on-primary transition-colors">dashboard</span>
+<span class="group-hover:text-on-primary transition-colors">Dashboard</span>
+</a>
+</li>
+<li>
+<a class="bg-primary text-on-primary border-l-4 border-inverse-primary flex items-center px-6 py-3 font-semibold font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined mr-3 text-lg" style="font-variation-settings: 'FILL' 1;">badge</span>
+                        Employees
+                    </a>
+</li>
+<li>
+<a class="text-primary-fixed-dim flex items-center px-6 py-3 hover:bg-primary/50 transition-all font-body-md text-body-md group" href="#">
+<span class="material-symbols-outlined mr-3 text-lg group-hover:text-on-primary transition-colors">account_tree</span>
+<span class="group-hover:text-on-primary transition-colors">Org Chart</span>
+</a>
+</li>
+<li>
+<a class="text-primary-fixed-dim flex items-center px-6 py-3 hover:bg-primary/50 transition-all font-body-md text-body-md group" href="#">
+<span class="material-symbols-outlined mr-3 text-lg group-hover:text-on-primary transition-colors">payments</span>
+<span class="group-hover:text-on-primary transition-colors">Payroll</span>
+</a>
+</li>
+<li>
+<a class="text-primary-fixed-dim flex items-center px-6 py-3 hover:bg-primary/50 transition-all font-body-md text-body-md group" href="#">
+<span class="material-symbols-outlined mr-3 text-lg group-hover:text-on-primary transition-colors">event_available</span>
+<span class="group-hover:text-on-primary transition-colors">Time Off</span>
+</a>
+</li>
+<li>
+<a class="text-primary-fixed-dim flex items-center px-6 py-3 hover:bg-primary/50 transition-all font-body-md text-body-md group" href="#">
+<span class="material-symbols-outlined mr-3 text-lg group-hover:text-on-primary transition-colors">settings</span>
+<span class="group-hover:text-on-primary transition-colors">Settings</span>
+</a>
+</li>
+</ul>
+</div>
+<div class="mt-auto px-4 w-full">
+<ul class="space-y-1 border-t border-outline-variant/20 pt-4">
+<li>
+<a class="text-primary-fixed-dim flex items-center px-2 py-2 hover:bg-primary/50 transition-all font-body-md text-body-md group rounded" href="#">
+<span class="material-symbols-outlined mr-3 text-lg group-hover:text-on-primary transition-colors">help</span>
+<span class="group-hover:text-on-primary transition-colors">Help Center</span>
+</a>
+</li>
+<li>
+<a class="text-primary-fixed-dim flex items-center px-2 py-2 hover:bg-primary/50 transition-all font-body-md text-body-md group rounded" href="#">
+<span class="material-symbols-outlined mr-3 text-lg group-hover:text-on-primary transition-colors">logout</span>
+<span class="group-hover:text-on-primary transition-colors">Sign Out</span>
+</a>
+</li>
+</ul>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex-1 flex flex-col md:ml-[260px] h-screen bg-background">
+<!-- TopNavBar -->
+<header class="bg-primary-container text-primary-fixed font-inter text-sm font-medium docked full-width top-0 z-40 border-b border-outline-variant/20 shadow-sm flex justify-between items-center h-navbar-height px-6 w-full sticky">
+<!-- Left Side: Mobile Menu & Nav Links (Desktop) -->
+<div class="flex items-center space-x-6">
+<button class="md:hidden text-on-primary p-2 -ml-2 rounded-md hover:bg-primary transition-all cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="hidden md:flex space-x-1">
+<a class="text-primary-fixed-dim hover:text-on-primary transition-colors px-3 py-2 rounded-md hover:bg-primary" href="#">Directory</a>
+<a class="text-primary-fixed-dim hover:text-on-primary transition-colors px-3 py-2 rounded-md hover:bg-primary" href="#">Reports</a>
+<a class="text-primary-fixed-dim hover:text-on-primary transition-colors px-3 py-2 rounded-md hover:bg-primary" href="#">Support</a>
+</div>
+</div>
+<!-- Right Side: Search, Actions, Profile -->
+<div class="flex items-center space-x-4">
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm">search</span>
+<input class="bg-surface-container-highest text-on-surface text-sm rounded-md pl-9 pr-4 py-1.5 border-none focus:ring-2 focus:ring-inverse-primary w-64 placeholder-outline" placeholder="Search..." type="text"/>
+</div>
+<button class="hidden sm:block bg-on-primary text-primary-container font-label-bold text-label-bold py-1.5 px-4 rounded hover:bg-surface-container-highest transition-colors cursor-pointer active:opacity-80">
+                    Add Employee
+                </button>
+<div class="flex items-center space-x-2">
+<button class="text-primary-fixed-dim hover:text-on-primary p-2 rounded-md hover:bg-primary transition-all cursor-pointer active:opacity-80 relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="text-primary-fixed-dim hover:text-on-primary p-2 rounded-md hover:bg-primary transition-all cursor-pointer active:opacity-80 hidden sm:block">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+</div>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-outline-variant ml-2 flex items-center justify-center bg-surface-container-high cursor-pointer">
+<img alt="Sarah Connor profile avatar" class="w-full h-full object-cover" data-alt="A professional headshot of a corporate employee in a well-lit office environment. The lighting is soft and natural, casting subtle shadows that highlight a confident and approachable expression. The color palette features neutral tones with a hint of warm corporate blue in the background, matching a modern modernist design system. The overall mood is reliable, calm, and institutional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkGI1a0CcKwHV4Oe0jkNikuEyLiHHgKUvpTnro5h3cKca9zhrZ62uNyGvuEEb-8v_lIPSgHD1RBhfELq5yOJ_eE_YuJAw8p7_pGkVHpSNIvonxzHE4KhI0TVJI21Jly88Ma0PXJmoSZECiR4k-WpwjB5GFeEyCkmjyTmPlZAnUZbWPF5bv0SPyMYE5EflQ11v5s1wYB47WIIRhOkfSOvBspC4hz707SvgaQVxss6tm_AGZKcRkUadtVV6d7no5oMuCnaWFrcHwCg"/>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="flex-1 overflow-y-auto p-4 md:p-xl flex flex-col bg-background">
+<!-- Page Header -->
+<div class="mb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h1 class="font-h1 text-h1 text-on-background mb-1">Employees</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Manage all active employees</p>
+</div>
+</div>
+<!-- Sub-pill Navigation -->
+<div class="flex space-x-2 mb-8 border-b border-outline-variant pb-px">
+<button class="px-4 py-2 font-label-bold text-label-bold text-on-surface-variant border-b-2 border-transparent hover:text-on-background transition-colors">
+                    Active Employees
+                </button>
+<button class="px-4 py-2 font-label-bold text-label-bold text-primary border-b-2 border-primary bg-surface-container-low rounded-t-sm">
+                    Deleted Employees
+                </button>
+</div>
+<!-- Workspace Card -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 flex-1 flex flex-col overflow-hidden">
+<!-- Toolbar -->
+<div class="p-4 border-b border-outline-variant/30 flex flex-col sm:flex-row gap-4 justify-between items-center bg-surface-container-lowest">
+<div class="flex flex-1 gap-4 w-full sm:w-auto">
+<div class="relative w-full sm:w-80">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">search</span>
+<input class="w-full bg-surface-container-low text-on-surface font-body-md text-body-md rounded-lg pl-10 pr-4 py-2 border border-outline-variant focus:ring-2 focus:ring-primary focus:border-primary placeholder-outline transition-shadow" placeholder="Search by name or email" type="text"/>
+</div>
+<div class="relative hidden sm:block w-48">
+<select class="w-full bg-surface-container-low text-on-surface font-body-md text-body-md rounded-lg pl-4 pr-10 py-2 border border-outline-variant focus:ring-2 focus:ring-primary focus:border-primary appearance-none cursor-pointer">
+<option value="">All Departments</option>
+<option value="engineering">Engineering</option>
+<option value="marketing">Marketing</option>
+<option value="sales">Sales</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Table Content -->
+<div class="flex-1 overflow-x-auto">
+<table class="w-full text-left border-collapse min-w-[800px]">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant/50 font-label-bold text-label-bold text-secondary uppercase tracking-wider">
+<th class="py-3 px-6 w-1/4">Name</th>
+<th class="py-3 px-6 w-1/4">Email</th>
+<th class="py-3 px-6 w-1/6">Department</th>
+<th class="py-3 px-6 w-1/6">Deleted Date</th>
+<th class="py-3 px-6 w-1/6 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md text-on-background divide-y divide-outline-variant/20">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-3 px-6">
+<div class="flex items-center">
+<div class="h-8 w-8 rounded-full bg-surface-container-highest text-secondary flex items-center justify-center font-label-bold text-label-bold mr-3 border border-outline-variant/30">
+                                            JD
+                                        </div>
+<span class="font-medium">John Doe</span>
+</div>
+</td>
+<td class="py-3 px-6 text-on-surface-variant">john.doe@enterprise.com</td>
+<td class="py-3 px-6 text-on-surface-variant">Engineering</td>
+<td class="py-3 px-6 text-on-surface-variant">Oct 15, 2023</td>
+<td class="py-3 px-6 text-right">
+<button class="inline-flex items-center px-3 py-1.5 border border-[#166534] text-[#166534] bg-transparent hover:bg-[#f0fdf4] font-label-bold text-label-bold rounded transition-colors focus:ring-2 focus:ring-[#166534] focus:outline-none">
+<span class="material-symbols-outlined text-[16px] mr-1">settings_backup_restore</span>
+                                        Restore
+                                    </button>
+</td>
+</tr>
+<!-- Row 2 (Striped) -->
+<tr class="bg-surface-bright hover:bg-surface-container-low transition-colors group">
+<td class="py-3 px-6">
+<div class="flex items-center">
+<div class="h-8 w-8 rounded-full bg-surface-container-highest text-secondary flex items-center justify-center font-label-bold text-label-bold mr-3 border border-outline-variant/30">
+                                            AS
+                                        </div>
+<span class="font-medium">Alice Smith</span>
+</div>
+</td>
+<td class="py-3 px-6 text-on-surface-variant">alice.smith@enterprise.com</td>
+<td class="py-3 px-6 text-on-surface-variant">Marketing</td>
+<td class="py-3 px-6 text-on-surface-variant">Sep 28, 2023</td>
+<td class="py-3 px-6 text-right">
+<button class="inline-flex items-center px-3 py-1.5 border border-[#166534] text-[#166534] bg-transparent hover:bg-[#f0fdf4] font-label-bold text-label-bold rounded transition-colors focus:ring-2 focus:ring-[#166534] focus:outline-none">
+<span class="material-symbols-outlined text-[16px] mr-1">settings_backup_restore</span>
+                                        Restore
+                                    </button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-3 px-6">
+<div class="flex items-center">
+<div class="h-8 w-8 rounded-full bg-surface-container-highest text-secondary flex items-center justify-center font-label-bold text-label-bold mr-3 border border-outline-variant/30">
+                                            BJ
+                                        </div>
+<span class="font-medium">Bob Johnson</span>
+</div>
+</td>
+<td class="py-3 px-6 text-on-surface-variant">bob.johnson@enterprise.com</td>
+<td class="py-3 px-6 text-on-surface-variant">Sales</td>
+<td class="py-3 px-6 text-on-surface-variant">Sep 12, 2023</td>
+<td class="py-3 px-6 text-right">
+<button class="inline-flex items-center px-3 py-1.5 border border-[#166534] text-[#166534] bg-transparent hover:bg-[#f0fdf4] font-label-bold text-label-bold rounded transition-colors focus:ring-2 focus:ring-[#166534] focus:outline-none">
+<span class="material-symbols-outlined text-[16px] mr-1">settings_backup_restore</span>
+                                        Restore
+                                    </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="p-4 border-t border-outline-variant/30 bg-surface-container-lowest flex items-center justify-between">
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                        Showing <span class="font-medium text-on-background">1</span> to <span class="font-medium text-on-background">3</span> of <span class="font-medium text-on-background">12</span> entries
+                    </p>
+<div class="flex space-x-1">
+<button class="px-3 py-1 border border-outline-variant rounded bg-surface-container-low text-outline cursor-not-allowed font-body-sm text-body-sm" disabled="">
+                            Previous
+                        </button>
+<button class="px-3 py-1 border border-primary bg-primary text-on-primary rounded font-body-sm text-body-sm">
+                            1
+                        </button>
+<button class="px-3 py-1 border border-outline-variant rounded bg-surface-container-lowest text-on-surface hover:bg-surface-container-low transition-colors font-body-sm text-body-sm">
+                            2
+                        </button>
+<button class="px-3 py-1 border border-outline-variant rounded bg-surface-container-lowest text-on-surface hover:bg-surface-container-low transition-colors font-body-sm text-body-sm">
+                            Next
+                        </button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

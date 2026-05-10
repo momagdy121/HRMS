@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Restore Employee - Deleted Employees</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-high": "#e8e8ec",
+                        "background": "#f9f9fd",
+                        "secondary": "#505f76",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-low": "#f3f3f7",
+                        "on-primary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "surface-bright": "#f9f9fd",
+                        "surface-dim": "#d9dade",
+                        "on-secondary-container": "#54647a",
+                        "on-background": "#1a1c1f",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e2e2e6",
+                        "primary-fixed-dim": "#a0cafc",
+                        "on-tertiary-fixed": "#191c1e",
+                        "surface-variant": "#e2e2e6",
+                        "error-container": "#ffdad6",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#ededf2",
+                        "on-surface-variant": "#42474f",
+                        "outline-variant": "#c2c7d0",
+                        "tertiary-fixed": "#e0e3e5",
+                        "primary-fixed": "#d1e4ff",
+                        "surface-tint": "#35618d",
+                        "surface": "#f9f9fd",
+                        "tertiary": "#323537",
+                        "on-tertiary-container": "#babcbe",
+                        "on-primary-fixed-variant": "#184974",
+                        "inverse-on-surface": "#f0f0f4",
+                        "primary-container": "#1f4e79",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "secondary-fixed": "#d3e4fe",
+                        "on-primary-container": "#95bff1",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "on-primary-fixed": "#001d35",
+                        "inverse-primary": "#a0cafc",
+                        "secondary-container": "#d0e1fb",
+                        "on-secondary-fixed": "#0b1c30",
+                        "on-error": "#ffffff",
+                        "error": "#ba1a1a",
+                        "tertiary-container": "#494c4e",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "inverse-surface": "#2f3034",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "primary": "#00375e",
+                        "outline": "#72777f",
+                        "on-surface": "#1a1c1f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "md": "16px",
+                        "navbar-height": "64px",
+                        "xl": "32px",
+                        "xs": "4px",
+                        "sidebar-width": "260px",
+                        "base": "4px",
+                        "sm": "8px",
+                        "sidebar-collapsed": "72px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "h2": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-bold": ["Inter"],
+                        "h3": ["Inter"],
+                        "h1": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "badge": ["Inter"]
+                    },
+                    "fontSize": {
+                        "h2": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-bold": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+                        "h3": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "h1": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "badge": ["12px", { "lineHeight": "12px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background font-body-md text-body-md text-on-background overflow-hidden">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center h-16 px-6 w-full fixed top-0 bg-blue-900 dark:bg-slate-950 docked full-width z-40 border-b border-blue-800 dark:border-slate-800 shadow-sm font-inter text-sm font-medium">
+<div class="flex items-center gap-8">
+<div class="text-xl font-bold text-white tracking-tight">HR Management System</div>
+<!-- Search Bar on left -->
+<div class="relative hidden md:flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-blue-200" style="font-variation-settings: 'FILL' 0;">search</span>
+<input class="bg-blue-800 text-white placeholder-blue-300 border-none rounded-md pl-10 pr-4 py-2 focus:ring-2 focus:ring-blue-400 transition-all text-sm w-64" placeholder="Search..." type="text"/>
+</div>
+</div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-blue-200 hover:text-white transition-colors cursor-pointer active:opacity-80" href="#">Directory</a>
+<a class="text-blue-200 hover:text-white transition-colors cursor-pointer active:opacity-80" href="#">Reports</a>
+<a class="text-blue-200 hover:text-white transition-colors cursor-pointer active:opacity-80" href="#">Support</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-all font-semibold text-sm cursor-pointer active:opacity-80 hidden md:block">Add Employee</button>
+<button class="text-blue-500 dark:text-blue-400 hover:bg-blue-800 dark:hover:bg-slate-900 rounded-md transition-all p-2 cursor-pointer active:opacity-80 flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-blue-500 dark:text-blue-400 hover:bg-blue-800 dark:hover:bg-slate-900 rounded-md transition-all p-2 cursor-pointer active:opacity-80 flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+<img alt="User profile avatar" class="w-8 h-8 rounded-full border border-blue-800 ml-2" data-alt="A professional headshot of a corporate employee on a plain background, representing a user profile avatar in a minimalist and clean aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8gbouFVZm9MxUTyQEydFliLZWq_ZvjUw9dqa15_rutJTSSvZtIR7NRgbYC2yVvu-sKthxDqErtuV71Fv4O47ZAZ6m_EM8uLYYkWsVt8C0_pqkyaO-Jno2KRZHgQZCIU6dpo1qZWXWacNLal_aYLGYCk25sb6GLVwrGIpWEBRDl5TPCNimrTmMKenJg2tANYWIy4_IEKiqjMW4pwjXX5NAdDBq-RN9iyUNIpeTb421aXtIFsGvMVKc7cVVS9tbZNa6hkAdd9E1fw"/>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="flex flex-col h-full pt-20 pb-6 fixed left-0 top-0 w-64 z-30 bg-blue-900 dark:bg-slate-950 border-r border-blue-800 dark:border-slate-800 no-shadow font-inter text-sm transition-transform duration-200 ease-in-out hidden md:flex">
+<!-- Header area inside sidebar as per some designs, though TopNav exists. Following JSON exactly. -->
+<div class="px-6 pb-6 border-b border-blue-800 mb-4 hidden">
+<div class="text-lg font-black text-white">Enterprise HR</div>
+<div class="text-blue-500 dark:text-blue-400 text-xs mt-1">Admin Console</div>
+</div>
+<div class="px-4 mb-6">
+<button class="w-full bg-blue-800 hover:bg-blue-700 text-white py-2 rounded-md transition-all font-semibold text-sm flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">add</span>
+                New Request
+            </button>
+</div>
+<nav class="flex-1 overflow-y-auto w-full">
+<a class="text-blue-200 flex items-center px-4 py-3 hover:bg-blue-800/50 transition-all hover:text-white hover:bg-blue-800/40" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="dashboard">dashboard</span>
+                Dashboard
+            </a>
+<a class="bg-blue-800 dark:bg-slate-900 text-white border-l-4 border-blue-400 flex items-center px-4 py-3 font-semibold transition-transform duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="badge">badge</span>
+                Employees
+            </a>
+<a class="text-blue-200 flex items-center px-4 py-3 hover:bg-blue-800/50 transition-all hover:text-white hover:bg-blue-800/40" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="account_tree">account_tree</span>
+                Org Chart
+            </a>
+<a class="text-blue-200 flex items-center px-4 py-3 hover:bg-blue-800/50 transition-all hover:text-white hover:bg-blue-800/40" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="payments">payments</span>
+                Payroll
+            </a>
+<a class="text-blue-200 flex items-center px-4 py-3 hover:bg-blue-800/50 transition-all hover:text-white hover:bg-blue-800/40" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="event_available">event_available</span>
+                Time Off
+            </a>
+<a class="text-blue-200 flex items-center px-4 py-3 hover:bg-blue-800/50 transition-all hover:text-white hover:bg-blue-800/40" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="settings">settings</span>
+                Settings
+            </a>
+</nav>
+<div class="mt-auto px-0 w-full">
+<a class="text-blue-200 flex items-center px-4 py-3 hover:bg-blue-800/50 transition-all hover:text-white hover:bg-blue-800/40 border-t border-blue-800" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="help">help</span>
+                Help Center
+            </a>
+<a class="text-blue-200 flex items-center px-4 py-3 hover:bg-blue-800/50 transition-all hover:text-white hover:bg-blue-800/40" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="logout">logout</span>
+                Sign Out
+            </a>
+</div>
+</aside>
+<!-- Main Content Canvas (Background behind overlay) -->
+<main class="ml-sidebar-width mt-navbar-height p-xl h-[calc(100vh-64px)] overflow-hidden blur-[2px] pointer-events-none">
+<div class="flex justify-between items-end mb-8">
+<div>
+<h1 class="font-h1 text-h1 text-on-surface mb-2">Deleted Employees</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Review and restore inactive employee profiles.</p>
+</div>
+</div>
+<!-- Table Placeholder -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-surface-variant overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-surface-variant font-label-bold text-label-bold text-secondary">
+<th class="py-3 px-4 font-semibold">Employee</th>
+<th class="py-3 px-4 font-semibold">Role</th>
+<th class="py-3 px-4 font-semibold">Department</th>
+<th class="py-3 px-4 font-semibold">Deletion Date</th>
+<th class="py-3 px-4 font-semibold text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-body-sm text-on-surface">
+<tr class="border-b border-surface-variant hover:bg-surface-container transition-colors">
+<td class="py-3 px-4 flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center text-secondary font-medium">JD</div>
+<div>
+<div class="font-medium">John Doe</div>
+<div class="text-on-surface-variant text-xs">john.doe@enterprise.com</div>
+</div>
+</td>
+<td class="py-3 px-4 text-on-surface-variant">Senior Engineer</td>
+<td class="py-3 px-4 text-on-surface-variant">Engineering</td>
+<td class="py-3 px-4 text-on-surface-variant">Oct 24, 2023</td>
+<td class="py-3 px-4 text-right">
+<button class="text-primary hover:text-primary-container font-medium text-xs">Restore</button>
+</td>
+</tr>
+<tr class="bg-surface-bright border-b border-surface-variant hover:bg-surface-container transition-colors">
+<td class="py-3 px-4 flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center text-secondary font-medium">AS</div>
+<div>
+<div class="font-medium">Alice Smith</div>
+<div class="text-on-surface-variant text-xs">alice.smith@enterprise.com</div>
+</div>
+</td>
+<td class="py-3 px-4 text-on-surface-variant">Marketing Manager</td>
+<td class="py-3 px-4 text-on-surface-variant">Marketing</td>
+<td class="py-3 px-4 text-on-surface-variant">Oct 20, 2023</td>
+<td class="py-3 px-4 text-right">
+<button class="text-primary hover:text-primary-container font-medium text-xs">Restore</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</main>
+<!-- Overlay & Modal -->
+<div class="fixed inset-0 bg-on-surface/40 backdrop-blur-sm z-[60] flex items-center justify-center">
+<!-- Modal Card (Level 2 Elevation) -->
+<div class="bg-surface-container-lowest w-[420px] rounded-xl shadow-[0_12px_24px_-4px_rgba(0,0,0,0.1)] overflow-hidden flex flex-col">
+<div class="p-lg pb-4">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">restore</span>
+</div>
+<h2 class="font-h3 text-h3 text-on-surface mb-2">Restore Employee</h2>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                    Are you sure you want to restore <span class="font-semibold text-on-surface">John Doe</span>? They will reappear in the active list. Tasks will remain hidden.
+                </p>
+</div>
+<div class="px-lg py-md bg-surface-container-low border-t border-surface-variant flex justify-end gap-3 mt-2">
+<button class="px-4 py-2 rounded-lg font-label-bold text-label-bold text-secondary border border-outline-variant hover:bg-surface-container transition-colors bg-surface-container-lowest">
+                    Cancel
+                </button>
+<button class="px-4 py-2 rounded-lg font-label-bold text-label-bold text-on-primary bg-primary-container hover:bg-primary transition-colors shadow-sm">
+                    Restore
+                </button>
+</div>
+</div>
+</div>
+<!-- Toast Notification -->
+<div class="fixed top-[80px] right-lg z-[70] bg-surface-container-lowest border-l-4 border-[#10B981] shadow-lg rounded-r-lg p-4 w-80 flex items-start gap-3 transform transition-all duration-300 translate-y-0 opacity-100">
+<span class="material-symbols-outlined text-[#10B981] mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<div class="flex-1">
+<h4 class="font-label-bold text-label-bold text-on-surface mb-0.5">Success</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Employee restored successfully.</p>
+</div>
+<button class="text-outline hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-sm">close</span>
+</button>
+</div>
+</body></html>

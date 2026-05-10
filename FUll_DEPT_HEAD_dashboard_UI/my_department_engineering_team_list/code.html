@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>My Department - Engineering</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-error-container": "#93000a",
+                      "surface-variant": "#e2e2e6",
+                      "on-error": "#ffffff",
+                      "inverse-on-surface": "#f0f0f4",
+                      "tertiary-container": "#494c4e",
+                      "surface-bright": "#f9f9fd",
+                      "secondary-fixed-dim": "#b7c8e1",
+                      "primary": "#00375e",
+                      "on-surface-variant": "#42474f",
+                      "surface": "#f9f9fd",
+                      "on-surface": "#1a1c1f",
+                      "tertiary-fixed": "#e0e3e5",
+                      "on-secondary-container": "#54647a",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-container": "#ededf2",
+                      "surface-container-high": "#e8e8ec",
+                      "on-secondary-fixed": "#0b1c30",
+                      "on-primary-container": "#95bff1",
+                      "on-secondary-fixed-variant": "#38485d",
+                      "surface-dim": "#d9dade",
+                      "on-primary-fixed-variant": "#184974",
+                      "secondary-container": "#d0e1fb",
+                      "surface-tint": "#35618d",
+                      "secondary-fixed": "#d3e4fe",
+                      "primary-container": "#1f4e79",
+                      "on-primary-fixed": "#001d35",
+                      "inverse-surface": "#2f3034",
+                      "primary-fixed-dim": "#a0cafc",
+                      "primary-fixed": "#d1e4ff",
+                      "on-tertiary": "#ffffff",
+                      "tertiary-fixed-dim": "#c4c7c9",
+                      "on-tertiary-container": "#babcbe",
+                      "outline-variant": "#c2c7d0",
+                      "on-background": "#1a1c1f",
+                      "surface-container-highest": "#e2e2e6",
+                      "on-primary": "#ffffff",
+                      "inverse-primary": "#a0cafc",
+                      "error-container": "#ffdad6",
+                      "surface-container-low": "#f3f3f7",
+                      "outline": "#72777f",
+                      "on-tertiary-fixed-variant": "#444749",
+                      "background": "#f9f9fd",
+                      "secondary": "#505f76",
+                      "on-secondary": "#ffffff",
+                      "on-tertiary-fixed": "#191c1e",
+                      "tertiary": "#323537",
+                      "error": "#ba1a1a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "sidebar-collapsed": "72px",
+                      "md": "16px",
+                      "lg": "24px",
+                      "xs": "4px",
+                      "sidebar-width": "260px",
+                      "sm": "8px",
+                      "xl": "32px",
+                      "navbar-height": "64px",
+                      "base": "4px"
+              },
+              "fontFamily": {
+                      "label-bold": [
+                              "Inter"
+                      ],
+                      "h2": [
+                              "Inter"
+                      ],
+                      "badge": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "h3": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "h1": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "label-bold": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "h2": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "badge": [
+                              "12px",
+                              {
+                                      "lineHeight": "12px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-sm": [
+                              "13px",
+                              {
+                                      "lineHeight": "18px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "h3": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "h1": [
+                              "30px",
+                              {
+                                      "lineHeight": "38px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 h-navbar-height z-30 flex justify-between items-center px-xl w-[calc(100%-260px)] ml-sidebar-width bg-surface dark:bg-surface-container-low border-b border-surface-variant dark:border-outline-variant shadow-sm">
+<div class="flex items-center gap-md">
+<!-- Search bar logic dictates it's on left per JSON, but leaving space as per layout -->
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/50 text-[20px]">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container-low border border-surface-variant rounded-lg font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary w-64" placeholder="Search team members..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-lg">
+<div class="flex items-center gap-sm">
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container-high transition-colors cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container-high transition-colors cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined">help</span>
+</button>
+</div>
+<div class="flex items-center gap-sm pl-md border-l border-surface-variant">
+<div class="text-right hidden md:block">
+<div class="font-label-bold text-label-bold text-on-surface">Bob Johnson</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Department Head — Engineering</div>
+</div>
+<img alt="Bob Johnson, Department Head" class="w-10 h-10 rounded-full object-cover border border-surface-variant" data-alt="A professional headshot of a corporate department head in a modern office setting. The lighting is bright and clean, reflecting a professional and organized corporate environment. The mood is confident and reliable." src="https://lh3.googleusercontent.com/aida/ADBb0uj0kK5tVKnlEe7Yo6fwE7ALyAuaLpHCCS3Nyv1p5B9bmY-jAWD-TRyFpkLdx9KhbQOfQ5Ua_KF1bsNMvSNVTn92DTA4zrBqrJcbbjXWQMdAkfqoQUA43fYJsxqQ3vMorFGsMrQ5TDMC6twmYRDkgUuoHZbHhmoNshLOfx_AARSrIYG5ZcVlMFEQIIdjLKS5odTm9RLReHJZjc9Y0Juo7DH9us6jll_H32G4XPmio_Ae-86lgpkMS0seuf3uJDam6q0qJBmzdw"/>
+</div>
+</div>
+</header>
+<!-- SideNavBar -->
+<nav class="fixed left-0 top-0 h-screen w-sidebar-width z-40 bg-primary dark:bg-primary-container text-on-primary dark:text-on-primary-container flex flex-col h-full py-lg font-body-md text-body-md flat no shadows transition-all duration-200 ease-in-out">
+<div class="px-lg mb-xl flex items-center gap-sm">
+<div class="w-8 h-8 rounded bg-primary-fixed-dim flex items-center justify-center text-primary-fixed text-[20px]">
+<span class="material-symbols-outlined">domain</span>
+</div>
+<div>
+<h1 class="text-h3 font-h3 text-on-primary tracking-tight">HRMS Portal</h1>
+<p class="font-body-sm text-body-sm text-on-primary/70">Corporate HR</p>
+</div>
+</div>
+<div class="flex flex-col gap-xs mt-md">
+<a class="text-on-primary/70 hover:text-on-primary transition-colors flex items-center px-4 py-3 hover:bg-on-primary/5" href="#">
+<span class="material-symbols-outlined mr-sm text-[20px]">dashboard</span>
+                Dashboard
+            </a>
+<a class="border-l-4 border-primary-fixed-dim bg-on-primary/10 text-on-primary font-label-bold flex items-center px-4 py-3" href="#">
+<span class="material-symbols-outlined mr-sm text-[20px]" style="font-variation-settings: 'FILL' 1;">groups</span>
+                My Department
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary transition-colors flex items-center px-4 py-3 hover:bg-on-primary/5" href="#">
+<span class="material-symbols-outlined mr-sm text-[20px]">task</span>
+                Manage Tasks
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary transition-colors flex items-center px-4 py-3 hover:bg-on-primary/5" href="#">
+<span class="material-symbols-outlined mr-sm text-[20px]">event_busy</span>
+                Team Leave
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary transition-colors flex items-center px-4 py-3 hover:bg-on-primary/5" href="#">
+<span class="material-symbols-outlined mr-sm text-[20px]">rule</span>
+                Team Attendance
+            </a>
+<a class="text-on-primary/70 hover:text-on-primary transition-colors flex items-center px-4 py-3 hover:bg-on-primary/5" href="#">
+<span class="material-symbols-outlined mr-sm text-[20px]">payments</span>
+                Department Payroll
+            </a>
+</div>
+</nav>
+<!-- Main Canvas -->
+<main class="ml-sidebar-width mt-navbar-height p-xl min-h-[calc(100vh-64px)] bg-background">
+<!-- Header -->
+<div class="mb-lg flex justify-between items-end">
+<div>
+<h1 class="font-h1 text-h1 text-on-surface">My Department</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-xs">Engineering team members</p>
+</div>
+<div class="flex items-center gap-md">
+<div class="relative">
+<select class="appearance-none bg-surface border border-outline-variant rounded-lg pl-4 pr-10 py-2 font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary">
+<option>Status: All</option>
+<option>Status: Active</option>
+<option>Status: On Leave</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px] pointer-events-none">expand_more</span>
+</div>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg font-label-bold text-label-bold flex items-center gap-xs hover:bg-primary-container transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                    Export List
+                </button>
+</div>
+</div>
+<!-- Data Grid Surface -->
+<div class="bg-surface-container-lowest rounded-xl border border-surface-variant shadow-sm overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low border-b border-surface-variant">
+<tr>
+<th class="py-3 px-4 font-label-bold text-label-bold text-on-surface-variant w-[30%]">Employee</th>
+<th class="py-3 px-4 font-label-bold text-label-bold text-on-surface-variant w-[20%]">Position</th>
+<th class="py-3 px-4 font-label-bold text-label-bold text-on-surface-variant w-[20%]">Email</th>
+<th class="py-3 px-4 font-label-bold text-label-bold text-on-surface-variant w-[15%]">Hire Date</th>
+<th class="py-3 px-4 font-label-bold text-label-bold text-on-surface-variant w-[15%]">Status</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-body-sm text-on-surface">
+<!-- Row 1 -->
+<tr class="border-b border-surface-variant hover:bg-surface-container-low/50 transition-colors bg-surface-container-lowest">
+<td class="py-3 px-4">
+<div class="flex items-center gap-sm">
+<img alt="Bob Johnson" class="w-8 h-8 rounded-full object-cover" data-alt="A small circular avatar of a male professional in corporate attire against a light background." src="https://lh3.googleusercontent.com/aida/ADBb0uj0kK5tVKnlEe7Yo6fwE7ALyAuaLpHCCS3Nyv1p5B9bmY-jAWD-TRyFpkLdx9KhbQOfQ5Ua_KF1bsNMvSNVTn92DTA4zrBqrJcbbjXWQMdAkfqoQUA43fYJsxqQ3vMorFGsMrQ5TDMC6twmYRDkgUuoHZbHhmoNshLOfx_AARSrIYG5ZcVlMFEQIIdjLKS5odTm9RLReHJZjc9Y0Juo7DH9us6jll_H32G4XPmio_Ae-86lgpkMS0seuf3uJDam6q0qJBmzdw"/>
+<span class="font-label-bold">Bob Johnson</span>
+</div>
+</td>
+<td class="py-3 px-4 text-on-surface-variant">Department Head</td>
+<td class="py-3 px-4 text-on-surface-variant">bob@company.com</td>
+<td class="py-3 px-4 text-on-surface-variant">Jan 15, 2020</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center px-2 py-1 rounded-full bg-[#E6F4EA] text-[#137333] font-badge text-badge">
+                                Active
+                            </span>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="border-b border-surface-variant hover:bg-surface-container-low/50 transition-colors bg-[#F8FAFC]">
+<td class="py-3 px-4">
+<div class="flex items-center gap-sm">
+<img alt="Emily Wong" class="w-8 h-8 rounded-full object-cover" data-alt="A small circular avatar of an Asian female professional smiling slightly against a neutral grey background." src="https://lh3.googleusercontent.com/aida/ADBb0ugPImENDHZl17ARKbkYKDy_QpXrWp01Pk5aAFOIXrXh3ft2yI0UrnWnNvoEzBn6xfqpb8smuc1EiUC3qg0Gu8t7wU8LiwCRklDS66Q5GMo1QeV0asMaWkM0nZKXw0Xj7uuOxd9ZD-czTqb3yyCdsWBjMeqKFNk22SQLFadIHwyJZ8rQpR3ykbIkgwdtOhFBTXODHqYwdKz4MprI3a_BiyGk6nwMr7se6w2iCscJmdqXRyKcKkxhhpPg-ZUEQ9uxBdgA-V3ikLK6"/>
+<span class="font-label-bold">Emily Wong</span>
+</div>
+</td>
+<td class="py-3 px-4 text-on-surface-variant">Senior Developer</td>
+<td class="py-3 px-4 text-on-surface-variant">ewong@company.com</td>
+<td class="py-3 px-4 text-on-surface-variant">Nov 02, 2023</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center px-2 py-1 rounded-full bg-[#E6F4EA] text-[#137333] font-badge text-badge">
+                                Active
+                            </span>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="border-b border-surface-variant hover:bg-surface-container-low/50 transition-colors bg-surface-container-lowest">
+<td class="py-3 px-4">
+<div class="flex items-center gap-sm">
+<img alt="Sarah Jenkins" class="w-8 h-8 rounded-full object-cover" data-alt="A small circular avatar of a professional woman with blonde hair in a well-lit office setting." src="https://lh3.googleusercontent.com/aida/ADBb0uhAXHQ2OEanHisZPrsKIcVJZw6FSyIy9tlRm8_7o2TQ0f5zpwff9eFigJBfneZPbiyDI4KGCkLkwrj6utupdWdiujqdsODnEIm7lbOWDw1bcSKiguwoVMOzjzCVshDXDF5kMimaWp9fZ05S9xzETGmbjsq2ZA74E9MKUi29DlaSrF4-6fCX0qxEcDDkC-mx0vYBK-D6vvvbhsbuMiaH7RlF1cdXvE6S9S2kGeK8kQHAbRfWJ5CxEsttSZfETP_NfrlQgh2CHzZj"/>
+<span class="font-label-bold">Sarah Jenkins</span>
+</div>
+</td>
+<td class="py-3 px-4 text-on-surface-variant">QA Engineer</td>
+<td class="py-3 px-4 text-on-surface-variant">s.jenkins@company.com</td>
+<td class="py-3 px-4 text-on-surface-variant">Mar 10, 2022</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center px-2 py-1 rounded-full bg-[#E6F4EA] text-[#137333] font-badge text-badge">
+                                Active
+                            </span>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="border-b border-surface-variant hover:bg-surface-container-low/50 transition-colors bg-[#F8FAFC]">
+<td class="py-3 px-4">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-bold text-label-bold">MR</div>
+<span class="font-label-bold">Michael Ross</span>
+</div>
+</td>
+<td class="py-3 px-4 text-on-surface-variant">Backend Developer</td>
+<td class="py-3 px-4 text-on-surface-variant">m.ross@company.com</td>
+<td class="py-3 px-4 text-on-surface-variant">Jun 05, 2021</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center px-2 py-1 rounded-full bg-[#E8F0FE] text-[#1967D2] font-badge text-badge">
+                                On Leave
+                            </span>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors bg-surface-container-lowest">
+<td class="py-3 px-4">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-tertiary-container text-on-tertiary-container flex items-center justify-center font-label-bold text-label-bold">DC</div>
+<span class="font-label-bold">David Chen</span>
+</div>
+</td>
+<td class="py-3 px-4 text-on-surface-variant">Frontend Developer</td>
+<td class="py-3 px-4 text-on-surface-variant">d.chen@company.com</td>
+<td class="py-3 px-4 text-on-surface-variant">Aug 14, 2019</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center px-2 py-1 rounded-full bg-[#E6F4EA] text-[#137333] font-badge text-badge">
+                                Active
+                            </span>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination Footer -->
+<div class="bg-surface-container-low border-t border-surface-variant p-4 flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Showing 1-5 of 58 employees</span>
+<div class="flex items-center gap-xs">
+<button class="w-8 h-8 flex items-center justify-center rounded text-on-surface-variant hover:bg-surface-container-high transition-colors border border-outline-variant disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded bg-primary text-on-primary font-body-sm text-body-sm">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded text-on-surface-variant hover:bg-surface-container-high transition-colors font-body-sm text-body-sm">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded text-on-surface-variant hover:bg-surface-container-high transition-colors font-body-sm text-body-sm">...</button>
+<button class="w-8 h-8 flex items-center justify-center rounded text-on-surface-variant hover:bg-surface-container-high transition-colors font-body-sm text-body-sm">12</button>
+<button class="w-8 h-8 flex items-center justify-center rounded text-on-surface-variant hover:bg-surface-container-high transition-colors border border-outline-variant">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+</body></html>

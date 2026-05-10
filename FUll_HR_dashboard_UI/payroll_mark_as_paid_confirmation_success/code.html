@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Payroll Management - HRMS Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#ffffff",
+                    "secondary": "#505f76",
+                    "outline": "#72777f",
+                    "on-error": "#ffffff",
+                    "error": "#ba1a1a",
+                    "tertiary": "#323537",
+                    "surface": "#f9f9fd",
+                    "secondary-fixed-dim": "#b7c8e1",
+                    "surface-dim": "#d9dade",
+                    "secondary-fixed": "#d3e4fe",
+                    "on-secondary-container": "#54647a",
+                    "on-tertiary-container": "#babcbe",
+                    "inverse-on-surface": "#f0f0f4",
+                    "on-tertiary-fixed-variant": "#444749",
+                    "on-surface": "#1a1c1f",
+                    "on-secondary-fixed-variant": "#38485d",
+                    "tertiary-fixed-dim": "#c4c7c9",
+                    "on-error-container": "#93000a",
+                    "background": "#f9f9fd",
+                    "surface-tint": "#35618d",
+                    "inverse-primary": "#a0cafc",
+                    "on-primary-container": "#95bff1",
+                    "surface-variant": "#e2e2e6",
+                    "outline-variant": "#c2c7d0",
+                    "on-secondary": "#ffffff",
+                    "surface-container-high": "#e8e8ec",
+                    "on-primary": "#ffffff",
+                    "primary-fixed": "#d1e4ff",
+                    "surface-container-low": "#f3f3f7",
+                    "tertiary-fixed": "#e0e3e5",
+                    "on-tertiary-fixed": "#191c1e",
+                    "surface-bright": "#f9f9fd",
+                    "on-primary-fixed-variant": "#184974",
+                    "on-background": "#1a1c1f",
+                    "primary-container": "#1f4e79",
+                    "tertiary-container": "#494c4e",
+                    "on-secondary-fixed": "#0b1c30",
+                    "on-surface-variant": "#42474f",
+                    "on-tertiary": "#ffffff",
+                    "inverse-surface": "#2f3034",
+                    "surface-container-highest": "#e2e2e6",
+                    "primary-fixed-dim": "#a0cafc",
+                    "error-container": "#ffdad6",
+                    "secondary-container": "#d0e1fb",
+                    "primary": "#00375e",
+                    "surface-container": "#ededf2",
+                    "on-primary-fixed": "#001d35"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "md": "16px",
+                    "xs": "4px",
+                    "xl": "32px",
+                    "sm": "8px",
+                    "sidebar-width": "260px",
+                    "navbar-height": "64px",
+                    "lg": "24px",
+                    "sidebar-collapsed": "72px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "badge": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-bold": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "h1": ["Inter"],
+                    "h3": ["Inter"],
+                    "h2": ["Inter"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "badge": ["12px", {"lineHeight": "12px", "fontWeight": "500"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                    "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "h1": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "h3": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "h2": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .striped-row:nth-child(even) {
+            background-color: #f8fafc;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-screen w-64 z-50 bg-[#1F4E79] dark:bg-slate-950 border-r border-slate-700/50 shadow-xl flex flex-col h-full">
+<div class="px-6 py-8 flex flex-col gap-1">
+<h1 class="text-xl font-black tracking-tight text-white">HRMS Portal</h1>
+<p class="text-xs text-white/60 uppercase tracking-widest font-semibold">Management Console</p>
+</div>
+<nav class="flex-1 flex flex-col mt-4">
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all font-['Inter'] text-sm font-medium leading-tight" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="dashboard">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all font-['Inter'] text-sm font-medium leading-tight" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="badge">badge</span>
+                Employees
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all font-['Inter'] text-sm font-medium leading-tight" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="domain">domain</span>
+                Departments
+            </a>
+<!-- Active State: Payroll -->
+<a class="bg-white/10 border-l-4 border-sky-400 text-white font-semibold flex items-center px-6 py-3 transition-all font-['Inter'] text-sm leading-tight translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="payments" style="font-variation-settings: 'FILL' 1;">payments</span>
+                Payroll
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all font-['Inter'] text-sm font-medium leading-tight" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="event_busy">event_busy</span>
+                Leave Requests
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all font-['Inter'] text-sm font-medium leading-tight" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="pending_actions">pending_actions</span>
+                Attendance
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all font-['Inter'] text-sm font-medium leading-tight" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="manage_accounts">manage_accounts</span>
+                User Accounts
+            </a>
+</nav>
+<div class="mt-auto border-t border-slate-700/50 py-4">
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all font-['Inter'] text-sm font-medium leading-tight" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="settings">settings</span>
+                Settings
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all font-['Inter'] text-sm font-medium leading-tight" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="logout">logout</span>
+                Logout
+            </a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 min-h-screen flex flex-col">
+<!-- TopNavBar Shell -->
+<header class="sticky top-0 w-full z-40 bg-white/80 backdrop-blur-md dark:bg-slate-900/80 border-b border-slate-200 dark:border-slate-800 shadow-sm flex justify-between items-center px-8 py-3 ml-0">
+<div class="flex items-center gap-6 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg" data-icon="search">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-lg text-sm focus:ring-2 focus:ring-primary-container/20 font-body-sm" placeholder="Search payroll records..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-500 hover:bg-slate-50 rounded-lg transition-transform duration-150 hover:scale-105">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-50 rounded-lg transition-transform duration-150 hover:scale-105">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+<div class="h-8 w-px bg-slate-200 mx-2"></div>
+<div class="flex items-center gap-3">
+<div class="text-right">
+<p class="text-sm font-bold text-slate-900 leading-none">Sarah Connor</p>
+<p class="text-xs text-slate-500 mt-1">HR Manager</p>
+</div>
+<img alt="Sarah Connor Profile" class="h-10 w-10 rounded-full object-cover ring-2 ring-white shadow-sm" data-alt="A professional portrait of a confident mid-40s woman with a warm smile, wearing a sharp corporate navy blazer over a crisp white blouse. She is set against a clean, softly blurred office interior with modern glass partitions and warm light-mode lighting. The style is institutional yet approachable, maintaining a clean corporate modernist aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAR0G5Niw-a3XqM6vFDc9TN9giQoHVE2o-_4ybyN-xdQIsP7RcWLaVtum4VdxWTFpUTjhGs4PE_xMitl8YebWcubeDMGgN-UKTVlkhXCgMQe576AZlhNKm6b5PEk_aB4AsnnjqxoUFiX7_ZaVD8KEyEseruyZO7YNOgkmNT_S623mpKpqHjqoyea3v8uxrwV6qEoZZP7AAFy6go_Y31d-GBe9LX3Tw42sbIXzfi7VqqsUXPKb_bx9Oz-ijJF2305QgVtsgRbDYD_g"/>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="p-8 flex flex-col gap-8 flex-1">
+<!-- Header Section -->
+<div class="flex justify-between items-end">
+<div>
+<h2 class="font-h1 text-h1 text-primary">Payroll</h2>
+<p class="font-body-md text-secondary mt-1">Process and manage employee payroll</p>
+</div>
+<button class="bg-[#1F4E79] text-white px-6 py-2.5 rounded-xl font-label-bold flex items-center gap-2 hover:bg-primary transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[20px]" data-icon="add">add</span>
+                    Process Payroll
+                </button>
+</div>
+<!-- Bento Filter Bar -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-white rounded-xl shadow-sm border border-slate-100">
+<div class="flex flex-col gap-1.5">
+<label class="font-label-bold text-slate-500 text-[11px] uppercase tracking-wider">Department</label>
+<select class="form-select border-slate-200 rounded-lg text-sm font-body-md focus:border-primary focus:ring-0">
+<option>All Departments</option>
+<option>Engineering</option>
+<option>Human Resources</option>
+<option>Marketing</option>
+<option>Sales</option>
+</select>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-label-bold text-slate-500 text-[11px] uppercase tracking-wider">Month</label>
+<select class="form-select border-slate-200 rounded-lg text-sm font-body-md focus:border-primary focus:ring-0">
+<option>October</option>
+<option>September</option>
+<option>August</option>
+</select>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-label-bold text-slate-500 text-[11px] uppercase tracking-wider">Year</label>
+<select class="form-select border-slate-200 rounded-lg text-sm font-body-md focus:border-primary focus:ring-0">
+<option>2025</option>
+<option>2024</option>
+</select>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-label-bold text-slate-500 text-[11px] uppercase tracking-wider">Status</label>
+<select class="form-select border-slate-200 rounded-lg text-sm font-body-md focus:border-primary focus:ring-0">
+<option>All Statuses</option>
+<option>Draft</option>
+<option>Approved</option>
+<option>Paid</option>
+</select>
+</div>
+</div>
+<!-- Payroll Table -->
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead class="bg-slate-50 border-b border-slate-100">
+<tr>
+<th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Employee</th>
+<th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Month/Year</th>
+<th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Base Salary</th>
+<th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Bonuses</th>
+<th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Deductions</th>
+<th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Net Salary</th>
+<th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-on-surface">
+<!-- Row 1 -->
+<tr class="striped-row hover:bg-slate-50/80 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-9 w-9 rounded-full bg-slate-200 overflow-hidden">
+<img alt="John Doe" class="h-full w-full object-cover" data-alt="A clean, professional headshot of a smiling young man in a minimalist white background, wearing a neat grey polo shirt. The lighting is soft and high-key, emphasizing a modern corporate aesthetic with natural skin tones and a sharp, clear focus on his friendly expression." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC82S3WliAhErs9aaJnPigvGGwEt7hpBmb64qTuZHdG8lKTTk-XR4GaVVk2LSUZgftuGQnkTUvTLK0q4eNAoaH17VyQzxxlfLS9c5RA9TdkrAi2lWVTyKbEbcVJtV7JwcH4JB5EB8RysjNmtDrflaaqqzZP9t6JaUUV1voHVKI0tGwHViVO7m4h5ROESCANsj_zpbAfGnJamt-eG5DtFXrlgnJ7iThZHTTOQ8LtUuSQHdYchWIUP8b9aIo6Zu3yoMKw6THlifA4og"/>
+</div>
+<span class="font-semibold text-primary">John Doe</span>
+</div>
+</td>
+<td class="px-6 py-4">Oct 2025</td>
+<td class="px-6 py-4">$6,500</td>
+<td class="px-6 py-4 text-green-600">+$500</td>
+<td class="px-6 py-4 text-error">-$240</td>
+<td class="px-6 py-4 font-bold">$6,760</td>
+<td class="px-6 py-4">
+<span class="bg-slate-100 text-slate-600 px-3 py-1 rounded-full font-badge text-badge">Draft</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="striped-row hover:bg-slate-50/80 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-9 w-9 rounded-full bg-slate-200 overflow-hidden">
+<img alt="Jane Smith" class="h-full w-full object-cover" data-alt="Close-up professional portrait of a professional woman with a calm, intelligent gaze. She has dark hair and wears elegant tortoiseshell glasses. The background is a soft-focus corporate office with bright, natural lighting. The overall color palette is airy and light, with subtle blues and whites reflecting a corporate modernist brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1XK0hlBL-JrCcwSVPpgY5DFCTCxk1aRwFIfLE1641kQCDKLUP6xMcZIrtDLGNC3IBzIVpy6apn3MsCGTEsxdGakSlkMttMuO_Fi-auSRb_tLFiJw5nhHUUAO6UFCQ_u8lcMBmImZ11tNvQsdg9VnuZM-EzUvo7Lnc10xUCyQQrI_9mOsMIzSBjAOKCfQLHSBiUBoT9dJqWNMi5k1PmhTV9x9m8E6O6D9KwQKM_ZBVB-ebs0ewfeVsKDJpaasbin8GTvhiZ4OI1Q"/>
+</div>
+<span class="font-semibold text-primary">Jane Smith</span>
+</div>
+</td>
+<td class="px-6 py-4">Oct 2025</td>
+<td class="px-6 py-4">$8,000</td>
+<td class="px-6 py-4 text-green-600">+$1,000</td>
+<td class="px-6 py-4 text-error">-$300</td>
+<td class="px-6 py-4 font-bold">$8,700</td>
+<td class="px-6 py-4">
+<span class="bg-amber-50 text-amber-600 px-3 py-1 rounded-full font-badge text-badge">Approved</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="striped-row hover:bg-slate-50/80 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-9 w-9 rounded-full bg-slate-200 overflow-hidden">
+<img alt="Michael Johnson" class="h-full w-full object-cover" data-alt="A portrait of a senior professional male executive with a kind smile and graying temples. He is wearing a dark navy suit and light blue shirt. The setting is a bright, high-end corporate lobby with expansive glass and modern furniture. The lighting is soft but directed, creating a sense of reliability and institutional trust." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOxVhAAYTpIS10HWMbhCZb1QOVixP3sUtOBORX8SC4GKzlyVML-CmSmBjG4C2WqwwDoj1hxxf5OAH4PhGR0EtE96lNRhQS6VwNpXVTx7_zCQQRxBPK4KzbyDNixX8KHTdtCpKi3J7XtGHQ0s0h2l1g9FiREfKXW5dN0Jjhdl67bUb5qDNquHpzRRbW3JT9T6F7QWpBrelDWqYFyTH3jqjzPjkPLiQor4rasHf6q4k6AdW_t7US-p1AuJNK6r7t-wFsQJJQcvdWCw"/>
+</div>
+<span class="font-semibold text-primary">Michael Johnson</span>
+</div>
+</td>
+<td class="px-6 py-4">Oct 2025</td>
+<td class="px-6 py-4">$5,200</td>
+<td class="px-6 py-4 text-green-600">+$200</td>
+<td class="px-6 py-4 text-error">-$150</td>
+<td class="px-6 py-4 font-bold">$5,250</td>
+<td class="px-6 py-4">
+<span class="bg-green-50 text-green-600 px-3 py-1 rounded-full font-badge text-badge">Paid</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="striped-row hover:bg-slate-50/80 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-9 w-9 rounded-full bg-slate-200 overflow-hidden">
+<img alt="Emily Wong" class="h-full w-full object-cover" data-alt="A professional headshot of a young woman of Asian descent with a friendly, professional demeanor. She is wearing a modern charcoal-colored blouse and stands against a clean, light-colored architectural background with geometric lines. The image captures a bright, corporate modernist vibe with exceptional clarity and soft, even lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3C2Xfe0ezQwgubeXJC83lc0LMNxJ7-lwHGa88DEzyQgTfm-7XN79qmHCKpo2XSudCBrNEDyL0w-D-isOW5gFRl34zOGMlAIVHdJLFx2YosF5O3-QVzAdg_dYeGxSw7gB0r3giO3ZDVJJHrcOzMDIdxyOOy5Exm5__Fib3GvKpWe2zKwBJnfGQ2hAHnCYFIkBChRiHx5TqWt09d7zfnblRDwwNmh3TZim01X6-ulSacalCje6mhSJZ_mesOSK58pGnbY_RYEHIGQ"/>
+</div>
+<span class="font-semibold text-primary">Emily Wong</span>
+</div>
+</td>
+<td class="px-6 py-4">Sep 2025</td>
+<td class="px-6 py-4">$7,200</td>
+<td class="px-6 py-4 text-green-600">+$0</td>
+<td class="px-6 py-4 text-error">-$180</td>
+<td class="px-6 py-4 font-bold">$7,020</td>
+<td class="px-6 py-4">
+<span class="bg-green-50 text-green-600 px-3 py-1 rounded-full font-badge text-badge">Paid</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination Footer -->
+<div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+<p class="text-sm text-secondary">Showing 1 to 4 of 48 entries</p>
+<div class="flex items-center gap-2">
+<button class="p-2 border border-slate-200 rounded-lg hover:bg-white text-secondary disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined text-[20px]" data-icon="chevron_left">chevron_left</span>
+</button>
+<div class="flex items-center gap-1">
+<button class="px-3.5 py-1.5 rounded-lg bg-primary text-white text-sm font-semibold">1</button>
+<button class="px-3.5 py-1.5 rounded-lg hover:bg-white text-secondary text-sm font-medium">2</button>
+<button class="px-3.5 py-1.5 rounded-lg hover:bg-white text-secondary text-sm font-medium">3</button>
+<span class="px-2 text-secondary">...</span>
+<button class="px-3.5 py-1.5 rounded-lg hover:bg-white text-secondary text-sm font-medium">12</button>
+</div>
+<button class="p-2 border border-slate-200 rounded-lg hover:bg-white text-secondary">
+<span class="material-symbols-outlined text-[20px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Stats Overlay Bento Element (Extra Context) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-center gap-4">
+<div class="h-12 w-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+</div>
+<div>
+<p class="text-xs font-label-bold text-slate-500 uppercase tracking-widest">Total Monthly Payroll</p>
+<p class="text-xl font-bold text-primary">$246,850.00</p>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-center gap-4">
+<div class="h-12 w-12 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="pending">pending</span>
+</div>
+<div>
+<p class="text-xs font-label-bold text-slate-500 uppercase tracking-widest">Pending Approvals</p>
+<p class="text-xl font-bold text-primary">12 Records</p>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-center gap-4">
+<div class="h-12 w-12 rounded-full bg-green-50 text-green-600 flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="check_circle">check_circle</span>
+</div>
+<div>
+<p class="text-xs font-label-bold text-slate-500 uppercase tracking-widest">Payouts Success Rate</p>
+<p class="text-xl font-bold text-primary">98.5%</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<div class="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+<div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+<!-- Modal Header -->
+<div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
+<div>
+<h3 class="text-lg font-bold text-slate-900">Payslip — Jane Smith — October 2025</h3>
+<span class="mt-1 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-100 uppercase tracking-wider">
+          Approved
+        </span>
+</div>
+<button class="text-slate-400 hover:text-slate-600 transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Modal Body -->
+<div class="p-6 overflow-y-auto space-y-6">
+<!-- Employee Info Card -->
+<div class="flex items-center gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
+<img alt="Jane Smith" class="h-14 w-14 rounded-full object-cover shadow-sm ring-2 ring-white" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1XK0hlBL-JrCcwSVPpgY5DFCTCxk1aRwFIfLE1641kQCDKLUP6xMcZIrtDLGNC3IBzIVpy6apn3MsCGTEsxdGakSlkMttMuO_Fi-auSRb_tLFiJw5nhHUUAO6UFCQ_u8lcMBmImZ11tNvQsdg9VnuZM-EzUvo7Lnc10xUCyQQrI_9mOsMIzSBjAOKCfQLHSBiUBoT9dJqWNMi5k1PmhTV9x9m8E6O6D9KwQKM_ZBVB-ebs0ewfeVsKDJpaasbin8GTvhiZ4OI1Q"/>
+<div>
+<p class="font-bold text-slate-900 text-lg">Jane Smith</p>
+<p class="text-sm text-slate-500 font-medium">Engineering Department</p>
+</div>
+</div>
+<!-- Summary Grid -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+<div class="p-3 bg-white border border-slate-100 rounded-lg">
+<p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Base Salary</p>
+<p class="text-base font-semibold text-slate-900 mt-1">$8,000.00</p>
+</div>
+<div class="p-3 bg-white border border-slate-100 rounded-lg">
+<p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Bonuses</p>
+<p class="text-base font-semibold text-green-600 mt-1">+$1,000.00</p>
+</div>
+<div class="p-3 bg-white border border-slate-100 rounded-lg">
+<p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Deductions</p>
+<p class="text-base font-semibold text-error mt-1">-$300.00</p>
+</div>
+<div class="p-3 bg-primary-container/10 border border-primary-container/20 rounded-lg">
+<p class="text-[11px] font-bold text-primary-container uppercase tracking-wider">Net Salary</p>
+<p class="text-xl font-bold text-[#1F4E79] mt-1">$8,700.00</p>
+</div>
+</div>
+<!-- Payroll Items Table -->
+<div class="border border-slate-100 rounded-xl overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead class="bg-slate-50 border-b border-slate-100">
+<tr>
+<th class="px-4 py-3 text-[11px] font-bold text-slate-500 uppercase tracking-wider">Type</th>
+<th class="px-4 py-3 text-[11px] font-bold text-slate-500 uppercase tracking-wider">Description</th>
+<th class="px-4 py-3 text-[11px] font-bold text-slate-500 uppercase tracking-wider text-right">Amount</th>
+</tr>
+</thead>
+<tbody class="text-sm">
+<tr class="border-b border-slate-50">
+<td class="px-4 py-3">
+<span class="px-2 py-0.5 rounded-md bg-green-50 text-green-700 text-[10px] font-bold uppercase tracking-tight">Bonus</span>
+</td>
+<td class="px-4 py-3 text-slate-600 font-medium">Annual Performance Bonus</td>
+<td class="px-4 py-3 text-right text-green-600 font-bold">+$1,000.00</td>
+</tr>
+<tr>
+<td class="px-4 py-3">
+<span class="px-2 py-0.5 rounded-md bg-red-50 text-red-700 text-[10px] font-bold uppercase tracking-tight">Deduction</span>
+</td>
+<td class="px-4 py-3 text-slate-600 font-medium">Dental Plan</td>
+<td class="px-4 py-3 text-right text-error font-bold">-$300.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Footer Info -->
+<p class="text-xs text-slate-400 italic text-center">Processed by Sarah Connor on Oct 25, 2025</p>
+</div>
+<!-- Modal Footer -->
+<div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
+<button class="px-5 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-200 transition-colors">Close</button>
+<button class="px-5 py-2 rounded-xl text-sm font-semibold bg-[#1F4E79] text-white hover:bg-primary shadow-sm transition-all">Mark as Paid</button>
+</div>
+</div>
+</div><!-- Confirmation Sub-modal Overlay -->
+<div class="fixed inset-0 z-[70] flex items-center justify-center bg-slate-900/40 backdrop-blur-[2px] p-4">
+<!-- Sub-modal Content -->
+<div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl border border-slate-100 overflow-hidden transform transition-all">
+<div class="p-6 text-center">
+<div class="w-12 h-12 bg-primary-container/10 text-primary-container rounded-full flex items-center justify-center mx-auto mb-4">
+<span class="material-symbols-outlined text-2xl">payments</span>
+</div>
+<h3 class="text-lg font-bold text-slate-900 mb-2">Confirm Payment</h3>
+<p class="text-sm text-slate-500 mb-6">Mark this payroll as Paid? This action cannot be undone.</p>
+<div class="flex gap-3">
+<button class="flex-1 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors">Cancel</button>
+<button class="flex-1 px-4 py-2.5 rounded-xl text-sm font-semibold bg-[#1F4E79] text-white hover:bg-primary transition-colors shadow-sm">Confirm</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Success Toast Notification -->
+<div class="fixed top-6 right-6 z-[100] flex items-center gap-3 bg-green-50 border border-green-200 px-4 py-3 rounded-xl shadow-lg transform transition-all animate-bounce">
+<div class="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-lg">check</span>
+</div>
+<div class="flex flex-col">
+<p class="text-sm font-bold text-green-900">Success</p>
+<p class="text-xs text-green-700">Payroll marked as paid.</p>
+</div>
+<button class="ml-4 text-green-400 hover:text-green-600 transition-colors">
+<span class="material-symbols-outlined text-sm">close</span>
+</button>
+</div></body></html>

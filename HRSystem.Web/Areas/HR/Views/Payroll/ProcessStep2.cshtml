@@ -1,0 +1,268 @@
+﻿@{
+    ViewBag.Title = "process_payroll_wizard_step_2";
+}
+
+<!-- Modal Overlay -->
+<div class="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+<div class="bg-white w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+<!-- Modal Header -->
+<div class="px-8 py-6 border-b border-slate-100 flex justify-between items-center bg-surface-container-low">
+<h3 class="font-h3 text-h3 text-primary">Process Payroll â€” Step 2 of 4</h3>
+<button class="text-slate-400 hover:text-slate-600 transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Modal Content -->
+<div class="p-8 space-y-6">
+<div class="bg-surface p-6 rounded-xl border border-slate-200">
+<div class="flex items-center justify-between mb-6 pb-6 border-b border-slate-100">
+<div class="flex items-center gap-4">
+<img alt="John Doe" class="h-14 w-14 rounded-full object-cover ring-2 ring-primary/10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC82S3WliAhErs9aaJnPigvGGwEt7hpBmb64qTuZHdG8lKTTk-XR4GaVVk2LSUZgftuGQnkTUvTLK0q4eNAoaH17VyQzxxlfLS9c5RA9TdkrAi2lWVTyKbEbcVJtV7JwcH4JB5EB8RysjNmtDrflaaqqzZP9t6JaUUV1voHVKI0tGwHViVO7m4h5ROESCANsj_zpbAfGnJamt-eG5DtFXrlgnJ7iThZHTTOQ8LtUuSQHdYchWIUP8b9aIo6Zu3yoMKw6THlifA4og"/>
+<div>
+<p class="text-xs font-label-bold text-slate-500 uppercase tracking-widest">Employee</p>
+<p class="text-lg font-bold text-primary">John Doe</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-xs font-label-bold text-slate-500 uppercase tracking-widest">Base Salary</p>
+<p class="text-2xl font-black text-primary">$6,500</p>
+</div>
+</div>
+<div class="flex items-start gap-3 bg-blue-50/50 p-4 rounded-lg border border-blue-100">
+<span class="material-symbols-outlined text-blue-600 text-[20px]" data-icon="info">info</span>
+<p class="text-sm text-blue-800 leading-relaxed font-body-sm">
+                        This salary is a snapshot of the employee's current base salary at the time of processing.
+                    </p>
+</div>
+</div>
+</div>
+<!-- Modal Footer -->
+<div class="px-8 py-6 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
+<a asp-action="ProcessStep1" class="px-6 py-2.5 rounded-xl font-label-bold text-secondary border border-slate-200 hover:bg-white transition-colors inline-flex items-center justify-center">Back</a>
+<a asp-action="ProcessStep3" class="px-8 py-2.5 rounded-xl font-label-bold bg-primary text-white hover:bg-primary-container transition-colors shadow-sm inline-flex items-center justify-center">Next</a>
+</div>
+</div>
+</div>
+<!-- SideNavBar Shell -->
+
+<!-- Main Content Canvas -->
+
+<!-- TopNavBar Shell -->
+
+<!-- Page Content -->
+<div class="p-8 flex flex-col gap-8 flex-1">
+<!-- Header Section -->
+<div class="flex justify-between items-end">
+<div>
+<h2 class="font-h1 text-h1 text-primary">Payroll</h2>
+<p class="font-body-md text-secondary mt-1">Process and manage employee payroll</p>
+</div>
+<button class="bg-[#1F4E79] text-white px-6 py-2.5 rounded-xl font-label-bold flex items-center gap-2 hover:bg-primary transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[20px]" data-icon="add">add</span>
+                    Process Payroll
+                </button>
+</div>
+<!-- Bento Filter Bar -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-white rounded-xl shadow-sm border border-slate-100">
+<div class="flex flex-col gap-1.5">
+<label class="font-label-bold text-slate-500 text-[11px] uppercase tracking-wider">Department</label>
+<select class="form-select border-slate-200 rounded-lg text-sm font-body-md focus:border-primary focus:ring-0">
+<option>All Departments</option>
+<option>Engineering</option>
+<option>Human Resources</option>
+<option>Marketing</option>
+<option>Sales</option>
+</select>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-label-bold text-slate-500 text-[11px] uppercase tracking-wider">Month</label>
+<select class="form-select border-slate-200 rounded-lg text-sm font-body-md focus:border-primary focus:ring-0">
+<option>October</option>
+<option>September</option>
+<option>August</option>
+</select>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-label-bold text-slate-500 text-[11px] uppercase tracking-wider">Year</label>
+<select class="form-select border-slate-200 rounded-lg text-sm font-body-md focus:border-primary focus:ring-0">
+<option>2025</option>
+<option>2024</option>
+</select>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-label-bold text-slate-500 text-[11px] uppercase tracking-wider">Status</label>
+<select class="form-select border-slate-200 rounded-lg text-sm font-body-md focus:border-primary focus:ring-0">
+<option>All Statuses</option>
+<option>Draft</option>
+<option>Approved</option>
+<option>Paid</option>
+</select>
+</div>
+</div>
+<!-- Payroll Table -->
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead class="bg-slate-50 border-b border-slate-100">
+<tr>
+<th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Employee</th>
+<th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Month/Year</th>
+<th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Base Salary</th>
+<th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Bonuses</th>
+<th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Deductions</th>
+<th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Net Salary</th>
+<th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-on-surface">
+<!-- Row 1 -->
+<tr class="striped-row hover:bg-slate-50/80 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-9 w-9 rounded-full bg-slate-200 overflow-hidden">
+<img alt="John Doe" class="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC82S3WliAhErs9aaJnPigvGGwEt7hpBmb64qTuZHdG8lKTTk-XR4GaVVk2LSUZgftuGQnkTUvTLK0q4eNAoaH17VyQzxxlfLS9c5RA9TdkrAi2lWVTyKbEbcVJtV7JwcH4JB5EB8RysjNmtDrflaaqqzZP9t6JaUUV1voHVKI0tGwHViVO7m4h5ROESCANsj_zpbAfGnJamt-eG5DtFXrlgnJ7iThZHTTOQ8LtUuSQHdYchWIUP8b9aIo6Zu3yoMKw6THlifA4og"/>
+</div>
+<span class="font-semibold text-primary">John Doe</span>
+</div>
+</td>
+<td class="px-6 py-4">Oct 2025</td>
+<td class="px-6 py-4">$6,500</td>
+<td class="px-6 py-4 text-green-600">+$500</td>
+<td class="px-6 py-4 text-error">-$240</td>
+<td class="px-6 py-4 font-bold">$6,760</td>
+<td class="px-6 py-4">
+<span class="bg-slate-100 text-slate-600 px-3 py-1 rounded-full font-badge text-badge">Draft</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="striped-row hover:bg-slate-50/80 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-9 w-9 rounded-full bg-slate-200 overflow-hidden">
+<img alt="Jane Smith" class="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1XK0hlBL-JrCcwSVPpgY5DFCTCxk1aRwFIfLE1641kQCDKLUP6xMcZIrtDLGNC3IBzIVpy6apn3MsCGTEsxdGakSlkMttMuO_Fi-auSRb_tLFiJw5nhHUUAO6UFCQ_u8lcMBmImZ11tNvQsdg9VnuZM-EzUvo7Lnc10xUCyQQrI_9mOsMIzSBjAOKCfQLHSBiUBoT9dJqWNMi5k1PmhTV9x9m8E6O6D9KwQKM_ZBVB-ebs0ewfeVsKDJpaasbin8GTvhiZ4OI1Q"/>
+</div>
+<span class="font-semibold text-primary">Jane Smith</span>
+</div>
+</td>
+<td class="px-6 py-4">Oct 2025</td>
+<td class="px-6 py-4">$8,000</td>
+<td class="px-6 py-4 text-green-600">+$1,000</td>
+<td class="px-6 py-4 text-error">-$300</td>
+<td class="px-6 py-4 font-bold">$8,700</td>
+<td class="px-6 py-4">
+<span class="bg-amber-50 text-amber-600 px-3 py-1 rounded-full font-badge text-badge">Approved</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="striped-row hover:bg-slate-50/80 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-9 w-9 rounded-full bg-slate-200 overflow-hidden">
+<img alt="Michael Johnson" class="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOxVhAAYTpIS10HWMbhCZb1QOVixP3sUtOBORX8SC4GKzlyVML-CmSmBjG4C2WqwwDoj1hxxf5OAH4PhGR0EtE96lNRhQS6VwNpXVTx7_zCQQRxBPK4KzbyDNixX8KHTdtCpKi3J7XtGHQ0s0h2l1g9FiREfKXW5dN0Jjhdl67bUb5qDNquHpzRRbW3JT9T6F7QWpBrelDWqYFyTH3jqjzPjkPLiQor4rasHf6q4k6AdW_t7US-p1AuJNK6r7t-wFsQJJQcvdWCw"/>
+</div>
+<span class="font-semibold text-primary">Michael Johnson</span>
+</div>
+</td>
+<td class="px-6 py-4">Oct 2025</td>
+<td class="px-6 py-4">$5,200</td>
+<td class="px-6 py-4 text-green-600">+$200</td>
+<td class="px-6 py-4 text-error">-$150</td>
+<td class="px-6 py-4 font-bold">$5,250</td>
+<td class="px-6 py-4">
+<span class="bg-green-50 text-green-600 px-3 py-1 rounded-full font-badge text-badge">Paid</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="striped-row hover:bg-slate-50/80 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-9 w-9 rounded-full bg-slate-200 overflow-hidden">
+<img alt="Emily Wong" class="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3C2Xfe0ezQwgubeXJC83lc0LMNxJ7-lwHGa88DEzyQgTfm-7XN79qmHCKpo2XSudCBrNEDyL0w-D-isOW5gFRl34zOGMlAIVHdJLFx2YosF5O3-QVzAdg_dYeGxSw7gB0r3giO3ZDVJJHrcOzMDIdxyOOy5Exm5__Fib3GvKpWe2zKwBJnfGQ2hAHnCYFIkBChRiHx5TqWt09d7zfnblRDwwNmh3TZim01X6-ulSacalCje6mhSJZ_mesOSK58pGnbY_RYEHIGQ"/>
+</div>
+<span class="font-semibold text-primary">Emily Wong</span>
+</div>
+</td>
+<td class="px-6 py-4">Sep 2025</td>
+<td class="px-6 py-4">$7,200</td>
+<td class="px-6 py-4 text-green-600">+$0</td>
+<td class="px-6 py-4 text-error">-$180</td>
+<td class="px-6 py-4 font-bold">$7,020</td>
+<td class="px-6 py-4">
+<span class="bg-green-50 text-green-600 px-3 py-1 rounded-full font-badge text-badge">Paid</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination Footer -->
+<div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+<p class="text-sm text-secondary">Showing 1 to 4 of 48 entries</p>
+<div class="flex items-center gap-2">
+<button class="p-2 border border-slate-200 rounded-lg hover:bg-white text-secondary disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined text-[20px]" data-icon="chevron_left">chevron_left</span>
+</button>
+<div class="flex items-center gap-1">
+<button class="px-3.5 py-1.5 rounded-lg bg-primary text-white text-sm font-semibold">1</button>
+<button class="px-3.5 py-1.5 rounded-lg hover:bg-white text-secondary text-sm font-medium">2</button>
+<button class="px-3.5 py-1.5 rounded-lg hover:bg-white text-secondary text-sm font-medium">3</button>
+<span class="px-2 text-secondary">...</span>
+<button class="px-3.5 py-1.5 rounded-lg hover:bg-white text-secondary text-sm font-medium">12</button>
+</div>
+<button class="p-2 border border-slate-200 rounded-lg hover:bg-white text-secondary">
+<span class="material-symbols-outlined text-[20px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Stats Overlay Bento Element (Extra Context) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-center gap-4">
+<div class="h-12 w-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+</div>
+<div>
+<p class="text-xs font-label-bold text-slate-500 uppercase tracking-widest">Total Monthly Payroll</p>
+<p class="text-xl font-bold text-primary">$246,850.00</p>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-center gap-4">
+<div class="h-12 w-12 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="pending">pending</span>
+</div>
+<div>
+<p class="text-xs font-label-bold text-slate-500 uppercase tracking-widest">Pending Approvals</p>
+<p class="text-xl font-bold text-primary">12 Records</p>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-center gap-4">
+<div class="h-12 w-12 rounded-full bg-green-50 text-green-600 flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="check_circle">check_circle</span>
+</div>
+<div>
+<p class="text-xs font-label-bold text-slate-500 uppercase tracking-widest">Payouts Success Rate</p>
+<p class="text-xl font-bold text-primary">98.5%</p>
+</div>
+</div>
+</div>
+</div>
+
+

@@ -1,0 +1,79 @@
+@{
+    ViewBag.Title = "Team Leave Requests - HRMS Portal";
+}
+
+<div class="max-w-7xl mx-auto space-y-6">
+    <div><h2 class="font-h1 text-h1 text-on-surface">Team Leave Requests</h2><p class="font-body-md text-body-md text-on-surface-variant mt-1">Engineering team leave requests</p></div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+        <table class="w-full text-left border-collapse">
+            <thead class="bg-slate-50 border-b border-slate-100">
+                <tr>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Employee</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Type</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Dates</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Reason</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Status</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-body-md text-on-surface">
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-bold text-xs">AB</div><span class="font-medium">Alice Brown</span></div></td>
+                    <td class="px-6 py-4"><span class="bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Annual</span></td>
+                    <td class="px-6 py-4 text-sm">Oct 28 - Nov 1, 2025</td>
+                    <td class="px-6 py-4 text-sm text-slate-500">Personal matters</td>
+                    <td class="px-6 py-4"><span class="bg-yellow-50 text-amber-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Pending</span></td>
+                    <td class="px-6 py-4 text-right">
+                        <button onclick="openModal('deptApproveModal')" class="w-8 h-8 rounded-lg flex items-center justify-center text-green-600 hover:bg-green-50"><span class="material-symbols-outlined">check_circle</span></button>
+                        <button onclick="openModal('deptRejectModal')" class="w-8 h-8 rounded-lg flex items-center justify-center text-red-500 hover:bg-red-50"><span class="material-symbols-outlined">cancel</span></button>
+                    </td>
+                </tr>
+                <tr class="bg-slate-50/30 hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-xs">JD</div><span class="font-medium">John Doe</span></div></td>
+                    <td class="px-6 py-4"><span class="bg-orange-50 text-orange-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Sick</span></td>
+                    <td class="px-6 py-4 text-sm">Oct 22, 2025</td>
+                    <td class="px-6 py-4 text-sm text-slate-500">Flu</td>
+                    <td class="px-6 py-4"><span class="bg-green-50 text-green-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Approved</span></td>
+                    <td class="px-6 py-4 text-right"><span class="text-slate-400 text-sm">—</span></td>
+                </tr>
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-xs">EW</div><span class="font-medium">Emily Wong</span></div></td>
+                    <td class="px-6 py-4"><span class="bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Annual</span></td>
+                    <td class="px-6 py-4 text-sm">Nov 10 - 12, 2025</td>
+                    <td class="px-6 py-4 text-sm text-slate-500">Family event</td>
+                    <td class="px-6 py-4"><span class="bg-yellow-50 text-amber-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Pending</span></td>
+                    <td class="px-6 py-4 text-right">
+                        <button class="w-8 h-8 rounded-lg flex items-center justify-center text-green-600 hover:bg-green-50"><span class="material-symbols-outlined">check_circle</span></button>
+                        <button class="w-8 h-8 rounded-lg flex items-center justify-center text-red-500 hover:bg-red-50"><span class="material-symbols-outlined">cancel</span></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Modals {
+    <div id="deptApproveModal" class="modal-overlay">
+        <div class="modal-content w-full max-w-sm mx-4 p-xl text-center">
+            <div class="w-16 h-16 rounded-full bg-[#d1fae5] text-[#047857] flex items-center justify-center mx-auto mb-lg"><span class="material-symbols-outlined text-[32px]" style="font-variation-settings: 'FILL' 1;">check_circle</span></div>
+            <h3 class="font-h3 text-h3 text-on-surface mb-sm">Approve Leave?</h3>
+            <p class="font-body-md text-on-surface-variant mb-lg">Approve annual leave for Alice Brown (Oct 28 – Nov 1)?</p>
+            <div class="flex justify-center gap-md">
+                <button onclick="closeModal('deptApproveModal')" class="px-6 py-2 border border-outline-variant rounded-lg text-on-surface-variant font-label-bold">Cancel</button>
+                <button class="px-6 py-2 bg-[#047857] text-white rounded-lg font-label-bold shadow-sm">Approve</button>
+            </div>
+        </div>
+    </div>
+    <div id="deptRejectModal" class="modal-overlay">
+        <div class="modal-content w-full max-w-md mx-4 p-xl">
+            <h3 class="font-h2 text-h2 text-on-surface mb-md">Reject Leave</h3>
+            <p class="font-body-md text-on-surface-variant mb-md">Reject leave for Alice Brown?</p>
+            <div class="mb-lg"><label class="block font-label-bold text-on-surface-variant mb-xs">Reason</label><textarea class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md h-24 resize-none" placeholder="Reason for rejection..."></textarea></div>
+            <div class="flex justify-end gap-md">
+                <button onclick="closeModal('deptRejectModal')" class="px-6 py-2 border border-outline-variant rounded-lg text-on-surface-variant font-label-bold">Cancel</button>
+                <button class="px-6 py-2 bg-error text-on-error rounded-lg font-label-bold shadow-sm">Reject</button>
+            </div>
+        </div>
+    </div>
+}

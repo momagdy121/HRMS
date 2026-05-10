@@ -1,0 +1,96 @@
+@{
+    ViewBag.Title = "User Accounts - HRMS Portal";
+}
+
+<div class="max-w-7xl mx-auto space-y-6">
+    <div class="flex justify-between items-end">
+        <div>
+            <h2 class="font-h1 text-h1 text-on-surface">User Accounts</h2>
+            <p class="font-body-md text-body-md text-on-surface-variant mt-1">Manage user credentials and roles</p>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+        <table class="w-full text-left border-collapse">
+            <thead class="bg-slate-50 border-b border-slate-100">
+                <tr>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Employee</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Email</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Roles</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-body-md text-on-surface">
+                <tr class="striped-row hover:bg-slate-50/80 transition-colors">
+                    <td class="px-6 py-4 font-medium">Sarah Connor</td>
+                    <td class="px-6 py-4 text-slate-600">sarah.connor@company.com</td>
+                    <td class="px-6 py-4"><span class="bg-primary-container/10 text-primary-container px-2.5 py-0.5 rounded-full text-xs font-medium mr-1">HR</span></td>
+                    <td class="px-6 py-4 text-right">
+                        <button onclick="openModal('editRolesModal')" class="text-primary-container hover:underline text-sm font-medium mr-3">Edit Roles</button>
+                        <button onclick="openModal('resetPwdModal')" class="text-secondary hover:underline text-sm font-medium">Reset Password</button>
+                    </td>
+                </tr>
+                <tr class="striped-row hover:bg-slate-50/80 transition-colors">
+                    <td class="px-6 py-4 font-medium">Bob Johnson</td>
+                    <td class="px-6 py-4 text-slate-600">bob.johnson@company.com</td>
+                    <td class="px-6 py-4"><span class="bg-amber-50 text-amber-700 px-2.5 py-0.5 rounded-full text-xs font-medium mr-1">DepartmentHead</span></td>
+                    <td class="px-6 py-4 text-right">
+                        <button class="text-primary-container hover:underline text-sm font-medium mr-3">Edit Roles</button>
+                        <button class="text-secondary hover:underline text-sm font-medium">Reset Password</button>
+                    </td>
+                </tr>
+                <tr class="striped-row hover:bg-slate-50/80 transition-colors">
+                    <td class="px-6 py-4 font-medium">Alice Brown</td>
+                    <td class="px-6 py-4 text-slate-600">alice.brown@company.com</td>
+                    <td class="px-6 py-4"><span class="bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded-full text-xs font-medium mr-1">Employee</span></td>
+                    <td class="px-6 py-4 text-right">
+                        <button class="text-primary-container hover:underline text-sm font-medium mr-3">Edit Roles</button>
+                        <button class="text-secondary hover:underline text-sm font-medium">Reset Password</button>
+                    </td>
+                </tr>
+                <tr class="striped-row hover:bg-slate-50/80 transition-colors">
+                    <td class="px-6 py-4 font-medium">Jane Smith</td>
+                    <td class="px-6 py-4 text-slate-600">jane.smith@company.com</td>
+                    <td class="px-6 py-4"><span class="bg-amber-50 text-amber-700 px-2.5 py-0.5 rounded-full text-xs font-medium mr-1">DepartmentHead</span><span class="bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded-full text-xs font-medium">Employee</span></td>
+                    <td class="px-6 py-4 text-right">
+                        <button class="text-primary-container hover:underline text-sm font-medium mr-3">Edit Roles</button>
+                        <button class="text-secondary hover:underline text-sm font-medium">Reset Password</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Modals {
+    <div id="editRolesModal" class="modal-overlay">
+        <div class="modal-content w-full max-w-sm mx-4 p-xl">
+            <h3 class="font-h2 text-h2 text-on-surface mb-md">Edit Roles — Sarah Connor</h3>
+            <div class="space-y-sm mb-lg">
+                <label class="flex items-center gap-sm"><input type="checkbox" checked class="rounded border-outline-variant text-primary-container" /> <span class="text-body-md">HR</span></label>
+                <label class="flex items-center gap-sm"><input type="checkbox" class="rounded border-outline-variant text-primary-container" /> <span class="text-body-md">DepartmentHead</span></label>
+                <label class="flex items-center gap-sm"><input type="checkbox" class="rounded border-outline-variant text-primary-container" /> <span class="text-body-md">Employee</span></label>
+            </div>
+            <div class="flex justify-end gap-md">
+                <button onclick="closeModal('editRolesModal')" class="px-6 py-2 border border-outline-variant rounded-lg text-on-surface-variant font-label-bold">Cancel</button>
+                <button class="px-6 py-2 bg-primary-container text-on-primary rounded-lg font-label-bold shadow-sm">Save</button>
+            </div>
+        </div>
+    </div>
+    <div id="resetPwdModal" class="modal-overlay">
+        <div class="modal-content w-full max-w-sm mx-4 p-xl">
+            <h3 class="font-h2 text-h2 text-on-surface mb-md">Reset Password</h3>
+            <p class="font-body-md text-on-surface-variant mb-md">Reset password for <strong>Sarah Connor</strong>?</p>
+            <div class="space-y-md mb-lg">
+                <div><label class="block font-label-bold text-label-bold text-on-surface-variant mb-xs">New Password</label>
+                    <input type="password" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md" placeholder="••••••••" /></div>
+                <div><label class="block font-label-bold text-label-bold text-on-surface-variant mb-xs">Confirm Password</label>
+                    <input type="password" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md" placeholder="••••••••" /></div>
+            </div>
+            <div class="flex justify-end gap-md">
+                <button onclick="closeModal('resetPwdModal')" class="px-6 py-2 border border-outline-variant rounded-lg text-on-surface-variant font-label-bold">Cancel</button>
+                <button class="px-6 py-2 bg-primary-container text-on-primary rounded-lg font-label-bold shadow-sm">Reset</button>
+            </div>
+        </div>
+    </div>
+}

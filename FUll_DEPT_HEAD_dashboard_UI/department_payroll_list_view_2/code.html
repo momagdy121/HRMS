@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Department Payroll - HR Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#f9f9fd",
+                        "on-secondary-container": "#54647a",
+                        "on-error-container": "#93000a",
+                        "surface-variant": "#e2e2e6",
+                        "on-secondary-fixed": "#0b1c30",
+                        "secondary-fixed": "#d3e4fe",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#d1e4ff",
+                        "surface-tint": "#35618d",
+                        "outline-variant": "#c2c7d0",
+                        "primary": "#00375e",
+                        "inverse-on-surface": "#f0f0f4",
+                        "error": "#ba1a1a",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#e0e3e5",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "surface-container": "#ededf2",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#f9f9fd",
+                        "primary-container": "#1f4e79",
+                        "secondary": "#505f76",
+                        "on-primary-container": "#95bff1",
+                        "on-tertiary-container": "#babcbe",
+                        "on-surface-variant": "#42474f",
+                        "on-tertiary": "#ffffff",
+                        "secondary-container": "#d0e1fb",
+                        "outline": "#72777f",
+                        "on-background": "#1a1c1f",
+                        "on-surface": "#1a1c1f",
+                        "primary-fixed-dim": "#a0cafc",
+                        "background": "#f9f9fd",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "inverse-surface": "#2f3034",
+                        "inverse-primary": "#a0cafc",
+                        "on-tertiary-fixed": "#191c1e",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "tertiary": "#323537",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#e2e2e6",
+                        "surface-container-low": "#f3f3f7",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "surface-container-high": "#e8e8ec",
+                        "on-primary-fixed": "#001d35",
+                        "tertiary-container": "#494c4e",
+                        "surface-dim": "#d9dade",
+                        "on-primary-fixed-variant": "#184974"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "md": "16px",
+                        "base": "4px",
+                        "xl": "32px",
+                        "lg": "24px",
+                        "sm": "8px",
+                        "sidebar-collapsed": "72px",
+                        "sidebar-width": "260px",
+                        "navbar-height": "64px",
+                        "xs": "4px"
+                    },
+                    "fontFamily": {
+                        "h3": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-bold": ["Inter"],
+                        "h2": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "h1": ["Inter"],
+                        "badge": ["Inter"]
+                    },
+                    "fontSize": {
+                        "h3": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-bold": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+                        "h2": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "h1": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "badge": ["12px", { "lineHeight": "12px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen">
+<!-- TopNavBar -->
+<nav class="fixed top-0 right-0 w-full md:w-[calc(100%-260px)] h-navbar-height bg-surface dark:bg-surface-dim border-b border-outline-variant shadow-sm z-40 flex justify-between items-center px-xl w-full">
+<div class="flex items-center md:hidden">
+<button class="p-sm text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+<div class="hidden md:flex items-center">
+<span class="font-h3 text-h3 text-primary">HRMS Portal</span>
+</div>
+<div class="flex items-center gap-md">
+<button class="p-sm text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-sm text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+<div class="hidden sm:flex flex-col items-end mr-xs">
+<span class="text-body-md font-medium text-on-surface">Bob Johnson</span>
+<span class="text-[10px] text-on-surface-variant leading-none uppercase tracking-tighter">Department Head — Engineering</span>
+</div><div class="h-8 w-8 rounded-full bg-primary-container overflow-hidden">
+<img alt="Bob Johnson" class="w-full h-full object-cover" data-alt="A professional headshot of a middle-aged man with short dark hair and glasses, wearing a sharp navy blue suit and a light blue dress shirt. The background is a clean, softly lit modern corporate office environment with subtle reflections. The lighting is bright and evenly distributed, emphasizing a trustworthy and approachable corporate persona. The overall color palette features cool blues and neutral greys." src="https://lh3.googleusercontent.com/aida/ADBb0uhAXHQ2OEanHisZPrsKIcVJZw6FSyIy9tlRm8_7o2TQ0f5zpwff9eFigJBfneZPbiyDI4KGCkLkwrj6utupdWdiujqdsODnEIm7lbOWDw1bcSKiguwoVMOzjzCVshDXDF5kMimaWp9fZ05S9xzETGmbjsq2ZA74E9MKUi29DlaSrF4-6fCX0qxEcDDkC-mx0vYBK-D6vvvbhsbuMiaH7RlF1cdXvE6S9S2kGeK8kQHAbRfWJ5CxEsttSZfETP_NfrlQgh2CHzZj"/>
+</div>
+</div>
+</nav>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-sidebar-width bg-primary-container dark:bg-primary z-50 hidden md:flex flex-col py-lg">
+<div class="px-xl mb-xl"><h1 class="font-h2 text-h2 text-on-primary">HRMS Portal</h1>
+<p class="text-on-primary-container/70 font-body-sm mt-xs">Management Console</p></div>
+<nav class="flex-1 flex flex-col gap-sm"><a class="flex items-center gap-md px-xl py-sm text-on-primary-container/70 font-body-md hover:bg-primary/50 transition-colors opacity-90 transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-md px-xl py-sm text-on-primary-container/70 font-body-md hover:bg-primary/50 transition-colors opacity-90 transition-all" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span>My Department</span>
+</a>
+<a class="flex items-center gap-md px-xl py-sm text-on-primary-container/70 font-body-md hover:bg-primary/50 transition-colors opacity-90 transition-all" href="#">
+<span class="material-symbols-outlined">assignment_turned_in</span>
+<span>Manage Tasks</span>
+</a>
+<a class="flex items-center gap-md px-xl py-sm text-on-primary-container/70 font-body-md hover:bg-primary/50 transition-colors opacity-90 transition-all" href="#">
+<span class="material-symbols-outlined">event_busy</span>
+<span>Team Leave</span>
+</a>
+<a class="flex items-center gap-md px-xl py-sm text-on-primary-container/70 font-body-md hover:bg-primary/50 transition-colors opacity-90 transition-all" href="#">
+<span class="material-symbols-outlined">badge</span>
+<span>Team Attendance</span>
+</a>
+<a class="flex items-center gap-md px-xl py-sm border-l-4 border-primary-fixed text-primary-fixed-dim font-label-bold bg-primary/20 opacity-90 transition-all" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span>Department Payroll</span>
+</a></nav><div class="mt-auto pb-lg">
+<a class="flex items-center gap-md px-xl py-sm text-on-primary-container/70 font-body-md hover:bg-primary/50 transition-colors opacity-90" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+<a class="flex items-center gap-md px-xl py-sm text-on-primary-container/70 font-body-md hover:bg-primary/50 transition-colors opacity-90" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="md:ml-sidebar-width pt-navbar-height min-h-screen">
+<div class="max-w-7xl mx-auto p-xl">
+<!-- Header Section -->
+<div class="mb-xl">
+<h1 class="font-h1 text-h1 text-on-surface">Department Payroll</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-xs">View payroll records for your team</p>
+</div>
+<!-- Filter Bar -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant p-md mb-lg flex flex-col md:flex-row gap-md items-end">
+<div class="flex flex-col gap-xs w-full md:w-auto">
+<label class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Month</label>
+<select class="form-select w-full rounded-lg border-outline-variant bg-surface text-on-surface font-body-md focus:border-primary focus:ring focus:ring-primary/20">
+<option>October</option>
+<option>September</option>
+<option>August</option>
+</select>
+</div>
+<div class="flex flex-col gap-xs w-full md:w-auto">
+<label class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Year</label>
+<select class="form-select w-full rounded-lg border-outline-variant bg-surface text-on-surface font-body-md focus:border-primary focus:ring focus:ring-primary/20">
+<option>2025</option>
+<option>2024</option>
+</select>
+</div>
+<div class="flex flex-col gap-xs w-full md:w-auto">
+<label class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Status</label>
+<select class="form-select w-full rounded-lg border-outline-variant bg-surface text-on-surface font-body-md focus:border-primary focus:ring focus:ring-primary/20">
+<option>All</option>
+<option>Draft</option>
+<option>Approved</option>
+<option>Paid</option>
+</select>
+</div>
+<div class="w-full md:w-auto md:ml-auto">
+<button class="w-full md:w-auto bg-primary text-on-primary font-body-md font-medium px-lg py-sm rounded-lg hover:bg-primary/90 transition-colors shadow-sm">
+                        Apply Filters
+                    </button>
+</div>
+</div>
+<!-- Data Table Card -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface border-b border-outline-variant">
+<th class="p-md font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Employee</th>
+<th class="p-md font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Month/Year</th>
+<th class="p-md font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider text-right">Base Salary</th>
+<th class="p-md font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider text-right">Bonuses</th>
+<th class="p-md font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider text-right">Deductions</th>
+<th class="p-md font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider text-right">Net Salary</th>
+<th class="p-md font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider text-center">Status</th>
+<th class="p-md font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider text-center">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/50">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="p-md">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-secondary-container overflow-hidden flex-shrink-0">
+<img alt="Emily Wong" class="w-full h-full object-cover" data-alt="A professional headshot of a young Asian woman with long dark hair, wearing a sleek grey blazer over a white blouse. The setting is a bright, modern corporate office with blurred architectural details in the background. The lighting is soft and natural, creating a welcoming and competent appearance. The color palette emphasizes corporate neutrality with subtle warm undertones." src="https://lh3.googleusercontent.com/aida/ADBb0uj0kK5tVKnlEe7Yo6fwE7ALyAuaLpHCCS3Nyv1p5B9bmY-jAWD-TRyFpkLdx9KhbQOfQ5Ua_KF1bsNMvSNVTn92DTA4zrBqrJcbbjXWQMdAkfqoQUA43fYJsxqQ3vMorFGsMrQ5TDMC6twmYRDkgUuoHZbHhmoNshLOfx_AARSrIYG5ZcVlMFEQIIdjLKS5odTm9RLReHJZjc9Y0Juo7DH9us6jll_H32G4XPmio_Ae-86lgpkMS0seuf3uJDam6q0qJBmzdw"/>
+</div>
+<span class="font-body-md text-on-surface font-medium">Emily Wong</span>
+</div>
+</td>
+<td class="p-md font-body-md text-on-surface-variant">Oct 2025</td>
+<td class="p-md font-body-md text-on-surface text-right">$7,200</td>
+<td class="p-md font-body-md text-on-surface text-right">+$0</td>
+<td class="p-md font-body-md text-on-surface text-right">-$180</td>
+<td class="p-md font-body-md text-on-surface font-medium text-right">$7,020</td>
+<td class="p-md text-center">
+<span class="inline-flex items-center px-2 py-1 rounded-full font-badge text-badge bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                                        Paid
+                                    </span>
+</td>
+<td class="p-md text-center">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-xs rounded-lg hover:bg-surface-variant/50">
+<span class="material-symbols-outlined" style="font-size: 20px;">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="bg-surface-container-low/50 hover:bg-surface-container-low transition-colors group">
+<td class="p-md">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-secondary-container overflow-hidden flex-shrink-0 flex items-center justify-center text-primary font-label-bold">
+                                            SJ
+                                        </div>
+<span class="font-body-md text-on-surface font-medium">Sarah Jenkins</span>
+</div>
+</td>
+<td class="p-md font-body-md text-on-surface-variant">Oct 2025</td>
+<td class="p-md font-body-md text-on-surface text-right">$5,800</td>
+<td class="p-md font-body-md text-on-surface text-right">+$300</td>
+<td class="p-md font-body-md text-on-surface text-right">-$150</td>
+<td class="p-md font-body-md text-on-surface font-medium text-right">$5,950</td>
+<td class="p-md text-center">
+<span class="inline-flex items-center px-2 py-1 rounded-full font-badge text-badge bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                                        Paid
+                                    </span>
+</td>
+<td class="p-md text-center">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-xs rounded-lg hover:bg-surface-variant/50">
+<span class="material-symbols-outlined" style="font-size: 20px;">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="p-md">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-secondary-container overflow-hidden flex-shrink-0">
+<img alt="Michael Ross" class="w-full h-full object-cover" data-alt="A professional headshot of a young man with short brown hair and a neat beard, wearing a light blue dress shirt without a tie. The background is a well-lit modern office space with subtle geometric lines. The lighting is crisp and even, projecting a sense of modern corporate professionalism. The color scheme is dominated by cool blues and soft greys." src="https://lh3.googleusercontent.com/aida/ADBb0ugPImENDHZl17ARKbkYKDy_QpXrWp01Pk5aAFOIXrXh3ft2yI0UrnWnNvoEzBn6xfqpb8smuc1EiUC3qg0Gu8t7wU8LiwCRklDS66Q5GMo1QeV0asMaWkM0nZKXw0Xj7uuOxd9ZD-czTqb3yyCdsWBjMeqKFNk22SQLFadIHwyJZ8rQpR3ykbIkgwdtOhFBTXODHqYwdKz4MprI3a_BiyGk6nwMr7se6w2iCscJmdqXRyKcKkxhhpPg-ZUEQ9uxBdgA-V3ikLK6"/>
+</div>
+<span class="font-body-md text-on-surface font-medium">Michael Ross</span>
+</div>
+</td>
+<td class="p-md font-body-md text-on-surface-variant">Oct 2025</td>
+<td class="p-md font-body-md text-on-surface text-right">$6,200</td>
+<td class="p-md font-body-md text-on-surface text-right">+$500</td>
+<td class="p-md font-body-md text-on-surface text-right">-$200</td>
+<td class="p-md font-body-md text-on-surface font-medium text-right">$6,500</td>
+<td class="p-md text-center">
+<span class="inline-flex items-center px-2 py-1 rounded-full font-badge text-badge bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400">
+                                        Approved
+                                    </span>
+</td>
+<td class="p-md text-center">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-xs rounded-lg hover:bg-surface-variant/50">
+<span class="material-symbols-outlined" style="font-size: 20px;">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="bg-surface-container-low/50 hover:bg-surface-container-low transition-colors group">
+<td class="p-md">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-secondary-container overflow-hidden flex-shrink-0 flex items-center justify-center text-primary font-label-bold">
+                                            DC
+                                        </div>
+<span class="font-body-md text-on-surface font-medium">David Chen</span>
+</div>
+</td>
+<td class="p-md font-body-md text-on-surface-variant">Oct 2025</td>
+<td class="p-md font-body-md text-on-surface text-right">$7,500</td>
+<td class="p-md font-body-md text-on-surface text-right">+$800</td>
+<td class="p-md font-body-md text-on-surface text-right">-$300</td>
+<td class="p-md font-body-md text-on-surface font-medium text-right">$8,000</td>
+<td class="p-md text-center">
+<span class="inline-flex items-center px-2 py-1 rounded-full font-badge text-badge bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                                        Paid
+                                    </span>
+</td>
+<td class="p-md text-center">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-xs rounded-lg hover:bg-surface-variant/50">
+<span class="material-symbols-outlined" style="font-size: 20px;">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="p-md">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-secondary-container overflow-hidden flex-shrink-0 flex items-center justify-center text-primary font-label-bold">
+                                            AR
+                                        </div>
+<span class="font-body-md text-on-surface font-medium">Alex Rivera</span>
+</div>
+</td>
+<td class="p-md font-body-md text-on-surface-variant">Sep 2025</td>
+<td class="p-md font-body-md text-on-surface text-right">$5,000</td>
+<td class="p-md font-body-md text-on-surface text-right">+$200</td>
+<td class="p-md font-body-md text-on-surface text-right">-$100</td>
+<td class="p-md font-body-md text-on-surface font-medium text-right">$5,100</td>
+<td class="p-md text-center">
+<span class="inline-flex items-center px-2 py-1 rounded-full font-badge text-badge bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                                        Paid
+                                    </span>
+</td>
+<td class="p-md text-center">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-xs rounded-lg hover:bg-surface-variant/50">
+<span class="material-symbols-outlined" style="font-size: 20px;">visibility</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination / Footer -->
+<div class="bg-surface border-t border-outline-variant p-sm flex items-center justify-between">
+<span class="text-on-surface-variant font-body-sm px-sm">Showing 1 to 5 of 24 entries</span>
+<div class="flex gap-xs">
+<button class="p-xs text-on-surface-variant hover:bg-surface-variant rounded-lg transition-colors" disabled="">
+<span class="material-symbols-outlined" style="font-size: 20px;">chevron_left</span>
+</button>
+<button class="px-sm py-xs text-on-primary bg-primary rounded-lg font-body-sm transition-colors">1</button>
+<button class="px-sm py-xs text-on-surface-variant hover:bg-surface-variant rounded-lg font-body-sm transition-colors">2</button>
+<button class="px-sm py-xs text-on-surface-variant hover:bg-surface-variant rounded-lg font-body-sm transition-colors">3</button>
+<span class="px-sm py-xs text-on-surface-variant font-body-sm">...</span>
+<button class="p-xs text-on-surface-variant hover:bg-surface-variant rounded-lg transition-colors">
+<span class="material-symbols-outlined" style="font-size: 20px;">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<div class="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 p-md" id="payslip-modal">
+<div class="bg-surface-container-lowest w-full max-w-2xl rounded-xl shadow-xl border border-outline-variant overflow-hidden flex flex-col">
+<!-- Modal Header -->
+<div class="px-xl py-lg border-b border-outline-variant flex justify-between items-center bg-surface">
+<div class="flex items-center gap-md">
+<h2 class="text-h2 font-h2 text-on-surface">Payslip — Emily Wong — October 2025</h2>
+<span class="inline-flex items-center px-2 py-1 rounded-full font-badge text-badge bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">Paid</span>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Modal Content -->
+<div class="p-xl space-y-lg overflow-y-auto max-h-[80vh]">
+<!-- Employee Card -->
+<div class="flex items-center gap-md p-md bg-surface-container-low rounded-lg">
+<div class="w-12 h-12 rounded-full overflow-hidden border border-outline-variant">
+<img alt="Emily Wong" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/ADBb0uj0kK5tVKnlEe7Yo6fwE7ALyAuaLpHCCS3Nyv1p5B9bmY-jAWD-TRyFpkLdx9KhbQOfQ5Ua_KF1bsNMvSNVTn92DTA4zrBqrJcbbjXWQMdAkfqoQUA43fYJsxqQ3vMorFGsMrQ5TDMC6twmYRDkgUuoHZbHhmoNshLOfx_AARSrIYG5ZcVlMFEQIIdjLKS5odTm9RLReHJZjc9Y0Juo7DH9us6jll_H32G4XPmio_Ae-86lgpkMS0seuf3uJDam6q0qJBmzdw"/>
+</div>
+<div>
+<p class="text-body-lg font-medium text-on-surface">Emily Wong</p>
+<p class="text-body-sm text-on-surface-variant uppercase tracking-wider">Engineering</p>
+</div>
+</div>
+<!-- Summary Grid -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-md">
+<div class="p-md border border-outline-variant rounded-lg">
+<p class="text-label-bold text-on-surface-variant uppercase text-[10px] mb-xs">Base Salary</p>
+<p class="text-h3 font-h3 text-on-surface">$7,200</p>
+</div>
+<div class="p-md border border-outline-variant rounded-lg">
+<p class="text-label-bold text-on-surface-variant uppercase text-[10px] mb-xs">Total Bonuses</p>
+<p class="text-h3 font-h3 text-on-surface">+$0</p>
+</div>
+<div class="p-md border border-outline-variant rounded-lg">
+<p class="text-label-bold text-on-surface-variant uppercase text-[10px] mb-xs">Total Deductions</p>
+<p class="text-h3 font-h3 text-on-surface">-$180</p>
+</div>
+<div class="p-md border border-primary/20 bg-primary/5 rounded-lg">
+<p class="text-label-bold text-primary uppercase text-[10px] mb-xs">Net Salary</p>
+<p class="text-h3 font-h3 text-primary font-bold">$7,020</p>
+</div>
+</div>
+<!-- Breakdown Table -->
+<div>
+<h3 class="text-body-md font-semibold text-on-surface mb-sm">Deduction Breakdown</h3>
+<div class="border border-outline-variant rounded-lg overflow-hidden">
+<table class="w-full text-left">
+<thead class="bg-surface">
+<tr class="border-b border-outline-variant">
+<th class="p-sm text-label-bold text-on-surface-variant uppercase text-[10px]">Description</th>
+<th class="p-sm text-label-bold text-on-surface-variant uppercase text-[10px]">Type</th>
+<th class="p-sm text-label-bold text-on-surface-variant uppercase text-[10px] text-right">Amount</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/50">
+<tr>
+<td class="p-sm text-body-md">Dental Plan</td>
+<td class="p-sm text-body-md text-on-surface-variant">Deduction</td>
+<td class="p-sm text-body-md text-right text-error font-medium">-$180</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Footer Text -->
+<div class="pt-md">
+<p class="text-body-sm text-on-surface-variant italic">Processed by Sarah Connor on Oct 25, 2025</p>
+</div>
+</div>
+<!-- Modal Footer Actions -->
+<div class="px-xl py-md border-t border-outline-variant bg-surface flex justify-end">
+<button class="px-lg py-sm bg-primary text-on-primary font-body-md font-medium rounded-lg hover:bg-primary/90 transition-colors shadow-sm">
+                Close
+            </button>
+</div>
+</div>
+</div></body></html>

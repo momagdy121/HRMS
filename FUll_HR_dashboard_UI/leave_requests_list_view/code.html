@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Leave Requests - HRMS Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#e2e2e6",
+                        "error": "#ba1a1a",
+                        "on-secondary-container": "#54647a",
+                        "error-container": "#ffdad6",
+                        "tertiary": "#323537",
+                        "surface-bright": "#f9f9fd",
+                        "surface-container-high": "#e8e8ec",
+                        "outline-variant": "#c2c7d0",
+                        "on-primary-fixed-variant": "#184974",
+                        "on-primary-container": "#95bff1",
+                        "on-background": "#1a1c1f",
+                        "secondary-container": "#d0e1fb",
+                        "outline": "#72777f",
+                        "tertiary-fixed": "#e0e3e5",
+                        "surface-dim": "#d9dade",
+                        "secondary-fixed": "#d3e4fe",
+                        "on-tertiary-container": "#babcbe",
+                        "on-surface-variant": "#42474f",
+                        "surface-container": "#ededf2",
+                        "surface-tint": "#35618d",
+                        "surface-container-highest": "#e2e2e6",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "on-surface": "#1a1c1f",
+                        "on-secondary-fixed": "#0b1c30",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "primary-fixed": "#d1e4ff",
+                        "on-tertiary-fixed": "#191c1e",
+                        "on-primary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-on-surface": "#f0f0f4",
+                        "on-primary-fixed": "#001d35",
+                        "primary": "#00375e",
+                        "inverse-primary": "#a0cafc",
+                        "secondary": "#505f76",
+                        "tertiary-container": "#494c4e",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "primary-container": "#1f4e79",
+                        "surface-container-low": "#f3f3f7",
+                        "on-error": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "surface": "#f9f9fd",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "primary-fixed-dim": "#a0cafc",
+                        "inverse-surface": "#2f3034",
+                        "background": "#f9f9fd",
+                        "on-secondary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "sidebar-width": "260px",
+                        "md": "16px",
+                        "xs": "4px",
+                        "sidebar-collapsed": "72px",
+                        "navbar-height": "64px",
+                        "lg": "24px",
+                        "base": "4px",
+                        "xl": "32px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "h3": ["Inter"],
+                        "h1": ["Inter"],
+                        "h2": ["Inter"],
+                        "label-bold": ["Inter"],
+                        "badge": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "h3": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "h1": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "h2": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                        "badge": ["12px", {"lineHeight": "12px", "fontWeight": "500"}],
+                        "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #F1F5F9; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .sidebar-active-gradient {
+            background: linear-gradient(90deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+        }
+    </style>
+</head>
+<body class="text-on-surface">
+<!-- Fixed SideNavBar -->
+<aside class="fixed left-0 top-0 h-screen w-64 z-50 bg-[#1F4E79] dark:bg-slate-950 flex flex-col border-r border-slate-700/50 shadow-xl">
+<div class="px-6 py-8">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-sky-400 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-[#1F4E79] text-xl" data-icon="corporate_fare">corporate_fare</span>
+</div>
+<div>
+<h1 class="text-xl font-black tracking-tight text-white">HRMS Portal</h1>
+<p class="text-[10px] uppercase tracking-widest text-sky-300/70 font-bold">Management Console</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1 px-3">
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all font-medium text-sm" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="dashboard">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all font-medium text-sm" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="badge">badge</span>
+                Employees
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all font-medium text-sm" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="domain">domain</span>
+                Departments
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all font-medium text-sm" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="payments">payments</span>
+                Payroll
+            </a>
+<a class="bg-white/10 border-l-4 border-sky-400 text-white font-semibold flex items-center px-6 py-3 transition-all text-sm sidebar-active-gradient translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3 text-sky-400" data-icon="event_busy">event_busy</span>
+                Leave Requests
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all font-medium text-sm" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="pending_actions">pending_actions</span>
+                Attendance
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all font-medium text-sm" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="manage_accounts">manage_accounts</span>
+                User Accounts
+            </a>
+</nav>
+<div class="mt-auto p-3 space-y-1 border-t border-slate-700/50">
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all font-medium text-sm" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="settings">settings</span>
+                Settings
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all font-medium text-sm" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="logout">logout</span>
+                Logout
+            </a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen">
+<!-- TopNavBar -->
+<header class="sticky top-0 w-full z-40 bg-white/80 backdrop-blur-md dark:bg-slate-900/80 border-b border-slate-200 flex justify-between items-center px-8 py-3 shadow-sm">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg" data-icon="search">search</span>
+<input class="w-full bg-slate-100 border-none rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary-container outline-none transition-all" placeholder="Search for anything..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-3">
+<button class="w-10 h-10 flex items-center justify-center text-slate-500 hover:bg-slate-50 rounded-lg transition-transform hover:scale-105 duration-150 relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-white"></span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center text-slate-500 hover:bg-slate-50 rounded-lg transition-transform hover:scale-105 duration-150">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center text-slate-500 hover:bg-slate-50 rounded-lg transition-transform hover:scale-105 duration-150">
+<span class="material-symbols-outlined" data-icon="apps">apps</span>
+</button>
+</div>
+<div class="h-8 w-px bg-slate-200 mx-2"></div>
+<div class="flex items-center gap-3">
+<div class="text-right hidden sm:block">
+<p class="text-sm font-bold text-slate-900 leading-none">Sarah Connor</p>
+<p class="text-[11px] text-slate-500 mt-1">HR Director</p>
+</div>
+<img alt="Sarah Connor Profile" class="w-10 h-10 rounded-full border-2 border-white shadow-sm object-cover" data-alt="A professional portrait of a confident middle-aged female HR Director with short hair, wearing a stylish dark blazer in a brightly lit, modern corporate office setting. The lighting is soft and even, highlighting her approachable yet authoritative demeanor. The background is a clean, minimalist workspace with subtle glass partitions and neutral tones, fitting the corporate modernist aesthetic of the platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRvu5MSyeonsVrIfymEf9MzZfDzIFrUxFJG8E8jWIHX0AkIQ8a2GCJ3yuI8gVVUKZlkL73NBqf5oc2sT6Bm0fLx1j6fGzuiRqFQdrVivFmzz23AbD1oquvZ_fuDacUrVA4B1ffFFqcmy67TM2Z_3YTDuCsISYfTETeDbLQRn-AA7GS43Q77D4sjVReW8TsqVNEBgfcOSfHULq_-QuWYK1QLDsAbWzHXLG8zScmcViqq5X5EM0cvs7-GDmWIX7BFfzBs65RWQjV9g"/>
+</div>
+</div>
+</header>
+<!-- Canvas -->
+<div class="p-8">
+<!-- Header Section -->
+<div class="mb-8">
+<h2 class="font-h1 text-h1 text-slate-900 mb-1">Leave Requests</h2>
+<p class="font-body-md text-body-md text-slate-500">Manage and process employee time-off requests</p>
+</div>
+<!-- Dashboard Filters & Tabs -->
+<div class="flex flex-col gap-6 mb-8">
+<div class="flex flex-wrap items-center justify-between gap-4">
+<!-- Tabs -->
+<div class="flex bg-slate-200/50 p-1 rounded-xl">
+<button class="px-6 py-2 text-sm font-medium rounded-lg text-slate-600 hover:text-slate-900 transition-all">All</button>
+<button class="px-6 py-2 text-sm font-semibold rounded-lg bg-white text-primary shadow-sm transition-all border border-slate-200">Pending</button>
+<button class="px-6 py-2 text-sm font-medium rounded-lg text-slate-600 hover:text-slate-900 transition-all">Approved</button>
+<button class="px-6 py-2 text-sm font-medium rounded-lg text-slate-600 hover:text-slate-900 transition-all">Rejected</button>
+</div>
+<!-- Export/Action -->
+<button class="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-md hover:opacity-90 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+                        Export Report
+                    </button>
+</div>
+<!-- Filter Bar -->
+<div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-wrap items-center gap-4">
+<div class="flex-1 min-w-[240px] relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg" data-icon="search">search</span>
+<input class="w-full bg-slate-50 border border-slate-200 rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Search employee..." type="text"/>
+</div>
+<div class="relative min-w-[180px]">
+<select class="w-full bg-slate-50 border border-slate-200 rounded-lg pl-4 pr-10 py-2 text-sm appearance-none focus:ring-1 focus:ring-primary outline-none">
+<option>Department</option>
+<option>Engineering</option>
+<option>Design</option>
+<option>Marketing</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" data-icon="expand_more">expand_more</span>
+</div>
+<div class="relative min-w-[200px]">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg" data-icon="calendar_today">calendar_today</span>
+<input class="w-full bg-slate-50 border border-slate-200 rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Oct 1, 2025 - Oct 31, 2025" type="text"/>
+</div>
+<button class="flex items-center gap-2 text-slate-500 hover:text-primary px-4 py-2 text-sm font-medium transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="filter_list">filter_list</span>
+                        More Filters
+                    </button>
+</div>
+</div>
+<!-- List View (Table) -->
+<div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50 border-b border-slate-200">
+<th class="px-6 py-4 font-label-bold text-label-bold text-slate-500 uppercase tracking-wider">Employee</th>
+<th class="px-6 py-4 font-label-bold text-label-bold text-slate-500 uppercase tracking-wider">Leave Type</th>
+<th class="px-6 py-4 font-label-bold text-label-bold text-slate-500 uppercase tracking-wider">Dates</th>
+<th class="px-6 py-4 font-label-bold text-label-bold text-slate-500 uppercase tracking-wider">Reason</th>
+<th class="px-6 py-4 font-label-bold text-label-bold text-slate-500 uppercase tracking-wider">Requested</th>
+<th class="px-6 py-4 font-label-bold text-label-bold text-slate-500 uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 font-label-bold text-label-bold text-slate-500 uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<img alt="Jane Smith Avatar" class="w-9 h-9 rounded-full object-cover shadow-sm" data-alt="A portrait of a young professional woman with brown hair and a warm smile, wearing a professional beige sweater. The photo is a clean headshot with a soft-focus office background, matching the corporate modernist aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDREMKQuJJe176pWctcDv3b5NUk9HHNTfMIBsZp-GIuGhcjjNkGHdWZyZhLxXpaESHpE8ExgYvinqhTvE0Apib9Qv3T3MikHKnVqtnMV1PC8ujLEwMZEfVYd8pm-v_nYhpFCQnQGD_KOgyovSrQQaFsCgDRDNf6VVSRHGcqQ20Jfd-WivUYN6tOZdoPem2ZeqVSHZR_8Vot68PYloZs6JJmap7fKVqExXz7RmW6G6mf535T6dZzpUkq_w9DHwX1XI0_ieP1d9D2QA"/>
+<span class="text-sm font-semibold text-slate-900">Jane Smith</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
+                                    Annual
+                                </span>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm text-slate-600 font-medium">Oct 12 - 15, 2025</span>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm text-slate-500 truncate max-w-[150px]">Family vacation</p>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm text-slate-400">Oct 1, 2025</span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-50 text-amber-700">
+<span class="w-1.5 h-1.5 bg-amber-400 rounded-full mr-1.5"></span>
+                                    Pending
+                                </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-green-600 hover:bg-green-50 transition-all" title="Approve">
+<span class="material-symbols-outlined text-xl" data-icon="check_circle">check_circle</span>
+</button>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-red-500 hover:bg-red-50 transition-all" title="Reject">
+<span class="material-symbols-outlined text-xl" data-icon="cancel">cancel</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="bg-slate-50/30 hover:bg-slate-50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<img alt="Michael Johnson Avatar" class="w-9 h-9 rounded-full object-cover shadow-sm" data-alt="A portrait of a male professional with a short beard and glasses, wearing a light blue dress shirt. The setting is a bright, modern corporate building with expansive glass and a clean, high-end feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtMp--_lJGjDSPpPtSY4nLznauXQJ9ZyF8l8-SDkBdlUP3URR3AB8D52WnLbLvLlWpeLYKHHOcvNFgn_NRqzj0nHd8ZEEfWlXqZfpW8EH2iI-xE9Dtke5DPPm4T9dOBmliTMAVDaFL7XK6OJhzVb9CsDvjU7sm9EbhGaWTHs2rqKtF0G3yr5OHeaWJUuyZ3F0lMZlnp6stp6_cMDlJFSRaD20GIsCfDUHL4Z3cTAEFqdoiS0--iaeNG0G7EzHXRxJ3tmEOlZ1CeA"/>
+<span class="text-sm font-semibold text-slate-900">Michael Johnson</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-50 text-orange-700">
+                                    Sick
+                                </span>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm text-slate-600 font-medium">Oct 10, 2025</span>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm text-slate-500 truncate max-w-[150px]">Medical appointment</p>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm text-slate-400">Oct 9, 2025</span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-50 text-amber-700">
+<span class="w-1.5 h-1.5 bg-amber-400 rounded-full mr-1.5"></span>
+                                    Pending
+                                </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-green-600 hover:bg-green-50 transition-all" title="Approve">
+<span class="material-symbols-outlined text-xl" data-icon="check_circle">check_circle</span>
+</button>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-red-500 hover:bg-red-50 transition-all" title="Reject">
+<span class="material-symbols-outlined text-xl" data-icon="cancel">cancel</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<img alt="Alice Brown Avatar" class="w-9 h-9 rounded-full object-cover shadow-sm" data-alt="A portrait of a young woman with wavy hair and a professional yet creative look, wearing a white blouse. The lighting is natural and bright, in a workspace that suggests a collaborative, modern environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4HuFC5z6G-IyC_xHIjwQ-4c7x8hMotrsbIiQMMVOH-ZxuyhtC28HCqyWuHn88oMfbfeAZK00HDuqO1OJRwi0_mBaw-qP7E5upg-nUif8wesoIdNUIKYl995MurscFSeY7JWYrAtLsA6ukKel94ctqlIHHUyZhaS25zLnltLCxqSnRb2h4Tjm-83oG7vvli_8rCxRR02MV2QvfX9mPOYxhBTSWEi8h9b0GwO_AgLZy3Qxc-YBuuKWUUtirK1Eyyu2AiVP5MUId3Q"/>
+<span class="text-sm font-semibold text-slate-900">Alice Brown</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700">
+                                    Unpaid
+                                </span>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm text-slate-600 font-medium">Nov 1 - 5, 2025</span>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm text-slate-500 truncate max-w-[150px]">Personal matters</p>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm text-slate-400">Oct 8, 2025</span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-50 text-amber-700">
+<span class="w-1.5 h-1.5 bg-amber-400 rounded-full mr-1.5"></span>
+                                    Pending
+                                </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-green-600 hover:bg-green-50 transition-all" title="Approve">
+<span class="material-symbols-outlined text-xl" data-icon="check_circle">check_circle</span>
+</button>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-red-500 hover:bg-red-50 transition-all" title="Reject">
+<span class="material-symbols-outlined text-xl" data-icon="cancel">cancel</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="bg-slate-50/30 hover:bg-slate-50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<img alt="Emily Wong Avatar" class="w-9 h-9 rounded-full object-cover shadow-sm" data-alt="A portrait of an East Asian professional woman with a minimalist and sophisticated style, wearing a dark navy blazer. The lighting is sharp and cinematic, set against a blurred background of a sleek, high-tech office lobby." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQrFfsFhf281mSvU2_xE2Ivu8coQhwEe39yRKy2drw8Vad0wZ6q1znShVcd0QNMrJ1Bzn5JJ0ZF2CRg29uNRb6pOrwZH66TbEUA9TYyz5p8yKO0heM5XsqqkBVvLNFXcDUhtxpv2jUa_zkY-xkMbEEx3PBvJ-3raBJq9EnefGlg1Q16Re4frRDybUV50ial6ZVgZ4ZQI9uoniXDvUzYZs-6jPHsCdhaPDFaomnNqmeah8zMjglZPYyT1F6lxI01LzVvooK6y284g"/>
+<span class="text-sm font-semibold text-slate-900">Emily Wong</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
+                                    Annual
+                                </span>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm text-slate-600 font-medium">Sep 20 - 22, 2025</span>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm text-slate-500 truncate max-w-[150px]">Wedding</p>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm text-slate-400">Sep 15, 2025</span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-700">
+<span class="w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5"></span>
+                                    Approved
+                                </span>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="text-slate-300">—</span>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-xs shadow-sm">
+                                        JD
+                                    </div>
+<span class="text-sm font-semibold text-slate-900">John Doe</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-50 text-orange-700">
+                                    Sick
+                                </span>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm text-slate-600 font-medium">Aug 5, 2025</span>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm text-slate-500 truncate max-w-[150px]">Flu</p>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm text-slate-400">Aug 4, 2025</span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-700">
+<span class="w-1.5 h-1.5 bg-red-500 rounded-full mr-1.5"></span>
+                                    Rejected
+                                </span>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="text-slate-300">—</span>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination Footer -->
+<div class="px-6 py-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
+<p class="text-xs text-slate-500">Showing <span class="font-bold text-slate-900">1-5</span> of <span class="font-bold text-slate-900">24</span> requests</p>
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 bg-white cursor-not-allowed">
+<span class="material-symbols-outlined text-lg" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-primary bg-primary text-white text-xs font-bold shadow-sm">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-600 bg-white text-xs font-medium hover:border-primary hover:text-primary transition-all">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-600 bg-white text-xs font-medium hover:border-primary hover:text-primary transition-all">3</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-600 bg-white transition-all hover:border-primary hover:text-primary">
+<span class="material-symbols-outlined text-lg" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,49 @@
+@{
+    ViewBag.Title = "Team Attendance - HRMS Portal";
+}
+
+<div class="max-w-7xl mx-auto space-y-6">
+    <div class="flex justify-between items-end">
+        <div><h2 class="font-h1 text-h1 text-on-surface">Team Attendance</h2><p class="font-body-md text-body-md text-on-surface-variant mt-1">Engineering team daily attendance</p></div>
+        <div class="flex items-center gap-md">
+            <input type="date" value="2025-10-24" class="border-slate-200 rounded-lg text-sm font-body-md focus:border-primary focus:ring-0 px-3 py-2" />
+            <button class="bg-[#047857] text-white px-4 py-2 rounded-lg font-label-bold hover:bg-[#059669] transition-colors shadow-sm flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">check_circle</span>Mark All Present
+            </button>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+        <table class="w-full text-left border-collapse">
+            <thead class="bg-slate-50 border-b border-slate-100">
+                <tr>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Employee</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Check In</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Check Out</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Status</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Notes</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-body-md text-on-surface">
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-bold text-xs">AB</div><span class="font-medium">Alice Brown</span></div></td>
+                    <td class="px-6 py-4">08:50 AM</td><td class="px-6 py-4">—</td>
+                    <td class="px-6 py-4"><span class="bg-green-50 text-green-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Present</span></td>
+                    <td class="px-6 py-4"><input type="text" class="border-0 bg-transparent text-sm text-slate-500 w-full focus:ring-0 p-0" placeholder="Add note..." /></td>
+                </tr>
+                <tr class="bg-slate-50/30 hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-xs">JD</div><span class="font-medium">John Doe</span></div></td>
+                    <td class="px-6 py-4">—</td><td class="px-6 py-4">—</td>
+                    <td class="px-6 py-4"><span class="bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-full text-xs font-medium">On Leave</span></td>
+                    <td class="px-6 py-4 text-sm text-slate-500">Sick leave approved</td>
+                </tr>
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-xs">EW</div><span class="font-medium">Emily Wong</span></div></td>
+                    <td class="px-6 py-4">08:45 AM</td><td class="px-6 py-4">05:30 PM</td>
+                    <td class="px-6 py-4"><span class="bg-green-50 text-green-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Present</span></td>
+                    <td class="px-6 py-4"><input type="text" class="border-0 bg-transparent text-sm text-slate-500 w-full focus:ring-0 p-0" placeholder="Add note..." /></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

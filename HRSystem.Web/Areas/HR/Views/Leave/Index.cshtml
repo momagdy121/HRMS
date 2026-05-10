@@ -1,0 +1,112 @@
+@{
+    ViewBag.Title = "Leave Requests - HRMS Portal";
+}
+
+<div class="max-w-7xl mx-auto space-y-8">
+    <div class="mb-8">
+        <h2 class="font-h1 text-h1 text-slate-900 mb-1">Leave Requests</h2>
+        <p class="font-body-md text-body-md text-slate-500">Manage and process employee time-off requests</p>
+    </div>
+
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+        <div class="flex bg-slate-200/50 p-1 rounded-xl">
+            <button class="px-6 py-2 text-sm font-medium rounded-lg text-slate-600">All</button>
+            <button class="px-6 py-2 text-sm font-semibold rounded-lg bg-white text-primary shadow-sm border border-slate-200">Pending</button>
+            <button class="px-6 py-2 text-sm font-medium rounded-lg text-slate-600">Approved</button>
+            <button class="px-6 py-2 text-sm font-medium rounded-lg text-slate-600">Rejected</button>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-slate-50 border-b border-slate-200">
+                    <th class="px-6 py-4 font-label-bold text-label-bold text-slate-500 uppercase tracking-wider">Employee</th>
+                    <th class="px-6 py-4 font-label-bold text-label-bold text-slate-500 uppercase tracking-wider">Leave Type</th>
+                    <th class="px-6 py-4 font-label-bold text-label-bold text-slate-500 uppercase tracking-wider">Dates</th>
+                    <th class="px-6 py-4 font-label-bold text-label-bold text-slate-500 uppercase tracking-wider">Reason</th>
+                    <th class="px-6 py-4 font-label-bold text-label-bold text-slate-500 uppercase tracking-wider">Status</th>
+                    <th class="px-6 py-4 font-label-bold text-label-bold text-slate-500 uppercase tracking-wider text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-bold text-xs">JS</div><span class="text-sm font-semibold text-slate-900">Jane Smith</span></div></td>
+                    <td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700">Annual</span></td>
+                    <td class="px-6 py-4"><span class="text-sm text-slate-600 font-medium">Oct 12 - 15, 2025</span></td>
+                    <td class="px-6 py-4"><p class="text-sm text-slate-500 truncate max-w-[150px]">Family vacation</p></td>
+                    <td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-50 text-amber-700"><span class="w-1.5 h-1.5 bg-amber-400 rounded-full mr-1.5"></span>Pending</span></td>
+                    <td class="px-6 py-4 text-right">
+                        <div class="flex items-center justify-end gap-2">
+                            <button onclick="openModal('approveLeaveModal')" class="w-8 h-8 rounded-lg flex items-center justify-center text-green-600 hover:bg-green-50" title="Approve"><span class="material-symbols-outlined text-xl">check_circle</span></button>
+                            <button onclick="openModal('rejectLeaveModal')" class="w-8 h-8 rounded-lg flex items-center justify-center text-red-500 hover:bg-red-50" title="Reject"><span class="material-symbols-outlined text-xl">cancel</span></button>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="bg-slate-50/30 hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-xs">MJ</div><span class="text-sm font-semibold text-slate-900">Michael Johnson</span></div></td>
+                    <td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-50 text-orange-700">Sick</span></td>
+                    <td class="px-6 py-4"><span class="text-sm text-slate-600 font-medium">Oct 10, 2025</span></td>
+                    <td class="px-6 py-4"><p class="text-sm text-slate-500 truncate max-w-[150px]">Medical appointment</p></td>
+                    <td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-50 text-amber-700"><span class="w-1.5 h-1.5 bg-amber-400 rounded-full mr-1.5"></span>Pending</span></td>
+                    <td class="px-6 py-4 text-right">
+                        <div class="flex items-center justify-end gap-2">
+                            <button class="w-8 h-8 rounded-lg flex items-center justify-center text-green-600 hover:bg-green-50"><span class="material-symbols-outlined text-xl">check_circle</span></button>
+                            <button class="w-8 h-8 rounded-lg flex items-center justify-center text-red-500 hover:bg-red-50"><span class="material-symbols-outlined text-xl">cancel</span></button>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-bold text-xs">AB</div><span class="text-sm font-semibold text-slate-900">Alice Brown</span></div></td>
+                    <td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700">Annual</span></td>
+                    <td class="px-6 py-4"><span class="text-sm text-slate-600 font-medium">Oct 28 - Nov 1, 2025</span></td>
+                    <td class="px-6 py-4"><p class="text-sm text-slate-500 truncate max-w-[150px]">Personal matters</p></td>
+                    <td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-50 text-amber-700"><span class="w-1.5 h-1.5 bg-amber-400 rounded-full mr-1.5"></span>Pending</span></td>
+                    <td class="px-6 py-4 text-right">
+                        <div class="flex items-center justify-end gap-2">
+                            <button class="w-8 h-8 rounded-lg flex items-center justify-center text-green-600 hover:bg-green-50"><span class="material-symbols-outlined text-xl">check_circle</span></button>
+                            <button class="w-8 h-8 rounded-lg flex items-center justify-center text-red-500 hover:bg-red-50"><span class="material-symbols-outlined text-xl">cancel</span></button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="px-6 py-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
+            <p class="text-xs text-slate-500">Showing <span class="font-bold text-slate-900">1-3</span> of <span class="font-bold text-slate-900">24</span> requests</p>
+            <div class="flex items-center gap-2">
+                <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-primary bg-primary text-white text-xs font-bold shadow-sm">1</button>
+                <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-600 bg-white text-xs font-medium">2</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Modals {
+    <div id="approveLeaveModal" class="modal-overlay">
+        <div class="modal-content w-full max-w-sm mx-4 p-xl text-center">
+            <div class="w-16 h-16 rounded-full bg-[#d1fae5] text-[#047857] flex items-center justify-center mx-auto mb-lg">
+                <span class="material-symbols-outlined text-[32px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+            </div>
+            <h3 class="font-h3 text-h3 text-on-surface mb-sm">Approve Leave Request?</h3>
+            <p class="font-body-md text-body-md text-on-surface-variant mb-lg">Approve annual leave for Jane Smith (Oct 12–15, 2025)?</p>
+            <div class="flex justify-center gap-md">
+                <button onclick="closeModal('approveLeaveModal')" class="px-6 py-2 border border-outline-variant rounded-lg text-on-surface-variant font-label-bold">Cancel</button>
+                <button class="px-6 py-2 bg-[#047857] text-white rounded-lg font-label-bold shadow-sm">Approve</button>
+            </div>
+        </div>
+    </div>
+    <div id="rejectLeaveModal" class="modal-overlay">
+        <div class="modal-content w-full max-w-md mx-4 p-xl">
+            <h3 class="font-h2 text-h2 text-on-surface mb-md">Reject Leave Request</h3>
+            <p class="font-body-md text-body-md text-on-surface-variant mb-md">Reject annual leave for Jane Smith (Oct 12–15, 2025)?</p>
+            <div class="mb-lg">
+                <label class="block font-label-bold text-label-bold text-on-surface-variant mb-xs">Reason for Rejection</label>
+                <textarea class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md text-on-surface h-24 resize-none" placeholder="Provide a reason..."></textarea>
+            </div>
+            <div class="flex justify-end gap-md">
+                <button onclick="closeModal('rejectLeaveModal')" class="px-6 py-2 border border-outline-variant rounded-lg text-on-surface-variant font-label-bold">Cancel</button>
+                <button class="px-6 py-2 bg-error text-on-error rounded-lg font-label-bold shadow-sm">Reject</button>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Employees - HRMS Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-container": "#babcbe",
+                        "surface-container-highest": "#e2e2e6",
+                        "on-surface-variant": "#42474f",
+                        "primary-fixed": "#d1e4ff",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#f9f9fd",
+                        "on-background": "#1a1c1f",
+                        "error": "#ba1a1a",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-container": "#95bff1",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#d9dade",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "surface-container-high": "#e8e8ec",
+                        "on-surface": "#1a1c1f",
+                        "inverse-on-surface": "#f0f0f4",
+                        "surface-variant": "#e2e2e6",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "error-container": "#ffdad6",
+                        "outline-variant": "#c2c7d0",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#184974",
+                        "primary-fixed-dim": "#a0cafc",
+                        "on-secondary-fixed": "#0b1c30",
+                        "tertiary": "#323537",
+                        "background": "#f9f9fd",
+                        "outline": "#72777f",
+                        "inverse-surface": "#2f3034",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed": "#d3e4fe",
+                        "surface-tint": "#35618d",
+                        "surface-container-low": "#f3f3f7",
+                        "on-secondary": "#ffffff",
+                        "secondary-container": "#d0e1fb",
+                        "on-secondary-container": "#54647a",
+                        "inverse-primary": "#a0cafc",
+                        "tertiary-container": "#494c4e",
+                        "on-tertiary-fixed": "#191c1e",
+                        "secondary": "#505f76",
+                        "surface-container": "#ededf2",
+                        "tertiary-fixed": "#e0e3e5",
+                        "surface": "#f9f9fd",
+                        "on-primary-fixed": "#001d35",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "primary-container": "#1f4e79",
+                        "primary": "#00375e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "md": "16px",
+                        "sidebar-width": "260px",
+                        "xl": "32px",
+                        "lg": "24px",
+                        "xs": "4px",
+                        "base": "4px",
+                        "sidebar-collapsed": "72px",
+                        "navbar-height": "64px",
+                        "sm": "8px"
+                    },
+                    "fontFamily": {
+                        "h2": ["Inter"],
+                        "badge": ["Inter"],
+                        "h1": ["Inter"],
+                        "h3": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-bold": ["Inter"]
+                    },
+                    "fontSize": {
+                        "h2": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "badge": ["12px", { "lineHeight": "12px", "fontWeight": "500" }],
+                        "h1": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "h3": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-bold": ["12px", { "lineHeight": "16px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex">
+<!-- Success Toast -->
+<div class="fixed top-4 right-4 z-[60] flex items-center gap-3 bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-lg shadow-lg">
+<span class="material-symbols-outlined text-emerald-500" data-icon="check_circle">check_circle</span>
+<span class="font-medium text-sm">Success: Employee restored successfully.</span>
+<button class="ml-2 text-emerald-600 hover:text-emerald-800">
+<span class="material-symbols-outlined text-sm" data-icon="close">close</span>
+</button>
+</div>
+<!-- Modal Overlay -->
+<div class="fixed inset-0 z-[55] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm">
+<div class="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 overflow-hidden border border-surface-variant">
+<div class="p-6">
+<h2 class="text-xl font-bold text-on-surface mb-3">Restore Employee</h2>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6">
+                Are you sure you want to restore John Doe? They will reappear in the active list. Tasks will remain hidden.
+            </p>
+<div class="flex justify-end gap-3 mt-6">
+<button class="px-4 py-2 font-medium text-secondary hover:bg-surface-variant rounded-lg transition-colors">
+                    Cancel
+                </button>
+<button class="px-4 py-2 bg-primary text-white font-medium hover:bg-primary-container rounded-lg transition-colors">
+                    Restore
+                </button>
+</div>
+</div>
+</div>
+</div>
+<!-- SideNavBar -->
+<aside class="bg-[#1F4E79] text-white font-['Inter'] text-sm font-medium leading-tight fixed left-0 top-0 h-screen w-64 z-50 border-r border-slate-700/50 shadow-xl flex flex-col hidden md:flex">
+<div class="px-6 py-6 border-b border-slate-700/50 flex items-center gap-3">
+<img alt="HRMS Portal Logo" class="w-10 h-10 rounded-full" data-alt="A modern, abstract logo for a corporate HRMS portal, featuring geometric shapes in deep navy blue (#1F4E79) and crisp white. The design conveys stability, structure, and professional efficiency, set against a solid, contrasting background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXWLcY0wsH8iSRKr7TsaroLO_9-Dwp-a2hch3ZvcI1UcJ2eEe3oHEk7XWdbROq9SZs9HTJrHq7xHmxhZ_5QFNGVtEx-zLiJs-2z_mrDwUA-Iy2qSClP7qeMfIpTAK0aKX6pOnK-xrVKVCOzFYhHMWB4qKgtrAFMjihxXMFsnoGrS8Anu_W-5sG5mCP6c6x5jzqXqfb-CjUz_whL6uLmKCzHVbFkorJ3MD4ymRgehseg7qxrj5LduRGn92JPFs64sKiOZ0P0S0PsA"/>
+<div>
+<h1 class="text-xl font-black tracking-tight text-white">HRMS Portal</h1>
+<p class="text-xs text-slate-300 mt-1">Management Console</p>
+</div>
+</div>
+<nav class="flex-1 py-4 overflow-y-auto">
+<ul class="space-y-1">
+<li>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all group" href="#">
+<span class="material-symbols-outlined mr-3 text-slate-400 group-hover:text-white transition-colors" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+</li>
+<li>
+<div class="flex flex-col">
+<a class="flex items-center px-6 py-3 text-white transition-all group" href="#">
+<span class="material-symbols-outlined mr-3 text-white" data-icon="badge">badge</span>
+<span class="flex-1">Employees</span>
+<span class="material-symbols-outlined text-sm" data-icon="expand_more">expand_more</span>
+</a>
+<ul class="flex flex-col pl-12 pr-4 py-1 space-y-1">
+<li>
+<a class="block py-2 px-3 text-slate-300 hover:text-white rounded-md hover:bg-white/5 text-sm" href="#">Active Employees</a>
+</li>
+<li>
+<a class="block py-2 px-3 text-white font-semibold bg-white/10 rounded-md text-sm border-l-2 border-sky-400 pl-2" href="#">Deleted Employees</a>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all group" href="#">
+<span class="material-symbols-outlined mr-3 text-slate-400 group-hover:text-white transition-colors" data-icon="domain">domain</span>
+<span>Departments</span>
+</a>
+</li>
+<li>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all group" href="#">
+<span class="material-symbols-outlined mr-3 text-slate-400 group-hover:text-white transition-colors" data-icon="payments">payments</span>
+<span>Payroll</span>
+</a>
+</li>
+<li>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all group" href="#">
+<span class="material-symbols-outlined mr-3 text-slate-400 group-hover:text-white transition-colors" data-icon="event_busy">event_busy</span>
+<span>Leave Requests</span>
+</a>
+</li>
+<li>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all group" href="#">
+<span class="material-symbols-outlined mr-3 text-slate-400 group-hover:text-white transition-colors" data-icon="pending_actions">pending_actions</span>
+<span>Attendance</span>
+</a>
+</li>
+<li>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all group" href="#">
+<span class="material-symbols-outlined mr-3 text-slate-400 group-hover:text-white transition-colors" data-icon="manage_accounts">manage_accounts</span>
+<span>User Accounts</span>
+</a>
+</li>
+</ul>
+</nav>
+<div class="border-t border-slate-700/50 p-4">
+<ul class="space-y-1">
+<li>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all group rounded-lg" href="#">
+<span class="material-symbols-outlined mr-3 text-slate-400 group-hover:text-white transition-colors" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</li>
+<li>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all group rounded-lg" href="#">
+<span class="material-symbols-outlined mr-3 text-slate-400 group-hover:text-white transition-colors" data-icon="logout">logout</span>
+<span>Logout</span>
+</a>
+</li>
+</ul>
+</div>
+</aside>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col ml-0 md:ml-sidebar-width min-h-screen">
+<!-- TopNavBar -->
+<header class="bg-[#1F4E79] text-white font-['Inter'] text-sm tracking-wide sticky top-0 w-full z-40 shadow-sm flex justify-between items-center px-8 py-3">
+<div class="flex items-center gap-4 w-full max-w-md">
+<span class="text-lg font-bold text-white lg:hidden">HRMS Portal</span>
+<div class="relative w-full hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-300" data-icon="search">search</span>
+<input class="w-full bg-white/10 border-none rounded-lg pl-10 pr-4 py-2 text-white placeholder-slate-300 focus:ring-2 focus:ring-sky-400 transition-all outline-none" placeholder="Search employees..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-300 hover:bg-white/10 rounded-lg hover:scale-105 transition-all duration-150">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-slate-300 hover:bg-white/10 rounded-lg hover:scale-105 transition-all duration-150">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+<button class="p-2 text-slate-300 hover:bg-white/10 rounded-lg hover:scale-105 transition-all duration-150">
+<span class="material-symbols-outlined" data-icon="apps">apps</span>
+</button>
+<div class="flex items-center gap-3 ml-2 border-l border-white/20 pl-4 cursor-pointer hover:opacity-80 transition-opacity">
+<div class="h-8 w-8 rounded-full bg-primary-container overflow-hidden border border-white/50 shadow-sm">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="A professional headshot of an administrative user for a corporate portal, featuring a subtle, neutral background and clear, high-key lighting to convey approachability and competence." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5hds3dDS3Hc-u05uZb5Pt5-eTdA7peiHMjJMg6jBj5zrzZGar1YeJeRFtpyJ7YYH17FLVe9WGraNQgZKjw83277xilhCwr84uCm3QmcWqmxUxVXm8my1Vvn7fHiQg7TT0PnnQ9DRZ46PwOy71nJ3E00JGZhST_zLFrZ4BwAT5VpMJfygcVQIWl0pK-QmHR2nqwGmzYRDqdEW1aaluyPtFKiaY8zUotUKjRhB4UTEPJDK8BTwVmF2RJewHl2jpwKb-Q0lQ6ju6_w"/>
+</div>
+<div class="hidden sm:flex items-center gap-1">
+<span class="font-medium text-white">Sarah Connor</span>
+<span class="material-symbols-outlined text-slate-300 text-sm" data-icon="arrow_drop_down">arrow_drop_down</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="flex-1 p-xl overflow-x-hidden">
+<div class="mb-lg">
+<h1 class="font-h1 text-h1 text-on-background mb-sm">Employees</h1>
+<p class="font-body-lg text-body-lg text-secondary">Manage deleted employee records</p>
+</div>
+<!-- Sub-Navigation / Filter Bar -->
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-lg pb-4 border-b border-surface-variant">
+<div class="flex gap-2 bg-surface-container-low p-1 rounded-lg border border-surface-variant">
+<button class="px-4 py-2 font-body-sm text-body-sm text-secondary hover:bg-surface-container-high rounded-md transition-colors">Active Employees</button>
+<button class="px-4 py-2 font-body-sm text-body-sm bg-white shadow-sm border border-surface-variant text-on-surface font-medium rounded-md">Deleted Employees</button>
+</div>
+<div class="flex gap-3 w-full sm:w-auto">
+<div class="relative flex-1 sm:w-48">
+<select class="w-full appearance-none bg-white border border-outline-variant rounded-lg pl-3 pr-10 py-2 font-body-sm text-body-sm text-on-surface focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all">
+<option value="">All Departments</option>
+<option value="engineering">Engineering</option>
+<option value="sales">Sales</option>
+<option value="marketing">Marketing</option>
+<option value="hr">HR</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-sm" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Data Table Card -->
+<div class="bg-white rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] border border-surface-variant overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-surface-variant">
+<th class="py-3 px-6 font-label-bold text-label-bold text-secondary uppercase tracking-wider">Name</th>
+<th class="py-3 px-6 font-label-bold text-label-bold text-secondary uppercase tracking-wider">Email</th>
+<th class="py-3 px-6 font-label-bold text-label-bold text-secondary uppercase tracking-wider">Department</th>
+<th class="py-3 px-6 font-label-bold text-label-bold text-secondary uppercase tracking-wider">Deleted Date</th>
+<th class="py-3 px-6 font-label-bold text-label-bold text-secondary uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-variant font-body-sm text-body-sm">
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<img alt="Avatar" class="w-8 h-8 rounded-full" data-alt="A small, generic avatar for a user interface, displaying initials against a muted, light grey background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZK5_rhLhZuRo2zMopZq9Z2c6fJtsAGVVATKw8XbKfh0Fzz29bIDeB5cGsgNEQE8dfb3J7y-TK9bON8yxiUxoPfW7ZkrV4uUonX5dafMjcmsuZ9_HwxyDbgaE4B8S4_SqGRRpo2yuaJiflNhK85PzZZOWBoDkt4CYN55YMyfcy4fx2IBLftdfpWzPMclckXruhYfkKQr7FeetSV8sN_4LdLXSS4Z2vyRCRu-qoBRWSdVgFRXzGgAwP9Q5SfN7lmekEZkBYAD7L4Q"/>
+<span class="font-medium text-on-surface">John Smith</span>
+</div>
+</td>
+<td class="py-4 px-6 text-on-surface-variant">john.smith@example.com</td>
+<td class="py-4 px-6 text-on-surface-variant">Engineering</td>
+<td class="py-4 px-6 text-on-surface-variant">Oct 24, 2023</td>
+<td class="py-4 px-6 text-right">
+<button class="inline-flex items-center gap-1 px-3 py-1.5 border border-emerald-500 text-emerald-600 bg-emerald-50 hover:bg-emerald-100 rounded-lg font-medium transition-colors">
+<span class="material-symbols-outlined text-[16px]" data-icon="settings_backup_restore">settings_backup_restore</span>
+                                        Restore
+                                    </button>
+</td>
+</tr>
+<tr class="bg-[#F8FAFC] hover:bg-surface-container-lowest transition-colors group">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<img alt="Avatar" class="w-8 h-8 rounded-full" data-alt="A small, generic avatar for a user interface, displaying initials against a muted, light grey background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6xz6mWJaEm0kx9Z8m19qNdJuBQRWhne-Okts9x9M3mFPhKGZ8fLn2ptUr0_s-J1BVkrvBA511EdtjtcpxCMlQLZhFlCW48HoNZ3BGNaTrYHJmdJIYwPO2bmURi3D0PyHVHP0rxAVL6yNRSr9ziQ7vv7GVQAT8zjYgTfeUceQ7sh3n46YaB7lYwX1UMcYGxZiHUnZ2LEEZTlGzEAY5bLTP5sLDLy6FvPGOnDfIhPsefCLeS6ead3l_vdm4nmog1yUzOQ__8RSYTA"/>
+<span class="font-medium text-on-surface">Alice Doe</span>
+</div>
+</td>
+<td class="py-4 px-6 text-on-surface-variant">alice.doe@example.com</td>
+<td class="py-4 px-6 text-on-surface-variant">Marketing</td>
+<td class="py-4 px-6 text-on-surface-variant">Sep 15, 2023</td>
+<td class="py-4 px-6 text-right">
+<button class="inline-flex items-center gap-1 px-3 py-1.5 border border-emerald-500 text-emerald-600 bg-emerald-50 hover:bg-emerald-100 rounded-lg font-medium transition-colors">
+<span class="material-symbols-outlined text-[16px]" data-icon="settings_backup_restore">settings_backup_restore</span>
+                                        Restore
+                                    </button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<img alt="Avatar" class="w-8 h-8 rounded-full" data-alt="A small, generic avatar for a user interface, displaying initials against a muted, light grey background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJK-aGhS7BiX4CoSGPooRnZXKexHEa91bq3z-6_-8roKoc6Yx5z4518v2fH1hqTEZHWCc57RC-GwSF1QU-OV4A_Eh9zR3HKMpgOAsPJuDY-LT2LpYptGacrWY1eID3nxClU7uI0w6m4geM1sfs5Xt6uAVRIa_NxxXgsLXP3z1X5V0O7DqvfxU4pQtCJXttUknpy0jNDQHLOs7Nq4lZJOdgb2tmRX2pmfRREiOwHBtAppmF7p8wqC1JY5TTEMptOVPD68ghbyrtqA"/>
+<span class="font-medium text-on-surface">Michael Jones</span>
+</div>
+</td>
+<td class="py-4 px-6 text-on-surface-variant">michael.j@example.com</td>
+<td class="py-4 px-6 text-on-surface-variant">Sales</td>
+<td class="py-4 px-6 text-on-surface-variant">Aug 02, 2023</td>
+<td class="py-4 px-6 text-right">
+<button class="inline-flex items-center gap-1 px-3 py-1.5 border border-emerald-500 text-emerald-600 bg-emerald-50 hover:bg-emerald-100 rounded-lg font-medium transition-colors">
+<span class="material-symbols-outlined text-[16px]" data-icon="settings_backup_restore">settings_backup_restore</span>
+                                        Restore
+                                    </button>
+</td>
+</tr>
+<tr class="bg-[#F8FAFC] hover:bg-surface-container-lowest transition-colors group">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<img alt="Avatar" class="w-8 h-8 rounded-full" data-alt="A small, generic avatar for a user interface, displaying initials against a muted, light grey background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1ApdHcwxEA_btADGpadYo2weh8Xqy821OncTO_7EpoCodM4cxRLNqCafqBf6rfskMvZky88EoPBJKJHdWb-uQqWTBWJNwd0oUP2SszAygNcb_zWhib7bkyDb6iEhmzzlZMS2GygtzkAGgBFqU_Tmqo_xiqkE3XF8lagFpJ7gWnUmrUovEWJtAMlmMgjW32qZVx1nYe0JGT0B2EWRO9j98xjsCjNKrP8Z-eDrGTMmqgSTyomkI3hxmgt82gsNqb45oeOH5PX04gg"/>
+<span class="font-medium text-on-surface">Sarah Jenkins</span>
+</div>
+</td>
+<td class="py-4 px-6 text-on-surface-variant">s.jenkins@example.com</td>
+<td class="py-4 px-6 text-on-surface-variant">HR</td>
+<td class="py-4 px-6 text-on-surface-variant">Jul 28, 2023</td>
+<td class="py-4 px-6 text-right">
+<button class="inline-flex items-center gap-1 px-3 py-1.5 border border-emerald-500 text-emerald-600 bg-emerald-50 hover:bg-emerald-100 rounded-lg font-medium transition-colors">
+<span class="material-symbols-outlined text-[16px]" data-icon="settings_backup_restore">settings_backup_restore</span>
+                                        Restore
+                                    </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination Footer -->
+<div class="border-t border-surface-variant bg-surface-container-low px-6 py-3 flex items-center justify-between">
+<span class="font-body-sm text-body-sm text-secondary">Showing 1 to 4 of 12 entries</span>
+<div class="flex gap-1">
+<button class="p-1 text-secondary hover:bg-surface-variant rounded-md disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="p-1 text-secondary hover:bg-surface-variant rounded-md">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

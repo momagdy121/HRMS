@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#f9f9fd",
+                        "surface-bright": "#f9f9fd",
+                        "surface-container-low": "#f3f3f7",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#191c1e",
+                        "outline": "#72777f",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "inverse-primary": "#a0cafc",
+                        "error": "#ba1a1a",
+                        "primary-fixed-dim": "#a0cafc",
+                        "surface-container-high": "#e8e8ec",
+                        "surface-container-highest": "#e2e2e6",
+                        "primary-container": "#1f4e79",
+                        "on-background": "#1a1c1f",
+                        "primary": "#00375e",
+                        "primary-fixed": "#d1e4ff",
+                        "on-secondary-container": "#54647a",
+                        "on-primary-fixed-variant": "#184974",
+                        "on-error-container": "#93000a",
+                        "tertiary-container": "#494c4e",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "tertiary-fixed": "#e0e3e5",
+                        "surface-dim": "#d9dade",
+                        "surface-variant": "#e2e2e6",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#ededf2",
+                        "surface": "#f9f9fd",
+                        "on-tertiary": "#ffffff",
+                        "inverse-surface": "#2f3034",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "inverse-on-surface": "#f0f0f4",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#0b1c30",
+                        "secondary": "#505f76",
+                        "outline-variant": "#c2c7d0",
+                        "on-tertiary-container": "#babcbe",
+                        "secondary-container": "#d0e1fb",
+                        "surface-tint": "#35618d",
+                        "on-primary-container": "#95bff1",
+                        "tertiary": "#323537",
+                        "on-surface-variant": "#42474f",
+                        "secondary-fixed": "#d3e4fe",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "on-surface": "#1a1c1f",
+                        "on-primary-fixed": "#001d35"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "lg": "24px",
+                        "sm": "8px",
+                        "xs": "4px",
+                        "sidebar-collapsed": "72px",
+                        "base": "4px",
+                        "navbar-height": "64px",
+                        "md": "16px",
+                        "sidebar-width": "260px"
+                    },
+                    "fontFamily": {
+                        "badge": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-bold": ["Inter"],
+                        "h2": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "h1": ["Inter"],
+                        "h3": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "badge": ["12px", {"lineHeight": "12px", "fontWeight": "500"}],
+                        "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                        "h2": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "h1": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "h3": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background overflow-hidden">
+<!-- Sidebar Component Mapping from JSON -->
+<aside class="fixed left-0 top-0 h-screen w-64 z-50 bg-[#1F4E79] dark:bg-slate-950 border-r border-slate-700/50 shadow-xl flex flex-col h-full">
+<div class="px-6 py-8">
+<h1 class="text-xl font-black tracking-tight text-white">HRMS Portal</h1>
+<p class="text-xs text-white/60 font-medium tracking-widest uppercase">Management Console</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="dashboard">dashboard</span>
+<span class="font-['Inter'] text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="badge">badge</span>
+<span class="font-['Inter'] text-sm font-medium">Employees</span>
+</a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="domain">domain</span>
+<span class="font-['Inter'] text-sm font-medium">Departments</span>
+</a>
+<!-- Active Tab: Payroll -->
+<a class="bg-white/10 border-l-4 border-sky-400 text-white font-semibold flex items-center px-6 py-3 transition-all translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="payments">payments</span>
+<span class="font-['Inter'] text-sm font-medium">Payroll</span>
+</a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="event_busy">event_busy</span>
+<span class="font-['Inter'] text-sm font-medium">Leave Requests</span>
+</a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="pending_actions">pending_actions</span>
+<span class="font-['Inter'] text-sm font-medium">Attendance</span>
+</a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="manage_accounts">manage_accounts</span>
+<span class="font-['Inter'] text-sm font-medium">User Accounts</span>
+</a>
+</nav>
+<div class="p-4 border-t border-slate-700/50">
+<a class="flex items-center px-4 py-2 text-slate-300 hover:bg-white/5 hover:text-white transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="settings">settings</span>
+<span class="font-['Inter'] text-sm font-medium">Settings</span>
+</a>
+<a class="flex items-center px-4 py-2 text-slate-300 hover:bg-white/5 hover:text-white transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="logout">logout</span>
+<span class="font-['Inter'] text-sm font-medium">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas (Payroll List Background) -->
+<main class="ml-64 min-h-screen">
+<header class="sticky top-0 w-full z-40 bg-white/80 backdrop-blur-md border-b border-slate-200 flex justify-between items-center px-8 py-3 shadow-sm">
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="absolute inset-y-0 left-3 flex items-center text-slate-400">
+<span class="material-symbols-outlined text-md">search</span>
+</span>
+<input class="bg-surface-container-low border-none rounded-full pl-10 pr-4 py-2 text-sm w-80 focus:ring-2 focus:ring-primary/20" placeholder="Search payroll records..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-500 hover:bg-slate-50 rounded-lg transition-transform hover:scale-105">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-50 rounded-lg transition-transform hover:scale-105">
+<span class="material-symbols-outlined">help</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-slate-200 overflow-hidden ml-2">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a corporate manager in a clean, high-key studio setting. The lighting is soft and even, highlighting a confident expression. The background is a minimalist, neutral grey tone that fits the corporate modernist aesthetic of the HRMS portal." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCe8dg4uWqV44j2wb_7mkr4j-uNMNM7mRUMeHJ0oAEmd67BEUKRFuZTSTYnKO0lIxIkg15slz3G7J2LieSuo3yhA3RZ_TG3eNRJyuZ_yF28yM-CtT5eyvVNDpHbBSqCi9JADE6f7BRi0aGxYkX0K8MUqiRxWq4aYrTlbFbb0U4EGCjzZAcus4iozT04SBIWbTcf4qtBrB6uEVRK0TCVRtK7dAgjFq1dW4asTF511-PJRLRvNX17Au7XPm888MZgRDCN0xK3n_8YUg"/>
+</div>
+</div>
+</header>
+<section class="p-xl space-y-lg opacity-50 pointer-events-none">
+<div class="flex justify-between items-end">
+<div>
+<h2 class="font-h1 text-h1 text-primary">Payroll Management</h2>
+<p class="text-body-md text-secondary mt-1">Review and process monthly compensation cycles.</p>
+</div>
+<button class="bg-primary-container text-white px-6 py-2.5 rounded-full font-label-bold flex items-center gap-2">
+<span class="material-symbols-outlined">add</span>
+                    New Payroll Run
+                </button>
+</div>
+<!-- Bento Stats Grid -->
+<div class="grid grid-cols-4 gap-md">
+<div class="bg-surface-container-lowest p-lg rounded-xl shadow-sm border border-outline-variant/30 col-span-1">
+<p class="text-label-bold text-secondary uppercase tracking-wider">Total Disbursed</p>
+<p class="text-h2 font-h2 text-primary mt-sm">$482,500.00</p>
+<div class="mt-md flex items-center text-xs text-green-600 font-medium">
+<span class="material-symbols-outlined text-sm mr-1">trending_up</span>
+                        4.2% vs last month
+                    </div>
+</div>
+<div class="bg-surface-container-lowest p-lg rounded-xl shadow-sm border border-outline-variant/30 col-span-1">
+<p class="text-label-bold text-secondary uppercase tracking-wider">Active Employees</p>
+<p class="text-h2 font-h2 text-primary mt-sm">1,248</p>
+<p class="mt-md text-xs text-secondary font-medium">Full-time &amp; Contract</p>
+</div>
+<div class="bg-surface-container-lowest p-lg rounded-xl shadow-sm border border-outline-variant/30 col-span-2">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-label-bold text-secondary uppercase tracking-wider">Current Cycle</p>
+<p class="text-h2 font-h2 text-primary mt-sm">October 2023</p>
+</div>
+<div class="bg-primary/10 text-primary px-3 py-1 rounded-full text-badge font-badge">
+                            Processing
+                        </div>
+</div>
+<div class="mt-lg w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[75%]"></div>
+</div>
+</div>
+</div>
+<!-- Data Table -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container border-b border-outline-variant/50">
+<th class="px-6 py-4 font-label-bold text-secondary">EMPLOYEE</th>
+<th class="px-6 py-4 font-label-bold text-secondary">DEPARTMENT</th>
+<th class="px-6 py-4 font-label-bold text-secondary">BASE SALARY</th>
+<th class="px-6 py-4 font-label-bold text-secondary">STATUS</th>
+<th class="px-6 py-4 font-label-bold text-secondary text-right">ACTION</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/20">
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center text-primary font-bold">JD</div>
+<div>
+<p class="font-label-bold text-primary">John Doe</p>
+<p class="text-xs text-secondary">Senior Developer</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-body-md text-on-surface-variant">Engineering</td>
+<td class="px-6 py-4 text-body-md text-on-surface font-semibold">$6,500.00</td>
+<td class="px-6 py-4">
+<span class="bg-amber-50 text-amber-700 px-3 py-1 rounded-full text-badge font-badge ring-1 ring-amber-100">Pending</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-primary hover:underline font-label-bold text-sm">Review</button>
+</td>
+</tr>
+<tr class="bg-[#F8FAFC]">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-800 font-bold">AS</div>
+<div>
+<p class="font-label-bold text-primary">Alice Smith</p>
+<p class="text-xs text-secondary">HR Manager</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-body-md text-on-surface-variant">People Ops</td>
+<td class="px-6 py-4 text-body-md text-on-surface font-semibold">$5,200.00</td>
+<td class="px-6 py-4">
+<span class="bg-green-50 text-green-700 px-3 py-1 rounded-full text-badge font-badge ring-1 ring-green-100">Approved</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-secondary hover:underline font-label-bold text-sm">Details</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</main>
+<!-- PROCESS PAYROLL WIZARD MODAL -->
+<div class="fixed inset-0 z-[60] flex items-center justify-center p-xl">
+<!-- Backdrop -->
+<div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
+<!-- Modal Card -->
+<div class="relative w-full max-w-2xl bg-white rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[921px]">
+<!-- Header -->
+<div class="px-lg py-md border-b border-slate-100 flex justify-between items-center bg-slate-50">
+<div>
+<h3 class="font-h3 text-h3 text-primary">Process Payroll — Step 3 of 4</h3>
+<p class="text-body-md text-secondary">Add bonuses and deductions for John Doe</p>
+</div>
+<button class="text-slate-400 hover:text-slate-600 transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Content Area -->
+<div class="p-lg overflow-y-auto space-y-lg">
+<!-- Top Summary Card -->
+<div class="bg-[#F1F5F9] p-md rounded-lg flex justify-between items-center border-l-4 border-[#1F4E79]">
+<span class="text-label-bold text-slate-600 uppercase tracking-tight">Standard Monthly Pay</span>
+<span class="text-h3 font-h2 text-[#1F4E79]">Base Salary: $6,500</span>
+</div>
+<!-- Dynamic Items Table -->
+<div class="space-y-sm">
+<p class="text-label-bold text-slate-500 px-1">ADJUSTMENTS</p>
+<div class="border border-slate-200 rounded-lg overflow-hidden">
+<table class="w-full text-left">
+<thead class="bg-slate-50 border-b border-slate-200">
+<tr>
+<th class="px-4 py-3 text-badge font-label-bold text-slate-500">TYPE</th>
+<th class="px-4 py-3 text-badge font-label-bold text-slate-500">DESCRIPTION</th>
+<th class="px-4 py-3 text-badge font-label-bold text-slate-500">AMOUNT</th>
+<th class="px-4 py-3 text-right"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<tr class="hover:bg-slate-50/50">
+<td class="px-4 py-4">
+<span class="bg-green-50 text-green-700 px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider">Bonus</span>
+</td>
+<td class="px-4 py-4 text-body-md text-slate-700 font-medium">Q3 Performance Bonus</td>
+<td class="px-4 py-4 text-body-md text-slate-900 font-bold">$500.00</td>
+<td class="px-4 py-4 text-right">
+<button class="text-slate-400 hover:text-error transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="delete">delete</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50/50">
+<td class="px-4 py-4">
+<span class="bg-red-50 text-red-700 px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider">Deduction</span>
+</td>
+<td class="px-4 py-4 text-body-md text-slate-700 font-medium">Health Insurance Premium</td>
+<td class="px-4 py-4 text-body-md text-slate-900 font-bold">$240.00</td>
+<td class="px-4 py-4 text-right">
+<button class="text-slate-400 hover:text-error transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="delete">delete</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<button class="mt-sm flex items-center gap-2 text-primary font-label-bold text-sm hover:underline px-1 py-2">
+<span class="material-symbols-outlined text-md">add_circle</span>
+                        + Add Another Item
+                    </button>
+</div>
+<!-- Real-time Summary Area -->
+<div class="bg-surface-container-low p-lg rounded-xl border border-slate-200 grid grid-cols-3 items-center">
+<div class="space-y-1">
+<p class="text-xs text-slate-500 uppercase font-bold tracking-wider">Total Bonus</p>
+<p class="text-body-lg font-bold text-green-600">+$500</p>
+</div>
+<div class="space-y-1 border-x border-slate-300/50 px-lg">
+<p class="text-xs text-slate-500 uppercase font-bold tracking-wider">Total Deduction</p>
+<p class="text-body-lg font-bold text-red-600">-$240</p>
+</div>
+<div class="pl-lg text-right">
+<p class="text-xs text-slate-500 uppercase font-bold tracking-wider">Net Salary</p>
+<p class="text-h1 font-h1 text-[#1F4E79]">$6,760</p>
+</div>
+</div>
+</div>
+<!-- Footer Actions -->
+<div class="px-lg py-lg bg-white border-t border-slate-100 flex justify-between">
+<button class="px-8 py-2.5 border border-slate-300 text-slate-700 rounded-lg font-label-bold hover:bg-slate-50 transition-colors">
+                    Back
+                </button>
+<button class="px-10 py-2.5 bg-[#1F4E79] text-white rounded-lg font-label-bold hover:bg-primary transition-all shadow-md active:scale-95">
+                    Next
+                </button>
+</div>
+<div class="absolute inset-0 z-[70] flex items-center justify-center p-xl">
+<!-- Sub-modal Backdrop -->
+<div class="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px]"></div>
+<!-- Sub-modal Card -->
+<div class="relative w-full max-w-md bg-white rounded-xl shadow-2xl overflow-hidden border border-slate-200">
+<div class="px-lg py-md border-b border-slate-100 flex justify-between items-center bg-white">
+<h3 class="font-h3 text-h3 text-primary">Add Adjustment</h3>
+<button class="text-slate-400 hover:text-slate-600">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="p-lg space-y-md">
+<!-- Type Toggle -->
+<div class="space-y-base">
+<label class="text-label-bold text-slate-500 uppercase">Type</label>
+<div class="flex p-1 bg-slate-100 rounded-lg">
+<button class="flex-1 py-2 text-sm font-bold bg-green-100 text-green-700 rounded-md shadow-sm">Bonus</button>
+<button class="flex-1 py-2 text-sm font-bold text-slate-500 hover:bg-red-50 hover:text-red-600 transition-colors">Deduction</button>
+</div>
+</div>
+<!-- Description Input -->
+<div class="space-y-base">
+<label class="text-label-bold text-slate-500 uppercase">Description</label>
+<input class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" placeholder="e.g. Q3 Performance Bonus" type="text"/>
+</div>
+<!-- Amount Input -->
+<div class="space-y-base">
+<label class="text-label-bold text-slate-500 uppercase">Amount</label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">$</span>
+<input class="w-full pl-8 pr-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" placeholder="0.00" type="number"/>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<div class="px-lg py-md bg-slate-50 flex justify-end gap-md">
+<button class="px-6 py-2 text-sm font-label-bold text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">
+        Cancel
+      </button>
+<button class="px-6 py-2 text-sm font-label-bold bg-[#1F4E79] text-white rounded-lg hover:bg-primary shadow-sm transition-all active:scale-95">
+        Add Item
+      </button>
+</div>
+</div>
+</div></div>
+</div>
+</body></html>

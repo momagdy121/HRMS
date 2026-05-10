@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HRMS - User Accounts</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            font-feature-settings: 'liga';
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#72777f",
+                        "primary-container": "#1f4e79",
+                        "on-primary-container": "#95bff1",
+                        "on-secondary-container": "#54647a",
+                        "surface-dim": "#d9dade",
+                        "on-error-container": "#93000a",
+                        "primary": "#00375e",
+                        "inverse-primary": "#a0cafc",
+                        "on-tertiary-container": "#babcbe",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "on-tertiary-fixed": "#191c1e",
+                        "on-surface-variant": "#42474f",
+                        "tertiary-container": "#494c4e",
+                        "secondary": "#505f76",
+                        "tertiary": "#323537",
+                        "on-tertiary": "#ffffff",
+                        "surface-variant": "#e2e2e6",
+                        "on-surface": "#1a1c1f",
+                        "on-primary-fixed-variant": "#184974",
+                        "tertiary-fixed": "#e0e3e5",
+                        "on-secondary-fixed": "#0b1c30",
+                        "on-secondary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-container": "#ededf2",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "primary-fixed-dim": "#a0cafc",
+                        "surface-container-low": "#f3f3f7",
+                        "on-primary-fixed": "#001d35",
+                        "on-primary": "#ffffff",
+                        "surface-tint": "#35618d",
+                        "primary-fixed": "#d1e4ff",
+                        "error": "#ba1a1a",
+                        "secondary-fixed": "#d3e4fe",
+                        "inverse-surface": "#2f3034",
+                        "surface-container-high": "#e8e8ec",
+                        "surface-container-highest": "#e2e2e6",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "secondary-container": "#d0e1fb",
+                        "on-background": "#1a1c1f",
+                        "surface": "#f9f9fd",
+                        "inverse-on-surface": "#f0f0f4",
+                        "surface-bright": "#f9f9fd",
+                        "background": "#f9f9fd",
+                        "outline-variant": "#c2c7d0",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "sm": "8px",
+                        "sidebar-collapsed": "72px",
+                        "md": "16px",
+                        "base": "4px",
+                        "lg": "24px",
+                        "navbar-height": "64px",
+                        "xl": "32px",
+                        "sidebar-width": "260px"
+                    },
+                    "fontFamily": {
+                        "h1": ["Inter"],
+                        "h2": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-bold": ["Inter"],
+                        "body-md": ["Inter"],
+                        "badge": ["Inter"],
+                        "h3": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "h1": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "h2": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-bold": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "badge": ["12px", { "lineHeight": "12px", "fontWeight": "500" }],
+                        "h3": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md text-body-md h-screen flex overflow-hidden selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- SideNavBar (Shared Component) -->
+<aside class="bg-[#1F4E79] dark:bg-slate-950 text-white font-['Inter'] text-sm font-medium leading-tight fixed left-0 top-0 h-screen w-[260px] z-50 border-r border-slate-700/50 shadow-xl flex flex-col h-full">
+<div class="px-6 py-8 flex flex-col gap-2 border-b border-slate-700/50">
+<h1 class="text-xl font-black tracking-tight text-white">HRMS Portal</h1>
+<span class="text-slate-300 text-xs">Management Console</span>
+</div>
+<nav class="flex-1 overflow-y-auto py-4 flex flex-col gap-1">
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all hover:bg-white/5 hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all hover:bg-white/5 hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3">badge</span>
+                Employees
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all hover:bg-white/5 hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3">domain</span>
+                Departments
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all hover:bg-white/5 hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3">payments</span>
+                Payroll
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all hover:bg-white/5 hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3">event_busy</span>
+                Leave Requests
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all hover:bg-white/5 hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3">pending_actions</span>
+                Attendance
+            </a>
+<!-- Active Item -->
+<a class="bg-white/10 border-l-4 border-sky-400 text-white font-semibold flex items-center px-6 py-3 transition-all translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3" style="font-variation-settings: 'FILL' 1;">manage_accounts</span>
+                User Accounts
+            </a>
+</nav>
+<div class="mt-auto border-t border-slate-700/50 py-4 flex flex-col gap-1">
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all hover:bg-white/5 hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3">settings</span>
+                Settings
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all hover:bg-white/5 hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3">logout</span>
+                Logout
+            </a>
+</div>
+</aside>
+<!-- Main Content Area Wrapper -->
+<main class="flex-1 ml-[260px] flex flex-col h-full bg-background relative">
+<!-- TopNavBar (Shared Component) -->
+<header class="bg-white/80 backdrop-blur-md dark:bg-slate-900/80 text-[#1F4E79] dark:text-blue-400 font-['Inter'] text-sm tracking-wide sticky top-0 w-full z-40 border-b border-slate-200 dark:border-slate-800 shadow-sm flex justify-between items-center px-8 py-3">
+<div class="flex items-center gap-4">
+<span class="text-lg font-bold text-slate-900 dark:text-white lg:hidden">HRMS Portal</span>
+<!-- Search Bar Placeholder left alignment per JSON -->
+<div class="relative hidden md:block w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+<input class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-full py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-[#1F4E79] outline-none" placeholder="Search..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-2 md:gap-4">
+<div class="flex items-center">
+<button class="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg hover:scale-105 transition-transform duration-150">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg hover:scale-105 transition-transform duration-150">
+<span class="material-symbols-outlined">help</span>
+</button>
+<button class="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg hover:scale-105 transition-transform duration-150">
+<span class="material-symbols-outlined">apps</span>
+</button>
+</div>
+<div class="h-8 w-px bg-slate-200 dark:bg-slate-700 mx-2"></div>
+<div class="flex items-center gap-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg px-2 py-1 transition-all">
+<img alt="User Avatar" class="w-8 h-8 rounded-full object-cover border border-slate-200" data-alt="A professional headshot of a corporate HR manager in her late 30s. She has a confident, warm smile and is wearing a crisp navy blue blazer. The background is a clean, well-lit modern office space with a subtle bokeh effect to keep the focus on her face." src="https://lh3.googleusercontent.com/aida-public/AB6AXuByU39i86NtWeVoJazHz79TKkezSFISqBMDVbmAv-pdREUCYeVcYneaM64f_ygCB2yviQCH0wTed7AP0AHk1nxee1wqMDdkjPdY0Zl4rvTTCAfvRmdNMaVDgENiaFt7gjiINeST2jXYMKIRnMDurfJ4vrs34QRA8Zy5ReoZoVNRKngdj405R19HllALHt0hhGC7wSKrIoVvEMvLy5CC_EcbsSl6vDlr2WJ5aGCvp01rVSnA9rjsR1chxFkcfYIpJpx4VfOMAl2iLw"/>
+<span class="font-bold text-sm hidden md:block">Sarah Connor</span>
+<span class="material-symbols-outlined text-sm hidden md:block text-slate-500">expand_more</span>
+</div>
+</div>
+</header>
+<!-- Page Canvas (Blurred due to Modal) -->
+<div class="flex-1 overflow-y-auto p-xl relative bg-surface-container-lowest blur-[3px] pointer-events-none transition-all duration-300">
+<div class="max-w-6xl mx-auto flex flex-col gap-lg">
+<!-- Header Section -->
+<div class="flex justify-between items-end">
+<div>
+<h1 class="font-h1 text-h1 text-on-surface mb-1">User Accounts</h1>
+<p class="font-body-lg text-body-lg text-secondary">Manage identity accounts and role assignments</p>
+</div>
+<button class="bg-primary text-on-primary font-label-bold text-label-bold px-md py-sm rounded-lg flex items-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                        Create User Account
+                    </button>
+</div>
+<!-- Table Container -->
+<div class="bg-surface rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant font-label-bold text-label-bold text-secondary">
+<th class="py-sm px-md font-medium">Employee</th>
+<th class="py-sm px-md font-medium">Email</th>
+<th class="py-sm px-md font-medium">Roles</th>
+<th class="py-sm px-md font-medium">Status</th>
+<th class="py-sm px-md font-medium text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md text-on-surface divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="py-sm px-md">
+<div class="flex items-center gap-3">
+<img alt="" class="w-8 h-8 rounded-full object-cover" data-alt="A small professional avatar photo of Jane Smith, a corporate employee. She has shoulder-length brown hair and is smiling warmly. The background is a solid light grey color, typical of a corporate ID photo." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCv_I3x4GG33evbpFM-Y_1I99ko3jESLDBiSLNVUTs2FFY4IytoRmZzg1pBxPjjQZw0RIxTxiEau7UTitrvWAEAyOc1alFnE7CWfW1Od95h04FWlZQFzIFtybIYcknaDL64KjDSNZfam0rs3K2S-cHaQodD2o7bLQIOMyJEDmopDDmn7vFSHln0YX-jD0Uix6sIGw7CjU0dXT-jLNBrzkx0l6OJsx_38kKnHWFq9d0c5dR9du2IbBuBc6yim3RaRkP-a4BZdKZGfQ"/>
+<span class="font-medium">Jane Smith</span>
+</div>
+</td>
+<td class="py-sm px-md text-secondary">jane.smith@company.com</td>
+<td class="py-sm px-md">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full font-badge text-badge bg-primary-fixed text-on-primary-fixed">HR</span>
+</td>
+<td class="py-sm px-md">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full font-badge text-badge bg-secondary-container text-on-secondary-container gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-primary block"></span> Active
+                                    </span>
+</td>
+<td class="py-sm px-md text-right">
+<div class="flex items-center justify-end gap-3">
+<button class="text-primary font-label-bold text-label-bold hover:underline">Edit Roles</button>
+<button class="text-secondary font-label-bold text-label-bold hover:text-on-surface">Reset Pwd</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-lowest transition-colors bg-surface-container-low/30">
+<td class="py-sm px-md">
+<div class="flex items-center gap-3">
+<img alt="" class="w-8 h-8 rounded-full object-cover" data-alt="A professional avatar photo of Bob Johnson. He is a middle-aged man with short hair and glasses, wearing a light blue dress shirt. The lighting is bright and even, conveying a dependable corporate persona." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmTv2PdlZJuFh_kfk5Kn4NKwsvPQ5RIQBkc8Wq4AYjer_rC10zH3l3Hco9gcSd_AM-TO0mkgEPLlodoc1Ga1oFtO70Y0IHcAofpawETMHiL-2vpWQcGzBtv4moA2k_E89xEFbqGaETPpRPdLAb_3BILmKtZLNS0JFYw59tHZfrSdlhca_pm4a11shB9HPGDUiarmXjpN2XQoM9ctnxusQZlxPl7_Ck3dp0zV9hSBsw4KQv9BUkl5GCvD8uXM01AZK7qEVp2tltTw"/>
+<span class="font-medium">Bob Johnson</span>
+</div>
+</td>
+<td class="py-sm px-md text-secondary">bob.johnson@company.com</td>
+<td class="py-sm px-md">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full font-badge text-badge bg-secondary-fixed text-on-secondary-fixed">Dept Head</span>
+</td>
+<td class="py-sm px-md">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full font-badge text-badge bg-secondary-container text-on-secondary-container gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-primary block"></span> Active
+                                    </span>
+</td>
+<td class="py-sm px-md text-right">
+<div class="flex items-center justify-end gap-3">
+<button class="text-primary font-label-bold text-label-bold hover:underline">Edit Roles</button>
+<button class="text-secondary font-label-bold text-label-bold hover:text-on-surface">Reset Pwd</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="py-sm px-md">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center font-label-bold text-secondary">AB</div>
+<span class="font-medium">Alice Brown</span>
+</div>
+</td>
+<td class="py-sm px-md text-secondary">alice.brown@company.com</td>
+<td class="py-sm px-md text-outline">
+                                    --
+                                </td>
+<td class="py-sm px-md">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full font-badge text-badge bg-secondary-container text-on-secondary-container gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-primary block"></span> Active
+                                    </span>
+</td>
+<td class="py-sm px-md text-right">
+<div class="flex items-center justify-end gap-3">
+<button class="text-primary font-label-bold text-label-bold hover:underline">Edit Roles</button>
+<button class="text-secondary font-label-bold text-label-bold hover:text-on-surface">Reset Pwd</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-lowest transition-colors bg-surface-container-low/30">
+<td class="py-sm px-md">
+<div class="flex items-center gap-3">
+<img alt="" class="w-8 h-8 rounded-full object-cover" data-alt="A professional headshot of David Chen, a young corporate professional. He has neat dark hair and a subtle smile, wearing a modern grey suit without a tie. The background is a soft, out-of-focus office window." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbCjcGA63CdR3Z7SLBkBDwnF6_Pc1Rn-Y_ExNPMJ7kfAah4nsXCoe5zZ7Ke5E7BjoM5QFZKg3IXUZeQdp5EvDNkRk-6ZiMmBNtrZgld7vg6EIsroFa39Zu-e12qtjFxfmb1zLGF_FnCm1S_rY8QtO9wHPwdoIKNINOw3IqljNXifjI2bte45ueA5sA8c5mgiZy7NTMRUGxC9UXaCrBZFkpBpZ1Nka8x7quDZY-1KVhPqZy4lCECfy9Rdjp1RBt0jhZsaWRpjnIUw"/>
+<span class="font-medium">David Chen</span>
+</div>
+</td>
+<td class="py-sm px-md text-secondary">d.chen@company.com</td>
+<td class="py-sm px-md">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full font-badge text-badge bg-secondary-fixed text-on-secondary-fixed">Dept Head</span>
+</td>
+<td class="py-sm px-md">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full font-badge text-badge bg-secondary-container text-on-secondary-container gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-primary block"></span> Active
+                                    </span>
+</td>
+<td class="py-sm px-md text-right">
+<div class="flex items-center justify-end gap-3">
+<button class="text-primary font-label-bold text-label-bold hover:underline">Edit Roles</button>
+<button class="text-secondary font-label-bold text-label-bold hover:text-on-surface">Reset Pwd</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Toast Notification (Top Right inside Main Area) -->
+<div class="absolute top-lg right-xl z-50 flex items-center gap-3 bg-surface rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.1)] border border-[#166534] px-4 py-3 min-w-[300px]">
+<span class="material-symbols-outlined text-[#166534]">check_circle</span>
+<div class="flex-1">
+<p class="font-body-md text-body-md font-medium text-on-surface">Account created successfully.</p>
+</div>
+<button class="text-secondary hover:text-on-surface">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<!-- Overlay Modal Container (Absolute within main, centering the modal) -->
+<div class="absolute inset-0 z-40 bg-on-surface/10 flex items-center justify-center p-md pointer-events-auto">
+<!-- Modal Card -->
+<div class="bg-surface w-full max-w-md rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-outline-variant flex flex-col overflow-hidden">
+<!-- Modal Header -->
+<div class="px-lg py-md border-b border-outline-variant flex justify-between items-center bg-surface-container-lowest">
+<h2 class="font-h3 text-h3 text-on-surface">Create User Account</h2>
+<button class="text-secondary hover:bg-surface-container rounded-full p-1 transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Modal Body -->
+<div class="p-lg flex flex-col gap-md bg-surface-container-lowest">
+<!-- Select Employee -->
+<div class="flex flex-col gap-1">
+<label class="font-label-bold text-label-bold text-on-surface">Select Employee</label>
+<div class="relative">
+<select class="w-full appearance-none bg-surface border border-outline rounded-lg px-sm py-2 font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary">
+<option>Select an employee...</option>
+<option>Marcus Wright</option>
+<option>Kyle Reese</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-[20px]">arrow_drop_down</span>
+</div>
+</div>
+<!-- Email (Pre-filled) -->
+<div class="flex flex-col gap-1">
+<label class="font-label-bold text-label-bold text-on-surface">Email</label>
+<input class="w-full bg-surface-container-low border border-outline rounded-lg px-sm py-2 font-body-md text-body-md text-secondary focus:outline-none" placeholder="auto-filled from selection" readonly="" type="email" value=""/>
+</div>
+<!-- Passwords Grid -->
+<div class="grid grid-cols-2 gap-4">
+<div class="flex flex-col gap-1">
+<label class="font-label-bold text-label-bold text-on-surface">Password</label>
+<input class="w-full bg-surface border border-outline rounded-lg px-sm py-2 font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" type="password"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-bold text-label-bold text-on-surface">Confirm Password</label>
+<input class="w-full bg-surface border border-outline rounded-lg px-sm py-2 font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" type="password"/>
+</div>
+</div>
+<!-- Roles -->
+<div class="flex flex-col gap-2 mt-2">
+<label class="font-label-bold text-label-bold text-on-surface">Role Assignments</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<div class="relative flex items-center justify-center w-5 h-5 rounded border border-outline bg-surface group-hover:border-primary">
+<!-- Checked state hidden for base design, assume unchecked -->
+</div>
+<span class="font-body-md text-body-md text-on-surface">HR</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<div class="relative flex items-center justify-center w-5 h-5 rounded border border-outline bg-surface group-hover:border-primary">
+<!-- Checked state hidden for base design, assume unchecked -->
+</div>
+<span class="font-body-md text-body-md text-on-surface">Department Head</span>
+</label>
+<div class="flex items-start gap-2 mt-1 p-2 bg-surface-container-low rounded-lg border border-surface-container-highest">
+<span class="material-symbols-outlined text-[16px] text-secondary mt-0.5">info</span>
+<p class="font-body-sm text-body-sm text-secondary leading-tight">Department Head role is dynamic based on Department.ManagerId</p>
+</div>
+</div>
+</div>
+<!-- Modal Footer -->
+<div class="px-lg py-md border-t border-outline-variant bg-surface-container-low flex justify-end gap-3">
+<button class="px-md py-sm rounded-lg font-label-bold text-label-bold border border-outline text-on-surface hover:bg-surface-container transition-colors">
+                        Cancel
+                    </button>
+<button class="px-md py-sm rounded-lg font-label-bold text-label-bold bg-primary text-on-primary shadow-sm hover:opacity-90 transition-opacity">
+                        Create Account
+                    </button>
+</div>
+</div>
+</div>
+</main>
+</body></html>

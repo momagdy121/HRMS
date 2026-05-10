@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Team Leave Requests - HRMS Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary-container": "#babcbe",
+                      "on-secondary-container": "#54647a",
+                      "secondary": "#505f76",
+                      "surface-variant": "#e2e2e6",
+                      "on-primary-fixed-variant": "#184974",
+                      "tertiary-container": "#494c4e",
+                      "on-secondary-fixed": "#0b1c30",
+                      "on-primary": "#ffffff",
+                      "surface": "#f9f9fd",
+                      "error-container": "#ffdad6",
+                      "surface-tint": "#35618d",
+                      "on-primary-fixed": "#001d35",
+                      "on-primary-container": "#95bff1",
+                      "surface-container-highest": "#e2e2e6",
+                      "on-error": "#ffffff",
+                      "tertiary-fixed": "#e0e3e5",
+                      "error": "#ba1a1a",
+                      "on-tertiary-fixed-variant": "#444749",
+                      "primary-fixed": "#d1e4ff",
+                      "surface-dim": "#d9dade",
+                      "surface-container-low": "#f3f3f7",
+                      "background": "#f9f9fd",
+                      "on-secondary-fixed-variant": "#38485d",
+                      "inverse-on-surface": "#f0f0f4",
+                      "surface-bright": "#f9f9fd",
+                      "primary-container": "#1f4e79",
+                      "secondary-fixed-dim": "#b7c8e1",
+                      "primary": "#00375e",
+                      "outline": "#72777f",
+                      "inverse-primary": "#a0cafc",
+                      "on-surface": "#1a1c1f",
+                      "on-error-container": "#93000a",
+                      "on-secondary": "#ffffff",
+                      "secondary-fixed": "#d3e4fe",
+                      "tertiary-fixed-dim": "#c4c7c9",
+                      "surface-container-high": "#e8e8ec",
+                      "surface-container": "#ededf2",
+                      "on-tertiary": "#ffffff",
+                      "on-surface-variant": "#42474f",
+                      "on-background": "#1a1c1f",
+                      "primary-fixed-dim": "#a0cafc",
+                      "secondary-container": "#d0e1fb",
+                      "tertiary": "#323537",
+                      "inverse-surface": "#2f3034",
+                      "outline-variant": "#c2c7d0",
+                      "on-tertiary-fixed": "#191c1e"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "lg": "24px",
+                      "xs": "4px",
+                      "sidebar-width": "260px",
+                      "md": "16px",
+                      "xl": "32px",
+                      "navbar-height": "64px",
+                      "base": "4px",
+                      "sidebar-collapsed": "72px",
+                      "sm": "8px"
+              },
+              "fontFamily": {
+                      "h3": [
+                              "Inter"
+                      ],
+                      "h1": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "label-bold": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "h2": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ],
+                      "badge": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "h3": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "h1": [
+                              "30px",
+                              {
+                                      "lineHeight": "38px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-bold": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "h2": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-sm": [
+                              "13px",
+                              {
+                                      "lineHeight": "18px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "badge": [
+                              "12px",
+                              {
+                                      "lineHeight": "12px",
+                                      "fontWeight": "500"
+                              }
+                      ]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md flex h-screen overflow-hidden">
+<!-- Toast Notification -->
+<div class="fixed top-lg right-lg z-50 flex items-center bg-surface-container-lowest border border-outline-variant shadow-xl rounded-lg p-md pr-lg">
+<span class="material-symbols-outlined text-on-surface-variant mr-sm">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface">Leave request approved.</span>
+</div>
+<!-- Modal Overlay -->
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-on-surface/50">
+<div class="bg-surface-container-lowest rounded-xl shadow-xl w-full max-w-md overflow-hidden p-lg">
+<h3 class="font-h3 text-h3 text-on-surface mb-sm">Approve Leave Request</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-lg">Approve annual leave for Emily Wong? This will increment their Used Days.</p>
+<div class="flex justify-end space-x-md">
+<button class="px-md py-sm rounded-lg font-label-bold text-label-bold text-primary hover:bg-surface-container-low transition-colors">Cancel</button>
+<button class="px-md py-sm rounded-lg font-label-bold text-label-bold bg-primary text-on-primary hover:bg-primary/90 transition-colors">Approve</button>
+</div>
+</div>
+</div>
+<!-- SideNavBar -->
+<aside class="bg-[#1F4E79] dark:bg-slate-950 text-white font-['Inter'] text-sm font-medium leading-tight fixed left-0 top-0 h-screen w-64 z-50 border-r border-slate-700/50 shadow-xl flex flex-col h-full">
+<div class="p-lg flex items-center mb-md border-b border-slate-700/50">
+<div class="w-10 h-10 rounded-lg bg-surface-container-lowest/20 flex items-center justify-center mr-sm">
+<span class="material-symbols-outlined text-white">corporate_fare</span>
+</div>
+<div>
+<h1 class="text-xl font-black tracking-tight text-white">HRMS Portal</h1>
+<p class="text-xs text-slate-300 font-normal">Management Console</p>
+</div>
+</div>
+<nav class="flex-1 overflow-y-auto space-y-1 py-sm">
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-md">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-md">groups</span>
+                My Department
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-md">assignment</span>
+                Manage Tasks
+            </a>
+<a class="bg-white/10 border-l-4 border-sky-400 text-white font-semibold flex items-center px-6 py-3 transition-all Active: translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-md">event_busy</span>
+                Team Leave
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-md">pending_actions</span>
+                Team Attendance
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-md">payments</span>
+                Department Payroll
+            </a>
+</nav>
+<div class="p-sm border-t border-slate-700/50 mt-auto">
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-md">settings</span>
+                Settings
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-md">logout</span>
+                Logout
+            </a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col ml-64 bg-background">
+<!-- TopNavBar -->
+<header class="bg-white/80 backdrop-blur-md dark:bg-slate-900/80 text-[#1F4E79] dark:text-blue-400 font-['Inter'] text-sm tracking-wide sticky top-0 w-full z-40 border-b border-slate-200 dark:border-slate-800 shadow-sm flex justify-between items-center px-8 py-3">
+<div class="flex items-center">
+<h2 class="text-lg font-bold text-slate-900 dark:text-white lg:hidden">HRMS Portal</h2>
+</div>
+<div class="flex items-center space-x-md">
+<button class="p-sm text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg hover:scale-105 transition-transform duration-150">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-sm text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg hover:scale-105 transition-transform duration-150">
+<span class="material-symbols-outlined">help</span>
+</button>
+<button class="p-sm text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg hover:scale-105 transition-transform duration-150 mr-md">
+<span class="material-symbols-outlined">apps</span>
+</button>
+<div class="flex items-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg p-sm transition-all">
+<img alt="User Avatar Bob Johnson" class="w-8 h-8 rounded-full object-cover shadow-sm mr-sm" data-alt="A professional headshot of an executive manager named Bob Johnson, wearing a sharp navy suit with a subtle pattern, posing in a well-lit, contemporary corporate office environment. The lighting is crisp, bright, and modern, reflecting a clean, structured light-mode corporate aesthetic." src="https://lh3.googleusercontent.com/aida/ADBb0uj0kK5tVKnlEe7Yo6fwE7ALyAuaLpHCCS3Nyv1p5B9bmY-jAWD-TRyFpkLdx9KhbQOfQ5Ua_KF1bsNMvSNVTn92DTA4zrBqrJcbbjXWQMdAkfqoQUA43fYJsxqQ3vMorFGsMrQ5TDMC6twmYRDkgUuoHZbHhmoNshLOfx_AARSrIYG5ZcVlMFEQIIdjLKS5odTm9RLReHJZjc9Y0Juo7DH9us6jll_H32G4XPmio_Ae-86lgpkMS0seuf3uJDam6q0qJBmzdw"/>
+<span class="font-label-bold text-label-bold text-on-surface">Bob Johnson</span>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="flex-1 overflow-y-auto p-xl">
+<div class="mb-lg">
+<h1 class="font-h1 text-h1 text-on-surface mb-xs">Team Leave Requests</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Approve or reject time‑off requests for your team</p>
+</div>
+<!-- Sub-navigation Pills -->
+<div class="flex space-x-sm mb-lg">
+<button class="px-md py-sm rounded-full bg-primary-container text-on-primary-container font-label-bold text-label-bold shadow-sm">Pending</button>
+<button class="px-md py-sm rounded-full bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-bold text-label-bold">Approved</button>
+<button class="px-md py-sm rounded-full bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-bold text-label-bold">Rejected</button>
+</div>
+<!-- Data Table Card -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low border-b border-outline-variant">
+<tr>
+<th class="py-sm px-md font-label-bold text-label-bold text-outline">Employee</th>
+<th class="py-sm px-md font-label-bold text-label-bold text-outline">Type</th>
+<th class="py-sm px-md font-label-bold text-label-bold text-outline">Dates</th>
+<th class="py-sm px-md font-label-bold text-label-bold text-outline">Reason</th>
+<th class="py-sm px-md font-label-bold text-label-bold text-outline">Submitted</th>
+<th class="py-sm px-md font-label-bold text-label-bold text-outline text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant font-body-sm text-body-sm text-on-surface">
+<!-- Row 1: Emily Wong -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-sm px-md flex items-center">
+<img alt="Avatar Emily Wong" class="w-8 h-8 rounded-full object-cover mr-sm shadow-sm" data-alt="A bright, modern headshot of Emily Wong, a young female professional with a confident smile, wearing smart-casual office attire. The background is a clean, softly blurred light-grey workspace, embodying a pristine, high-key corporate modernist aesthetic." src="https://lh3.googleusercontent.com/aida/ADBb0ugPImENDHZl17ARKbkYKDy_QpXrWp01Pk5aAFOIXrXh3ft2yI0UrnWnNvoEzBn6xfqpb8smuc1EiUC3qg0Gu8t7wU8LiwCRklDS66Q5GMo1QeV0asMaWkM0nZKXw0Xj7uuOxd9ZD-czTqb3yyCdsWBjMeqKFNk22SQLFadIHwyJZ8rQpR3ykbIkgwdtOhFBTXODHqYwdKz4MprI3a_BiyGk6nwMr7se6w2iCscJmdqXRyKcKkxhhpPg-ZUEQ9uxBdgA-V3ikLK6"/>
+<span class="font-medium text-on-surface">Emily Wong</span>
+</td>
+<td class="py-sm px-md">
+<span class="inline-flex items-center px-xs py-base rounded bg-secondary-container text-on-secondary-container font-badge text-badge">Annual</span>
+</td>
+<td class="py-sm px-md text-on-surface-variant">Oct 28 - Nov 1</td>
+<td class="py-sm px-md text-on-surface-variant">Family trip</td>
+<td class="py-sm px-md text-on-surface-variant">Oct 22</td>
+<td class="py-sm px-md text-right">
+<button class="p-sm text-primary hover:bg-primary-container hover:text-on-primary-container rounded-full transition-colors mr-xs">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</button>
+<button class="p-sm text-error hover:bg-error-container hover:text-on-error-container rounded-full transition-colors">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</td>
+</tr>
+<!-- Row 2: Sarah Jenkins -->
+<tr class="bg-surface-container-low/50 hover:bg-surface-container-low transition-colors">
+<td class="py-sm px-md flex items-center">
+<img alt="Avatar Sarah Jenkins" class="w-8 h-8 rounded-full object-cover mr-sm shadow-sm" data-alt="A professional portrait of Sarah Jenkins, an experienced female manager with a thoughtful expression. She is wearing a dark, textured blazer against a very clean, minimalist off-white background, perfectly matching a professional, stable corporate modernist UI theme." src="https://lh3.googleusercontent.com/aida/ADBb0uhAXHQ2OEanHisZPrsKIcVJZw6FSyIy9tlRm8_7o2TQ0f5zpwff9eFigJBfneZPbiyDI4KGCkLkwrj6utupdWdiujqdsODnEIm7lbOWDw1bcSKiguwoVMOzjzCVshDXDF5kMimaWp9fZ05S9xzETGmbjsq2ZA74E9MKUi29DlaSrF4-6fCX0qxEcDDkC-mx0vYBK-D6vvvbhsbuMiaH7RlF1cdXvE6S9S2kGeK8kQHAbRfWJ5CxEsttSZfETP_NfrlQgh2CHzZj"/>
+<span class="font-medium text-on-surface">Sarah Jenkins</span>
+</td>
+<td class="py-sm px-md">
+<span class="inline-flex items-center px-xs py-base rounded bg-error-container text-on-error-container font-badge text-badge">Sick</span>
+</td>
+<td class="py-sm px-md text-on-surface-variant">Oct 25</td>
+<td class="py-sm px-md text-on-surface-variant">Doctor visit</td>
+<td class="py-sm px-md text-on-surface-variant">Oct 24</td>
+<td class="py-sm px-md text-right">
+<button class="p-sm text-primary hover:bg-primary-container hover:text-on-primary-container rounded-full transition-colors mr-xs">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</button>
+<button class="p-sm text-error hover:bg-error-container hover:text-on-error-container rounded-full transition-colors">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</td>
+</tr>
+<!-- Row 3: Michael Ross -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-sm px-md flex items-center">
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center mr-sm shadow-sm">
+<span class="material-symbols-outlined text-outline text-[16px]">person</span>
+</div>
+<span class="font-medium text-on-surface">Michael Ross</span>
+</td>
+<td class="py-sm px-md">
+<span class="inline-flex items-center px-xs py-base rounded bg-secondary-container text-on-secondary-container font-badge text-badge">Annual</span>
+</td>
+<td class="py-sm px-md text-on-surface-variant">Nov 10 - Nov 12</td>
+<td class="py-sm px-md text-on-surface-variant">Personal</td>
+<td class="py-sm px-md text-on-surface-variant">Nov 1</td>
+<td class="py-sm px-md text-right">
+<button class="p-sm text-primary hover:bg-primary-container hover:text-on-primary-container rounded-full transition-colors mr-xs">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</button>
+<button class="p-sm text-error hover:bg-error-container hover:text-on-error-container rounded-full transition-colors">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</main>
+</div>
+</body></html>

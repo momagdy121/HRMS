@@ -1,0 +1,69 @@
+@{
+    ViewBag.Title = "My Payslips - HRMS Portal";
+}
+
+<div class="max-w-7xl mx-auto space-y-6">
+    <div><h2 class="font-h1 text-h1 text-on-surface">My Payslips</h2><p class="font-body-md text-body-md text-on-surface-variant mt-1">Your salary payment history</p></div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+        <table class="w-full text-left border-collapse">
+            <thead class="bg-slate-50 border-b border-slate-100">
+                <tr>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Month/Year</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Base Salary</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Bonuses</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Deductions</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Net Salary</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Status</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider text-right">Details</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-body-md text-on-surface">
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4 font-medium">October 2025</td>
+                    <td class="px-6 py-4">$6,000</td><td class="px-6 py-4 text-green-600">+$0</td><td class="px-6 py-4 text-error">-$150</td><td class="px-6 py-4 font-bold">$5,850</td>
+                    <td class="px-6 py-4"><span class="bg-green-50 text-green-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Paid</span></td>
+                    <td class="px-6 py-4 text-right"><button onclick="openModal('myPayslipModal')" class="text-secondary hover:text-primary"><span class="material-symbols-outlined">visibility</span></button></td>
+                </tr>
+                <tr class="bg-slate-50/30 hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4 font-medium">September 2025</td>
+                    <td class="px-6 py-4">$6,000</td><td class="px-6 py-4 text-green-600">+$200</td><td class="px-6 py-4 text-error">-$150</td><td class="px-6 py-4 font-bold">$6,050</td>
+                    <td class="px-6 py-4"><span class="bg-green-50 text-green-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Paid</span></td>
+                    <td class="px-6 py-4 text-right"><button class="text-secondary hover:text-primary"><span class="material-symbols-outlined">visibility</span></button></td>
+                </tr>
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4 font-medium">August 2025</td>
+                    <td class="px-6 py-4">$6,000</td><td class="px-6 py-4 text-green-600">+$0</td><td class="px-6 py-4 text-error">-$150</td><td class="px-6 py-4 font-bold">$5,850</td>
+                    <td class="px-6 py-4"><span class="bg-green-50 text-green-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Paid</span></td>
+                    <td class="px-6 py-4 text-right"><button class="text-secondary hover:text-primary"><span class="material-symbols-outlined">visibility</span></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Modals {
+    <div id="myPayslipModal" class="modal-overlay">
+        <div class="modal-content w-full max-w-lg mx-4 p-xl">
+            <div class="flex justify-between items-center mb-lg">
+                <h3 class="font-h2 text-h2 text-on-surface">Payslip — October 2025</h3>
+                <button onclick="closeModal('myPayslipModal')" class="p-1 text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">close</span></button>
+            </div>
+            <div class="border border-outline-variant/30 rounded-lg overflow-hidden">
+                <div class="grid grid-cols-2 gap-0">
+                    <div class="p-md border-b border-r border-outline-variant/30"><p class="text-body-sm text-on-surface-variant">Employee</p><p class="font-label-bold text-on-surface">Alice Brown</p></div>
+                    <div class="p-md border-b border-outline-variant/30"><p class="text-body-sm text-on-surface-variant">Department</p><p class="font-label-bold text-on-surface">Engineering</p></div>
+                    <div class="p-md border-b border-r border-outline-variant/30"><p class="text-body-sm text-on-surface-variant">Period</p><p class="font-label-bold text-on-surface">October 2025</p></div>
+                    <div class="p-md border-b border-outline-variant/30"><p class="text-body-sm text-on-surface-variant">Base Salary</p><p class="font-label-bold text-on-surface">$6,000.00</p></div>
+                    <div class="p-md border-b border-r border-outline-variant/30"><p class="text-body-sm text-on-surface-variant">Bonuses</p><p class="font-label-bold text-green-600">+$0.00</p></div>
+                    <div class="p-md border-b border-outline-variant/30"><p class="text-body-sm text-on-surface-variant">Deductions</p><p class="font-label-bold text-error">-$150.00</p></div>
+                </div>
+                <div class="p-md bg-primary-fixed/10 flex justify-between items-center">
+                    <p class="font-label-bold text-primary-container">Net Salary</p>
+                    <p class="font-h3 text-h3 text-primary-container">$5,850.00</p>
+                </div>
+            </div>
+            <div class="flex justify-end mt-lg"><button onclick="closeModal('myPayslipModal')" class="px-6 py-2 border border-outline-variant rounded-lg text-on-surface-variant font-label-bold">Close</button></div>
+        </div>
+    </div>
+}

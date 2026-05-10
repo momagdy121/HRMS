@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-on-surface": "#f0f0f4",
+                    "tertiary": "#323537",
+                    "on-primary-fixed": "#001d35",
+                    "inverse-primary": "#a0cafc",
+                    "surface-container-low": "#f3f3f7",
+                    "outline": "#72777f",
+                    "surface-variant": "#e2e2e6",
+                    "on-secondary-fixed": "#0b1c30",
+                    "background": "#f9f9fd",
+                    "surface": "#f9f9fd",
+                    "on-error-container": "#93000a",
+                    "on-primary-fixed-variant": "#184974",
+                    "primary-fixed-dim": "#a0cafc",
+                    "error-container": "#ffdad6",
+                    "on-primary-container": "#95bff1",
+                    "surface-container-highest": "#e2e2e6",
+                    "on-secondary-container": "#54647a",
+                    "surface-dim": "#d9dade",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error": "#ffffff",
+                    "surface-container-high": "#e8e8ec",
+                    "on-primary": "#ffffff",
+                    "tertiary-fixed": "#e0e3e5",
+                    "primary-fixed": "#d1e4ff",
+                    "on-tertiary-fixed-variant": "#444749",
+                    "outline-variant": "#c2c7d0",
+                    "on-background": "#1a1c1f",
+                    "secondary-container": "#d0e1fb",
+                    "on-surface-variant": "#42474f",
+                    "on-secondary-fixed-variant": "#38485d",
+                    "on-tertiary-fixed": "#191c1e",
+                    "tertiary-container": "#494c4e",
+                    "tertiary-fixed-dim": "#c4c7c9",
+                    "secondary-fixed": "#d3e4fe",
+                    "primary-container": "#1f4e79",
+                    "surface-tint": "#35618d",
+                    "on-tertiary-container": "#babcbe",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "error": "#ba1a1a",
+                    "primary": "#00375e",
+                    "secondary": "#505f76",
+                    "on-surface": "#1a1c1f",
+                    "secondary-fixed-dim": "#b7c8e1",
+                    "surface-container": "#ededf2",
+                    "surface-bright": "#f9f9fd",
+                    "inverse-surface": "#2f3034"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "xs": "4px",
+                    "base": "4px",
+                    "xl": "32px",
+                    "sm": "8px",
+                    "sidebar-collapsed": "72px",
+                    "md": "16px",
+                    "sidebar-width": "260px",
+                    "navbar-height": "64px",
+                    "lg": "24px"
+            },
+            "fontFamily": {
+                    "body-sm": ["Inter"],
+                    "h3": ["Inter"],
+                    "h1": ["Inter"],
+                    "label-bold": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "badge": ["Inter"],
+                    "h2": ["Inter"]
+            },
+            "fontSize": {
+                    "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "h3": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "h1": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "badge": ["12px", {"lineHeight": "12px", "fontWeight": "500"}],
+                    "h2": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-screen w-64 z-50 bg-[#1F4E79] dark:bg-slate-950 border-r border-slate-700/50 shadow-xl flex flex-col h-full">
+<div class="px-6 py-8">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-sky-400 rounded-lg flex items-center justify-center text-[#1F4E79]">
+<span class="material-symbols-outlined" data-icon="domain" data-weight="fill" style="font-variation-settings: 'FILL' 1;">domain</span>
+</div>
+<div>
+<h1 class="text-xl font-black tracking-tight text-white">HRMS Portal</h1>
+<p class="text-[10px] uppercase tracking-widest text-sky-300 font-bold">Management Console</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1 mt-4">
+<!-- Dashboard -->
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3 text-lg" data-icon="dashboard">dashboard</span>
+<span class="font-['Inter'] text-sm font-medium leading-tight">Dashboard</span>
+</a>
+<!-- Employees -->
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3 text-lg" data-icon="badge">badge</span>
+<span class="font-['Inter'] text-sm font-medium leading-tight">Employees</span>
+</a>
+<!-- Departments (Active State) -->
+<a class="bg-white/10 border-l-4 border-sky-400 text-white font-semibold flex items-center px-6 py-3 transition-all translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3 text-lg" data-icon="domain" data-weight="fill" style="font-variation-settings: 'FILL' 1;">domain</span>
+<span class="font-['Inter'] text-sm font-medium leading-tight">Departments</span>
+</a>
+<!-- Payroll -->
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3 text-lg" data-icon="payments">payments</span>
+<span class="font-['Inter'] text-sm font-medium leading-tight">Payroll</span>
+</a>
+<!-- Leave Requests -->
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3 text-lg" data-icon="event_busy">event_busy</span>
+<span class="font-['Inter'] text-sm font-medium leading-tight">Leave Requests</span>
+</a>
+<!-- Attendance -->
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3 text-lg" data-icon="pending_actions">pending_actions</span>
+<span class="font-['Inter'] text-sm font-medium leading-tight">Attendance</span>
+</a>
+<!-- User Accounts -->
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3 text-lg" data-icon="manage_accounts">manage_accounts</span>
+<span class="font-['Inter'] text-sm font-medium leading-tight">User Accounts</span>
+</a>
+</nav>
+<div class="pb-8 space-y-1">
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3 text-lg" data-icon="settings">settings</span>
+<span class="font-['Inter'] text-sm font-medium leading-tight">Settings</span>
+</a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3 text-lg" data-icon="logout">logout</span>
+<span class="font-['Inter'] text-sm font-medium leading-tight">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Shell -->
+<main class="flex-1 ml-64 flex flex-col min-h-screen">
+<!-- TopNavBar Shell -->
+<header class="sticky top-0 w-full z-40 bg-white/80 backdrop-blur-md dark:bg-slate-900/80 border-b border-slate-200 dark:border-slate-800 shadow-sm flex justify-between items-center px-8 py-3">
+<div class="flex items-center flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg" data-icon="search">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-slate-100/50 border-none rounded-xl text-body-md focus:ring-2 focus:ring-primary-container outline-none transition-all" placeholder="Search by name" type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4 border-r border-slate-200 pr-6">
+<button class="p-2 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-transform duration-150 hover:scale-105">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-transform duration-150 hover:scale-105">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-transform duration-150 hover:scale-105">
+<span class="material-symbols-outlined" data-icon="apps">apps</span>
+</button>
+</div>
+<div class="flex items-center gap-3 cursor-pointer group">
+<div class="text-right">
+<p class="text-sm font-bold text-slate-900 dark:text-white">Sarah Connor</p>
+<p class="text-xs text-slate-500">HR Director</p>
+</div>
+<div class="relative">
+<img alt="User Avatar" class="w-10 h-10 rounded-full border-2 border-primary-container group-hover:scale-105 transition-transform" data-alt="A professional headshot of a female executive in her late 30s with light brown hair in a soft bob. She is wearing a modern charcoal blazer over a white blouse. The lighting is soft and corporate, set against a clean, minimalist office background with soft blue accents, embodying a high-end leadership presence." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJTansJVpGDK1HROmBBntoe-tU6sQ4Fm7DQNr4JZeD_T4mMax4Drr0or53IVG0spiVWf4J0uRK7y3eynKdt9erZ_mStYl22W88zge78MvzJs7Fg0nW7zbMH1aV4LzEWLqnpZ8c1hi4P9b7IAkyozzBMZZcadTP4hMr8N2GLt0t1B3yqaQbL-6Cqa_mor8YbWifXCrn49Kw6npDxDumT8tEeS3L2LxzHchQVDyQcXk3yHBKQmsDCxWJJO9w3UUc6PCe2r5UhnfBtA"/>
+<div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>
+</div>
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary-container transition-colors" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+</header>
+<!-- Page Canvas -->
+<div class="space-y-lg p-lg">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h2 class="font-h1 text-h1 text-on-background">Departments</h2>
+<p class="font-body-md text-body-md text-secondary">Manage organization structure</p>
+</div>
+<div class="flex items-center gap-sm bg-surface-container-high p-1 rounded-full w-fit">
+<button class="px-6 py-2 rounded-full bg-white shadow-sm text-label-bold text-primary-container">Active Departments</button>
+<button class="px-6 py-2 rounded-full text-label-bold text-secondary hover:text-primary-container transition-colors">Deleted Departments</button>
+</div>
+</div>
+<!-- Main Workspace Card -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] border border-slate-200/50 overflow-hidden">
+<!-- Toolbar -->
+<div class="px-lg py-md border-b border-slate-100 flex items-center justify-between">
+<div class="flex items-center gap-md">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm" data-icon="filter_list">filter_list</span>
+<select class="pl-9 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-lg text-body-sm text-secondary appearance-none focus:ring-1 focus:ring-primary outline-none">
+<option>All Locations</option>
+</select>
+</div>
+</div>
+<button class="flex items-center gap-2 bg-primary-container text-white px-6 py-2.5 rounded-lg text-label-bold shadow-md hover:bg-primary transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                        Create Department
+                    </button>
+</div>
+<!-- Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-slate-50/50">
+<th class="px-lg font-label-bold text-label-bold text-slate-500 uppercase tracking-wider py-2">Name</th>
+<th class="px-lg font-label-bold text-label-bold text-slate-500 uppercase tracking-wider py-2">Manager</th>
+<th class="px-lg font-label-bold text-label-bold text-slate-500 uppercase tracking-wider text-center py-2">Employee Count</th>
+<th class="px-lg font-label-bold text-label-bold text-slate-500 uppercase tracking-wider text-right py-2">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-lg py-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-sky-100 flex items-center justify-center text-sky-700">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+</div>
+<div>
+<p class="font-body-lg text-body-lg text-slate-900 font-semibold">Human Resources</p>
+<p class="text-xs text-slate-400">HQ • floor 4</p>
+</div>
+</div>
+</td>
+<td class="px-lg py-3">
+<div class="flex items-center gap-3">
+<img alt="Jane Smith" class="w-8 h-8 rounded-full" data-alt="A detailed portrait of Jane Smith, a professional HR manager with short dark hair and glasses. She is wearing a professional blue silk blouse. The background is a blurred high-end office environment with natural daylight streaming through large windows, creating a bright and trustworthy atmosphere that aligns with the corporate blue palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKHMxifWBlI5gMxWKNyNjZKRBE__bkfzmFDLFo8AYkx9WpIf-kgYck6uKG5672uc6sc7a6lSgneQl5HhttpZnJEuxQg01O9A2FOt6b7d0GlPSRxO8KGMPOW55-v0ApFNK210Wchqjim3b0Q80ii16yO-2lvcr4NzhAV7Gc7azZmTP9PEI0oUVFajVT3LXj_hVnSxtpqv4fQ_smAyc2h1wufxwmAFIDroaLYT6GXt6hBg1bGMEw5O633CvZ31MjXJhLjN3ZkpTH0g"/>
+<span class="text-body-md font-medium text-slate-700">Jane Smith</span>
+</div>
+</td>
+<td class="px-lg text-center py-3">
+<span class="inline-flex items-center justify-center px-3 py-1 bg-sky-50 text-sky-700 rounded-full font-badge text-badge">24</span>
+</td>
+<td class="px-lg text-right py-3">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-slate-400 hover:text-sky-600 hover:bg-sky-50 rounded-lg transition-colors" title="Edit Department">
+<span class="material-symbols-outlined text-lg" data-icon="edit">edit</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" title="Replace Manager">
+<span class="material-symbols-outlined text-lg" data-icon="swap_horiz">swap_horiz</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-error hover:bg-error-container rounded-lg transition-colors" title="Delete Department">
+<span class="material-symbols-outlined text-lg" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="bg-slate-50/30 hover:bg-slate-50 transition-colors group">
+<td class="px-lg py-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-700">
+<span class="material-symbols-outlined" data-icon="code">code</span>
+</div>
+<div>
+<p class="font-body-lg text-body-lg text-slate-900 font-semibold">Engineering</p>
+<p class="text-xs text-slate-400">Tech Hub • floor 2</p>
+</div>
+</div>
+</td>
+<td class="px-lg py-3">
+<div class="flex items-center gap-3">
+<img alt="Robert Chen" class="w-8 h-8 rounded-full" data-alt="A portrait of Robert Chen, a senior engineering leader with black hair and a friendly expression. He is wearing a minimalist dark grey t-shirt and modern glasses. The environment is a contemporary workspace with subtle architectural lines and soft grey tones, lit by cool studio lighting to create a focused, professional tech-industry aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdqGNTveBW2VIfEfTR6YDZvupc-Fi1-tRwUzh6xOhMOKJaMedEU4ezy5KWD-1Wki5SKhYAaQJ-nEFHjnp_9p87iJPZWAG78HjtEyhW_rI-yjT5OrWUbBWekLAX84jdT4-agS6WHma80tAVnvO_W2Nr9ZQjKBJjFbS_HPTHMp-D2V5-SzdYEiDBTBjtxOE-kRuJIYB0eC6lk74eeqmrZPCSukgy9FKf4W-Gz08EhmwwLOJTHfqwFYfhzvBtZdKCSaJTkWb9gNX43A"/>
+<span class="text-body-md font-medium text-slate-700">Robert Chen</span>
+</div>
+</td>
+<td class="px-lg text-center py-3">
+<span class="inline-flex items-center justify-center px-3 py-1 bg-sky-50 text-sky-700 rounded-full font-badge text-badge">58</span>
+</td>
+<td class="px-lg text-right py-3">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-slate-400 hover:text-sky-600 hover:bg-sky-50 rounded-lg transition-colors" title="Edit Department">
+<span class="material-symbols-outlined text-lg" data-icon="edit">edit</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" title="Replace Manager">
+<span class="material-symbols-outlined text-lg" data-icon="swap_horiz">swap_horiz</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-error hover:bg-error-container rounded-lg transition-colors" title="Delete Department">
+<span class="material-symbols-outlined text-lg" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-lg py-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-pink-100 flex items-center justify-center text-pink-700">
+<span class="material-symbols-outlined" data-icon="palette">palette</span>
+</div>
+<div>
+<p class="font-body-lg text-body-lg text-slate-900 font-semibold">Design</p>
+<p class="text-xs text-slate-400">Creative Studio • floor 5</p>
+</div>
+</div>
+</td>
+<td class="px-lg py-3">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400 text-sm" data-icon="person">(Unassigned)</span>
+</div>
+<span class="text-body-sm italic text-slate-400">(Unassigned)</span>
+</div>
+</td>
+<td class="px-lg text-center py-3">
+<span class="inline-flex items-center justify-center px-3 py-1 bg-sky-50 text-sky-700 rounded-full font-badge text-badge">12</span>
+</td>
+<td class="px-lg text-right py-3">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-slate-400 hover:text-sky-600 hover:bg-sky-50 rounded-lg transition-colors" title="Edit Department">
+<span class="material-symbols-outlined text-lg" data-icon="edit">edit</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" title="Replace Manager">
+<span class="material-symbols-outlined text-lg" data-icon="swap_horiz">swap_horiz</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-error hover:bg-error-container rounded-lg transition-colors" title="Delete Department">
+<span class="material-symbols-outlined text-lg" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="bg-slate-50/30 hover:bg-slate-50 transition-colors group">
+<td class="px-lg py-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-700">
+<span class="material-symbols-outlined" data-icon="trending_up">trending_up</span>
+</div>
+<div>
+<p class="font-body-lg text-body-lg text-slate-900 font-semibold">Sales</p>
+<p class="text-xs text-slate-400">Expansion Wing • floor 3</p>
+</div>
+</div>
+</td>
+<td class="px-lg py-3">
+<div class="flex items-center gap-3">
+<img alt="David Chen" class="w-8 h-8 rounded-full" data-alt="A portrait of David Chen, an energetic sales director with sharp features and short black hair. He is wearing a crisp light blue shirt and a professional wristwatch. The background is a bright, airy office with expansive glass walls and reflections of a city skyline, lit with high-key corporate lighting for a dynamic and professional business aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDP7RaPaMisdLmsxjLlp-BrxFVrt-IJl43R13i4mr6U0QsCrys9PSX3Xom-mdMKxqKFV-4J3mH3fn2z1CcDlqvbDTRmjOAcPm5p9WsxhqLa92BJXSLMw_6WW5uGbGDLsXTAsB6VfDUd9kUVCN7ZEta9ICG-nmXyYhwSACvrrDyDnBz2NeW2MYPG4rfwsGV_J91w_Zv78IBLb38xORo6Loy83DrJBCPVLvGlIteySXnwbxH6erLOhzGyajooSEGy3OJFJa_vrWi1-Q"/>
+<span class="text-body-md font-medium text-slate-700">David Chen</span>
+</div>
+</td>
+<td class="px-lg text-center py-3">
+<span class="inline-flex items-center justify-center px-3 py-1 bg-sky-50 text-sky-700 rounded-full font-badge text-badge">31</span>
+</td>
+<td class="px-lg text-right py-3">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-slate-400 hover:text-sky-600 hover:bg-sky-50 rounded-lg transition-colors" title="Edit Department">
+<span class="material-symbols-outlined text-lg" data-icon="edit">edit</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" title="Replace Manager">
+<span class="material-symbols-outlined text-lg" data-icon="swap_horiz">swap_horiz</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-error hover:bg-error-container rounded-lg transition-colors" title="Delete Department">
+<span class="material-symbols-outlined text-lg" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Footer Pagination -->
+<div class="px-lg py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+<p class="text-body-sm text-secondary">Showing 1 to 4 of 8 entries</p>
+<div class="flex items-center gap-1">
+<button class="p-2 text-slate-400 hover:text-primary-container transition-colors disabled:opacity-30" disabled="">
+<span class="material-symbols-outlined text-lg" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded flex items-center justify-center bg-primary-container text-white font-label-bold text-xs">1</button>
+<button class="w-8 h-8 rounded flex items-center justify-center hover:bg-slate-200 text-secondary font-label-bold text-xs">2</button>
+<button class="p-2 text-slate-400 hover:text-primary-container transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Contextual Stats Grid (Bento Style Extension) -->
+</div>
+</main>
+</body></html>

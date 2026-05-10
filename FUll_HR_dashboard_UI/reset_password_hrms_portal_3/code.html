@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Reset Password - Corporate Modernist HR</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-surface": "#1a1c1f",
+                        "inverse-primary": "#a0cafc",
+                        "primary": "#00375e",
+                        "outline": "#72777f",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "surface-container-high": "#e8e8ec",
+                        "surface-container": "#ededf2",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "secondary-fixed": "#d3e4fe",
+                        "secondary-container": "#d0e1fb",
+                        "primary-fixed-dim": "#a0cafc",
+                        "on-surface-variant": "#42474f",
+                        "on-background": "#1a1c1f",
+                        "on-tertiary-fixed": "#191c1e",
+                        "outline-variant": "#c2c7d0",
+                        "tertiary": "#323537",
+                        "inverse-surface": "#2f3034",
+                        "tertiary-container": "#494c4e",
+                        "on-secondary-fixed": "#0b1c30",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#e2e2e6",
+                        "on-primary-fixed-variant": "#184974",
+                        "secondary": "#505f76",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-container": "#babcbe",
+                        "on-secondary-container": "#54647a",
+                        "surface-container-highest": "#e2e2e6",
+                        "on-error": "#ffffff",
+                        "on-primary-container": "#95bff1",
+                        "on-primary-fixed": "#001d35",
+                        "surface-tint": "#35618d",
+                        "surface": "#f9f9fd",
+                        "error-container": "#ffdad6",
+                        "surface-dim": "#d9dade",
+                        "primary-fixed": "#d1e4ff",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#e0e3e5",
+                        "surface-bright": "#f9f9fd",
+                        "primary-container": "#1f4e79",
+                        "inverse-on-surface": "#f0f0f4",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "background": "#f9f9fd",
+                        "surface-container-low": "#f3f3f7"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "navbar-height": "64px",
+                        "xl": "32px",
+                        "sm": "8px",
+                        "sidebar-collapsed": "72px",
+                        "base": "4px",
+                        "xs": "4px",
+                        "lg": "24px",
+                        "sidebar-width": "260px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "label-bold": ["Inter"],
+                        "h3": ["Inter"],
+                        "h1": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "badge": ["Inter"],
+                        "h2": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                        "h3": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "h1": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "badge": ["12px", {"lineHeight": "12px", "fontWeight": "500"}],
+                        "h2": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface-container-low min-h-screen flex flex-col justify-center items-center p-md font-body-md text-on-surface">
+<div class="w-full max-w-[440px] bg-surface-container-lowest rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] border border-outline-variant p-xl flex flex-col gap-lg">
+<div class="flex flex-col items-center gap-sm text-center">
+<div class="flex items-center gap-sm text-primary mb-sm">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1; font-size: 32px;">corporate_fare</span>
+<span class="font-h2 text-h2 text-primary font-bold">HRMS Portal</span>
+</div>
+<h1 class="font-h3 text-h3 text-on-surface">Reset Password</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Enter your new password.</p>
+</div>
+<div class="bg-error-container border border-error/20 rounded-DEFAULT p-md flex gap-sm items-start">
+<span class="material-symbols-outlined text-on-error-container">error</span>
+<p class="font-body-sm text-body-sm text-on-error-container">The reset token is invalid or has expired. Please request a new reset link.</p>
+</div>
+<!-- Success state hidden by default, shown here for requirements -->
+<!--
+        <div class="bg-[#e6f4ea] border border-[#34a853]/20 rounded-DEFAULT p-md flex gap-sm items-start">
+            <span class="material-symbols-outlined text-[#137333]">check_circle</span>
+            <p class="font-body-sm text-body-sm text-[#137333]">Password reset successfully. You can now sign in with your new password.</p>
+        </div>
+        -->
+<form class="flex flex-col gap-md">
+<div class="flex flex-col gap-xs">
+<label class="font-label-bold text-label-bold text-on-surface-variant" for="email">Email Address</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-sm flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline">mail</span>
+</div>
+<input class="w-full bg-surface-variant border border-outline-variant rounded-DEFAULT py-[10px] pl-[36px] pr-sm font-body-md text-body-md text-on-surface-variant cursor-not-allowed focus:ring-0 focus:border-outline-variant" disabled="" id="email" readonly="" type="email" value="jane.smith@company.com"/>
+</div>
+</div>
+<div class="flex flex-col gap-xs">
+<label class="font-label-bold text-label-bold text-on-surface-variant" for="new_password">New Password</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-sm flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline">lock</span>
+</div>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-DEFAULT py-[10px] pl-[36px] pr-sm font-body-md text-body-md text-on-surface focus:ring-2 focus:ring-primary focus:border-primary transition-all" id="new_password" placeholder="Enter new password" type="password"/>
+</div>
+</div>
+<div class="flex flex-col gap-xs">
+<label class="font-label-bold text-label-bold text-on-surface-variant" for="confirm_password">Confirm New Password</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-sm flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline">lock_reset</span>
+</div>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-DEFAULT py-[10px] pl-[36px] pr-sm font-body-md text-body-md text-on-surface focus:ring-2 focus:ring-primary focus:border-primary transition-all" id="confirm_password" placeholder="Confirm new password" type="password"/>
+</div>
+</div>
+<button class="w-full bg-primary-container hover:bg-primary text-on-primary font-label-bold text-label-bold py-[12px] rounded-DEFAULT transition-colors mt-sm flex justify-center items-center gap-sm" type="button">
+                Reset Password
+            </button>
+</form>
+<div class="text-center mt-sm">
+<a class="font-body-sm text-body-sm text-primary hover:text-primary-container transition-colors inline-flex items-center gap-xs" href="#">
+<span class="material-symbols-outlined" style="font-size: 16px;">arrow_back</span>
+                Back to Sign in
+            </a>
+</div>
+</div>
+<!-- Injecting Footer Component per JSON specs (though prompt requested standalone, providing footer as per instructions to use shared components if logical, but placed outside the card for clean layout) -->
+<footer class="w-full py-lg px-xl flex flex-col md:flex-row justify-center items-center gap-md bg-transparent mt-xl absolute bottom-0">
+<p class="font-body-sm text-body-sm text-secondary dark:text-secondary-fixed-dim mr-auto md:mr-0">© 2024 Corporate Modernist HR. All rights reserved.</p>
+<div class="flex gap-md">
+<a class="font-body-sm text-body-sm text-secondary dark:text-secondary-fixed-dim hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">Privacy Policy</a>
+<a class="font-body-sm text-body-sm text-secondary dark:text-secondary-fixed-dim hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">Terms of Service</a>
+<a class="font-body-sm text-body-sm text-secondary dark:text-secondary-fixed-dim hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">Contact Support</a>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,85 @@
+@{
+    ViewBag.Title = "Attendance - HRMS Portal";
+}
+
+<div class="max-w-7xl mx-auto space-y-6">
+    <div>
+        <h2 class="font-h1 text-h1 text-on-surface">Attendance</h2>
+        <p class="font-body-md text-body-md text-on-surface-variant mt-1">Daily attendance records</p>
+    </div>
+
+    <!-- Filters -->
+    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex flex-wrap gap-4 items-end">
+        <div class="flex flex-col gap-1.5">
+            <label class="font-label-bold text-slate-500 text-[11px] uppercase tracking-wider">Date</label>
+            <input type="date" value="2025-10-24" class="border-slate-200 rounded-lg text-sm font-body-md focus:border-primary focus:ring-0 px-3 py-2" />
+        </div>
+        <div class="flex flex-col gap-1.5">
+            <label class="font-label-bold text-slate-500 text-[11px] uppercase tracking-wider">Department</label>
+            <select class="border-slate-200 rounded-lg text-sm font-body-md focus:border-primary focus:ring-0 px-3 py-2">
+                <option>All Departments</option><option>Engineering</option><option>Design</option><option>Marketing</option><option>Sales</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+        <table class="w-full text-left border-collapse">
+            <thead class="bg-slate-50 border-b border-slate-100">
+                <tr>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Employee</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Department</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Check In</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Check Out</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Status</th>
+                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Notes</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-body-md text-on-surface">
+                <tr class="striped-row hover:bg-slate-50/80 transition-colors">
+                    <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-xs">JD</div><span class="font-medium">John Doe</span></div></td>
+                    <td class="px-6 py-4 text-slate-600">Engineering</td>
+                    <td class="px-6 py-4">08:55 AM</td><td class="px-6 py-4">05:30 PM</td>
+                    <td class="px-6 py-4"><span class="bg-green-50 text-green-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Present</span></td>
+                    <td class="px-6 py-4 text-slate-400">—</td>
+                </tr>
+                <tr class="striped-row hover:bg-slate-50/80 transition-colors">
+                    <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-bold text-xs">JS</div><span class="font-medium">Jane Smith</span></div></td>
+                    <td class="px-6 py-4 text-slate-600">Design</td>
+                    <td class="px-6 py-4">09:10 AM</td><td class="px-6 py-4">06:00 PM</td>
+                    <td class="px-6 py-4"><span class="bg-yellow-50 text-amber-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Late</span></td>
+                    <td class="px-6 py-4 text-slate-500 text-sm">Traffic delay</td>
+                </tr>
+                <tr class="striped-row hover:bg-slate-50/80 transition-colors">
+                    <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-xs">MJ</div><span class="font-medium">Michael Johnson</span></div></td>
+                    <td class="px-6 py-4 text-slate-600">Marketing</td>
+                    <td class="px-6 py-4 text-slate-400">—</td><td class="px-6 py-4 text-slate-400">—</td>
+                    <td class="px-6 py-4"><span class="bg-red-50 text-red-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Absent</span></td>
+                    <td class="px-6 py-4 text-slate-500 text-sm">Sick leave</td>
+                </tr>
+                <tr class="striped-row hover:bg-slate-50/80 transition-colors">
+                    <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-bold text-xs">EW</div><span class="font-medium">Emily Wong</span></div></td>
+                    <td class="px-6 py-4 text-slate-600">Engineering</td>
+                    <td class="px-6 py-4">08:45 AM</td><td class="px-6 py-4">—</td>
+                    <td class="px-6 py-4"><span class="bg-green-50 text-green-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Present</span></td>
+                    <td class="px-6 py-4 text-slate-400">—</td>
+                </tr>
+                <tr class="striped-row hover:bg-slate-50/80 transition-colors">
+                    <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-xs">DC</div><span class="font-medium">David Chen</span></div></td>
+                    <td class="px-6 py-4 text-slate-600">Sales</td>
+                    <td class="px-6 py-4">08:30 AM</td><td class="px-6 py-4">05:15 PM</td>
+                    <td class="px-6 py-4"><span class="bg-green-50 text-green-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Present</span></td>
+                    <td class="px-6 py-4 text-slate-400">—</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+            <p class="text-sm text-secondary">Showing 1 to 5 of 1,248 entries</p>
+            <div class="flex items-center gap-1">
+                <button class="px-3 py-1 rounded-lg bg-primary text-white text-sm font-semibold">1</button>
+                <button class="px-3 py-1 rounded-lg hover:bg-white text-secondary text-sm">2</button>
+                <button class="px-3 py-1 rounded-lg hover:bg-white text-secondary text-sm">3</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HRMS Portal - Reset Password</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface": "#f9f9fd",
+                    "tertiary-container": "#494c4e",
+                    "background": "#f9f9fd",
+                    "error": "#ba1a1a",
+                    "surface-variant": "#e2e2e6",
+                    "inverse-on-surface": "#f0f0f4",
+                    "primary": "#00375e",
+                    "on-tertiary-fixed-variant": "#444749",
+                    "on-secondary-fixed-variant": "#38485d",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary-container": "#d0e1fb",
+                    "on-primary-container": "#95bff1",
+                    "secondary-fixed": "#d3e4fe",
+                    "primary-fixed": "#d1e4ff",
+                    "primary-container": "#1f4e79",
+                    "inverse-primary": "#a0cafc",
+                    "on-surface": "#1a1c1f",
+                    "surface-container-low": "#f3f3f7",
+                    "on-tertiary": "#ffffff",
+                    "on-primary-fixed-variant": "#184974",
+                    "on-primary": "#ffffff",
+                    "outline-variant": "#c2c7d0",
+                    "on-secondary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "outline": "#72777f",
+                    "inverse-surface": "#2f3034",
+                    "surface-container-highest": "#e2e2e6",
+                    "secondary-fixed-dim": "#b7c8e1",
+                    "on-surface-variant": "#42474f",
+                    "tertiary-fixed": "#e0e3e5",
+                    "surface-bright": "#f9f9fd",
+                    "secondary": "#505f76",
+                    "on-tertiary-fixed": "#191c1e",
+                    "on-secondary-container": "#54647a",
+                    "on-background": "#1a1c1f",
+                    "surface-container-high": "#e8e8ec",
+                    "on-tertiary-container": "#babcbe",
+                    "on-primary-fixed": "#001d35",
+                    "tertiary": "#323537",
+                    "surface-tint": "#35618d",
+                    "tertiary-fixed-dim": "#c4c7c9",
+                    "error-container": "#ffdad6",
+                    "surface-dim": "#d9dade",
+                    "surface-container": "#ededf2",
+                    "on-error": "#ffffff",
+                    "on-secondary-fixed": "#0b1c30",
+                    "primary-fixed-dim": "#a0cafc"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "md": "16px",
+                    "xl": "32px",
+                    "sidebar-width": "260px",
+                    "sm": "8px",
+                    "navbar-height": "64px",
+                    "base": "4px",
+                    "sidebar-collapsed": "72px",
+                    "xs": "4px",
+                    "lg": "24px"
+            },
+            "fontFamily": {
+                    "body-sm": [
+                            "Inter"
+                    ],
+                    "badge": [
+                            "Inter"
+                    ],
+                    "h3": [
+                            "Inter"
+                    ],
+                    "label-bold": [
+                            "Inter"
+                    ],
+                    "h2": [
+                            "Inter"
+                    ],
+                    "h1": [
+                            "Inter"
+                    ],
+                    "body-lg": [
+                            "Inter"
+                    ],
+                    "body-md": [
+                            "Inter"
+                    ]
+            },
+            "fontSize": {
+                    "body-sm": [
+                            "13px",
+                            {
+                                    "lineHeight": "18px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "badge": [
+                            "12px",
+                            {
+                                    "lineHeight": "12px",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "h3": [
+                            "20px",
+                            {
+                                    "lineHeight": "28px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "label-bold": [
+                            "12px",
+                            {
+                                    "lineHeight": "16px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "h2": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "letterSpacing": "-0.01em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "h1": [
+                            "30px",
+                            {
+                                    "lineHeight": "38px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "body-lg": [
+                            "16px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "body-md": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "fontWeight": "400"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-surface-container-low min-h-screen flex items-center justify-center p-md">
+<!-- Main Container -->
+<main class="w-full max-w-md bg-surface-container-lowest rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] overflow-hidden">
+<!-- Header Section -->
+<header class="pt-xl px-xl pb-md text-center">
+<div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary-container text-on-primary mb-md">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">corporate_fare</span>
+</div>
+<h1 class="font-h1 text-h1 text-on-surface mb-xs">HRMS Portal</h1>
+</header>
+<!-- Content Section -->
+<section class="px-xl pb-xl">
+<h2 class="font-h2 text-h2 text-on-surface mb-xs text-center">Reset Password</h2>
+<p class="font-body-md text-body-md text-on-surface-variant text-center mb-lg">Enter your new password.</p>
+<!-- Error State Alert -->
+<div class="bg-error-container text-on-error-container p-md rounded-lg mb-lg border border-[#f8b4b4] flex items-start gap-sm">
+<span class="material-symbols-outlined mt-0.5" style="font-variation-settings: 'FILL' 1;">error</span>
+<p class="font-body-sm text-body-sm">The reset token is invalid or has expired. Please request a new reset link.</p>
+</div>
+<!-- Form -->
+<form action="#" class="space-y-md" method="POST">
+<!-- Email Field (Disabled) -->
+<div>
+<label class="block font-label-bold text-label-bold text-on-surface-variant mb-xs" for="email">Email Address</label>
+<input class="w-full rounded-DEFAULT border-outline-variant bg-surface-variant text-on-surface-variant font-body-md text-body-md px-md py-sm cursor-not-allowed opacity-70" disabled="" id="email" name="email" type="email" value="jane.smith@company.com"/>
+</div>
+<!-- New Password Field -->
+<div>
+<label class="block font-label-bold text-label-bold text-on-surface mb-xs" for="new_password">New Password</label>
+<input class="w-full rounded-DEFAULT border-outline focus:border-primary focus:ring-1 focus:ring-primary bg-surface-container-lowest text-on-surface font-body-md text-body-md px-md py-sm transition-colors" id="new_password" name="new_password" placeholder="••••••••" required="" type="password"/>
+</div>
+<!-- Confirm Password Field -->
+<div>
+<label class="block font-label-bold text-label-bold text-on-surface mb-xs" for="confirm_password">Confirm New Password</label>
+<input class="w-full rounded-DEFAULT border-outline focus:border-primary focus:ring-1 focus:ring-primary bg-surface-container-lowest text-on-surface font-body-md text-body-md px-md py-sm transition-colors" id="confirm_password" name="confirm_password" placeholder="••••••••" required="" type="password"/>
+</div>
+<!-- Submit Button -->
+<button class="w-full bg-primary-container text-on-primary hover:bg-primary font-label-bold text-label-bold py-md rounded-DEFAULT transition-colors flex items-center justify-center gap-sm mt-lg shadow-sm" type="submit">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">lock_reset</span>
+                    Reset Password
+                </button>
+</form>
+<!-- Footer Link -->
+<div class="mt-lg text-center">
+<a class="font-body-sm text-body-sm text-primary hover:text-primary-container transition-colors font-medium" href="#">Back to Sign in</a>
+</div>
+</section>
+<!-- Hidden Success State (For demonstration) -->
+<!--
+        <div class="px-xl pb-xl hidden">
+            <div class="bg-[#dcfce7] text-[#166534] p-md rounded-lg border border-[#bbf7d0] flex items-start gap-sm">
+                <span class="material-symbols-outlined mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                <p class="font-body-sm text-body-sm">Password reset successfully. You can now sign in with your new password.</p>
+            </div>
+            <div class="mt-lg text-center">
+                <a href="#" class="inline-flex bg-primary-container text-on-primary hover:bg-primary font-label-bold text-label-bold py-sm px-xl rounded-DEFAULT transition-colors items-center justify-center gap-sm">
+                    Sign In Now
+                </a>
+            </div>
+        </div>
+        -->
+</main>
+<!-- Global Footer Component -->
+<footer class="fixed bottom-0 w-full py-lg px-xl flex flex-col md:flex-row justify-center items-center gap-md bg-transparent no shadows">
+<p class="font-body-sm text-body-sm text-secondary dark:text-secondary-fixed-dim">© 2024 Corporate Modernist HR. All rights reserved.</p>
+<nav class="flex gap-md">
+<a class="font-body-sm text-body-sm text-secondary dark:text-secondary-fixed-dim hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">Privacy Policy</a>
+<a class="font-body-sm text-body-sm text-secondary dark:text-secondary-fixed-dim hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">Terms of Service</a>
+<a class="font-body-sm text-body-sm text-secondary dark:text-secondary-fixed-dim hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">Contact Support</a>
+</nav>
+</footer>
+</body></html>

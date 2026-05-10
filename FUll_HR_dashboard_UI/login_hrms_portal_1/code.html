@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HRMS Portal - Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-container": "#1f4e79",
+                      "secondary-fixed": "#d3e4fe",
+                      "tertiary": "#323537",
+                      "on-secondary-fixed-variant": "#38485d",
+                      "surface-container-low": "#f3f3f7",
+                      "outline": "#72777f",
+                      "outline-variant": "#c2c7d0",
+                      "inverse-primary": "#a0cafc",
+                      "background": "#f9f9fd",
+                      "on-primary": "#ffffff",
+                      "on-error": "#ffffff",
+                      "on-secondary-fixed": "#0b1c30",
+                      "on-background": "#1a1c1f",
+                      "surface": "#f9f9fd",
+                      "surface-bright": "#f9f9fd",
+                      "on-surface-variant": "#42474f",
+                      "on-tertiary": "#ffffff",
+                      "secondary": "#505f76",
+                      "inverse-on-surface": "#f0f0f4",
+                      "surface-tint": "#35618d",
+                      "on-tertiary-fixed-variant": "#444749",
+                      "tertiary-fixed": "#e0e3e5",
+                      "tertiary-fixed-dim": "#c4c7c9",
+                      "tertiary-container": "#494c4e",
+                      "surface-variant": "#e2e2e6",
+                      "on-secondary": "#ffffff",
+                      "on-error-container": "#93000a",
+                      "on-secondary-container": "#54647a",
+                      "on-primary-fixed-variant": "#184974",
+                      "primary-fixed-dim": "#a0cafc",
+                      "surface-container-lowest": "#ffffff",
+                      "inverse-surface": "#2f3034",
+                      "secondary-fixed-dim": "#b7c8e1",
+                      "surface-dim": "#d9dade",
+                      "on-surface": "#1a1c1f",
+                      "on-tertiary-fixed": "#191c1e",
+                      "secondary-container": "#d0e1fb",
+                      "surface-container-high": "#e8e8ec",
+                      "primary-fixed": "#d1e4ff",
+                      "error-container": "#ffdad6",
+                      "surface-container-highest": "#e2e2e6",
+                      "on-tertiary-container": "#babcbe",
+                      "on-primary-container": "#95bff1",
+                      "primary": "#00375e",
+                      "surface-container": "#ededf2",
+                      "on-primary-fixed": "#001d35",
+                      "error": "#ba1a1a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "xs": "4px",
+                      "xl": "32px",
+                      "navbar-height": "64px",
+                      "sidebar-collapsed": "72px",
+                      "md": "16px",
+                      "sm": "8px",
+                      "base": "4px",
+                      "lg": "24px",
+                      "sidebar-width": "260px"
+              },
+              "fontFamily": {
+                      "badge": [
+                              "Inter"
+                      ],
+                      "label-bold": [
+                              "Inter"
+                      ],
+                      "h2": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ],
+                      "h3": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "h1": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "badge": [
+                              "12px",
+                              {
+                                      "lineHeight": "12px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "label-bold": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "h2": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-sm": [
+                              "13px",
+                              {
+                                      "lineHeight": "18px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "h3": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "h1": [
+                              "30px",
+                              {
+                                      "lineHeight": "38px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background min-h-screen flex items-center justify-center p-md font-body-md text-on-surface">
+<div class="w-full max-w-[440px] bg-surface-container-lowest rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] border border-surface-variant p-xl flex flex-col gap-lg backdrop-blur-[4px]">
+<!-- Header -->
+<div class="flex flex-col items-center gap-sm text-center">
+<div class="w-16 h-16 rounded-full bg-primary-container flex items-center justify-center mb-sm">
+<span class="material-symbols-outlined text-on-primary text-[32px]" style="font-variation-settings: 'FILL' 1;">domain</span>
+</div>
+<h1 class="font-h1 text-h1 text-primary-container">HRMS Portal</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Sign in to access your employee dashboard</p>
+</div>
+<!-- Form -->
+<form action="#" class="flex flex-col gap-md" method="POST">
+<!-- Error Placeholder (Hidden by default, shown for demonstration) -->
+<div class="bg-error-container text-on-error-container font-body-sm text-body-sm p-sm rounded-lg flex items-center gap-sm border border-error">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">error</span>
+                Invalid email or password. Please try again.
+            </div>
+<!-- Email Field -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-bold text-label-bold text-on-surface-variant" for="email">Email Address</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-outline">mail</span>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg py-sm pl-xl pr-sm font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors" id="email" name="email" placeholder="name@company.com" required="" type="email"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="flex flex-col gap-xs">
+<div class="flex justify-between items-center">
+<label class="font-label-bold text-label-bold text-on-surface-variant" for="password">Password</label>
+<a class="font-body-sm text-body-sm text-surface-tint hover:underline" href="#">Forgot password?</a>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-outline">lock</span>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg py-sm pl-xl pr-sm font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors" id="password" name="password" placeholder="••••••••" required="" type="password"/>
+</div>
+</div>
+<!-- Remember Me -->
+<div class="flex items-center gap-sm mt-xs">
+<input class="w-4 h-4 rounded border-outline-variant text-primary-container focus:ring-primary-container" id="remember" name="remember" type="checkbox"/>
+<label class="font-body-sm text-body-sm text-on-surface-variant" for="remember">Remember me on this device</label>
+</div>
+<!-- Submit Button -->
+<button class="mt-sm w-full bg-primary-container text-on-primary font-label-bold text-label-bold py-md rounded-lg hover:bg-primary transition-colors flex justify-center items-center gap-sm shadow-sm" type="submit">
+                Sign In
+                <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</form>
+<!-- Footer -->
+<div class="text-center mt-sm">
+<p class="font-body-sm text-body-sm text-on-surface-variant">Need access? <a class="text-surface-tint hover:underline font-medium" href="#">Contact IT Support</a></p>
+</div>
+</div>
+</body></html>

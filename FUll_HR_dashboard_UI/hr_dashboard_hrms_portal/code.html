@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HR Dashboard - HRMS Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-high": "#e8e8ec",
+                        "secondary-fixed": "#d3e4fe",
+                        "on-error-container": "#93000a",
+                        "primary": "#00375e",
+                        "error-container": "#ffdad6",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#42474f",
+                        "on-surface": "#1a1c1f",
+                        "primary-container": "#1f4e79",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#ededf2",
+                        "inverse-on-surface": "#f0f0f4",
+                        "surface-variant": "#e2e2e6",
+                        "outline-variant": "#c2c7d0",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "tertiary-fixed": "#e0e3e5",
+                        "surface-dim": "#d9dade",
+                        "outline": "#72777f",
+                        "on-primary-fixed-variant": "#184974",
+                        "on-secondary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#e2e2e6",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "on-tertiary-fixed": "#191c1e",
+                        "primary-fixed-dim": "#a0cafc",
+                        "on-primary-fixed": "#001d35",
+                        "inverse-surface": "#2f3034",
+                        "on-primary-container": "#95bff1",
+                        "tertiary-container": "#494c4e",
+                        "secondary-container": "#d0e1fb",
+                        "error": "#ba1a1a",
+                        "surface-tint": "#35618d",
+                        "surface-bright": "#f9f9fd",
+                        "primary-fixed": "#d1e4ff",
+                        "surface": "#f9f9fd",
+                        "on-tertiary-container": "#babcbe",
+                        "on-secondary-fixed": "#0b1c30",
+                        "tertiary": "#323537",
+                        "surface-container-low": "#f3f3f7",
+                        "inverse-primary": "#a0cafc",
+                        "on-secondary-container": "#54647a",
+                        "secondary": "#505f76",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "on-background": "#1a1c1f",
+                        "background": "#f9f9fd"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "md": "16px",
+                        "sidebar-collapsed": "72px",
+                        "base": "4px",
+                        "sidebar-width": "260px",
+                        "sm": "8px",
+                        "lg": "24px",
+                        "xl": "32px",
+                        "navbar-height": "64px",
+                        "xs": "4px"
+                    },
+                    "fontFamily": {
+                        "badge": ["Inter"],
+                        "label-bold": ["Inter"],
+                        "h1": ["Inter"],
+                        "h3": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "h2": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "badge": ["12px", { "lineHeight": "12px", "fontWeight": "500" }],
+                        "label-bold": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+                        "h1": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "h3": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "h2": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface-container-low text-on-background min-h-screen flex">
+<!-- SideNavBar -->
+<nav class="bg-[#1F4E79] dark:bg-slate-950 text-white font-['Inter'] text-sm font-medium leading-tight fixed left-0 top-0 h-screen w-64 z-50 border-r border-slate-700/50 shadow-xl flex flex-col h-full hidden md:flex">
+<div class="px-6 py-8">
+<h1 class="text-xl font-black tracking-tight text-white mb-1">HRMS Portal</h1>
+<p class="text-xs text-slate-300">Management Console</p>
+</div>
+<div class="flex-1 overflow-y-auto py-4 flex flex-col gap-1">
+<a class="bg-white/10 border-l-4 border-sky-400 text-white font-semibold flex items-center px-6 py-3 transition-all Active: translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3">badge</span>
+                Employees
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3">domain</span>
+                Departments
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3">payments</span>
+                Payroll
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3">event_busy</span>
+                Leave Requests
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3">pending_actions</span>
+                Attendance
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3">manage_accounts</span>
+                User Accounts
+            </a>
+</div>
+<div class="mt-auto border-t border-slate-700/50 py-4 flex flex-col gap-1">
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3">settings</span>
+                Settings
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3">logout</span>
+                Logout
+            </a>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex-1 md:ml-sidebar-width flex flex-col min-h-screen">
+<!-- TopNavBar -->
+<header class="bg-white/80 backdrop-blur-md dark:bg-slate-900/80 text-[#1F4E79] dark:text-blue-400 font-['Inter'] text-sm tracking-wide sticky top-0 w-full z-40 border-b border-slate-200 dark:border-slate-800 shadow-sm flex justify-between items-center px-8 py-3">
+<div class="flex items-center">
+<span class="text-lg font-bold text-slate-900 dark:text-white md:hidden mr-4">HRMS Portal</span>
+<!-- Search Bar Placeholder -->
+<div class="hidden sm:flex items-center bg-surface-container-low rounded-lg px-3 py-1.5 border border-surface-variant focus-within:border-primary-container transition-colors w-64">
+<span class="material-symbols-outlined text-outline text-sm mr-2">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm text-on-surface w-full p-0" placeholder="Search..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg p-2 hover:scale-105 transition-transform duration-150">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg p-2 hover:scale-105 transition-transform duration-150">
+<span class="material-symbols-outlined">help</span>
+</button>
+<button class="text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg p-2 hover:scale-105 transition-transform duration-150 mr-4">
+<span class="material-symbols-outlined">apps</span>
+</button>
+<div class="flex items-center gap-3 border-l border-slate-200 pl-4">
+<div class="text-right hidden sm:block">
+<p class="font-label-bold text-label-bold text-on-surface">Sarah Connor</p>
+<p class="font-body-sm text-body-sm text-outline">HR Director</p>
+</div>
+<img alt="User Avatar" class="w-10 h-10 rounded-full object-cover border-2 border-primary-container" data-alt="A professional headshot of a corporate HR director, well-lit, neutral background, conveying trust and authority within a modern corporate modernist environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzUZrRthU0MXdJgXjqJKdLrMF5kPFp38pOEu1sT6LrDxBYdZ1LWjDaLe6WZj2lt42csWDcLD-Ie0kl4ylra417PuWTti1fIhKDoKNUiekghGR1Uq8QepNPxOOAeVDlUZEXYSzS12ym4RhrWomhQIoHqAYxRoNd0vx6nCZIpyRHhTgo6G83v9v2PxSUQGlfCNBQ9xkiXcl2PCpeilAiP3F4GNAmiUPEzqLmQAjFvmHTTlX_szOo6oSURapDoJbWMIegzyMsvNF7aA"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 p-lg lg:p-xl overflow-y-auto">
+<!-- Page Header -->
+<div class="mb-8">
+<h2 class="font-h1 text-h1 text-primary-container mb-1">HR Dashboard</h2>
+<p class="font-body-lg text-body-lg text-outline">Overview of key organizational metrics</p>
+</div>
+<!-- Stat Cards Row -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<!-- Stat Card 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-[0_2px_4px_rgba(0,0,0,0.05)] border border-surface-variant flex flex-col justify-between hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)] transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<p class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Total Active Employees</p>
+<span class="material-symbols-outlined text-primary-container bg-secondary-fixed p-1.5 rounded-lg">group</span>
+</div>
+<p class="font-h1 text-h1 text-on-surface">1,248</p>
+<p class="font-body-sm text-body-sm text-outline mt-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm text-[green]">trending_up</span> +2% this month
+                    </p>
+</div>
+<!-- Stat Card 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-[0_2px_4px_rgba(0,0,0,0.05)] border border-surface-variant flex flex-col justify-between hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)] transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<p class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Pending Leave Requests</p>
+<span class="material-symbols-outlined text-[#B45309] bg-[#FEF3C7] p-1.5 rounded-lg">event_busy</span>
+</div>
+<p class="font-h1 text-h1 text-on-surface">12</p>
+<p class="font-body-sm text-body-sm text-outline mt-2 flex items-center gap-1">
+                        Requires action
+                    </p>
+</div>
+<!-- Stat Card 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-[0_2px_4px_rgba(0,0,0,0.05)] border border-surface-variant flex flex-col justify-between hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)] transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<p class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Today's Check-ins</p>
+<span class="material-symbols-outlined text-[#047857] bg-[#D1FAE5] p-1.5 rounded-lg">how_to_reg</span>
+</div>
+<p class="font-h1 text-h1 text-on-surface">342</p>
+<p class="font-body-sm text-body-sm text-outline mt-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm text-[green]">trending_up</span> 98% attendance
+                    </p>
+</div>
+<!-- Stat Card 4 -->
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-[0_2px_4px_rgba(0,0,0,0.05)] border border-surface-variant flex flex-col justify-between hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)] transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<p class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Active Departments</p>
+<span class="material-symbols-outlined text-[#4338CA] bg-[#E0E7FF] p-1.5 rounded-lg">domain</span>
+</div>
+<p class="font-h1 text-h1 text-on-surface">8</p>
+<p class="font-body-sm text-body-sm text-outline mt-2 flex items-center gap-1">
+                        All operational
+                    </p>
+</div>
+</div>
+<!-- Bento Grid Layout for Lower Section -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Recent Activity (Spans 2 columns) -->
+<div class="lg:col-span-2 bg-surface-container-lowest rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] border border-surface-variant overflow-hidden flex flex-col">
+<div class="px-6 py-5 border-b border-surface-variant flex justify-between items-center bg-surface-container-low/30">
+<h3 class="font-h3 text-h3 text-on-surface">Recent Activity</h3>
+<button class="font-label-bold text-label-bold text-primary-container hover:underline">View All</button>
+</div>
+<div class="p-0 flex-1 overflow-y-auto">
+<ul class="divide-y divide-surface-variant">
+<li class="px-6 py-4 flex items-start hover:bg-surface-container-low transition-colors group">
+<div class="w-2 h-2 rounded-full bg-[#10B981] mt-2 mr-4 flex-shrink-0"></div>
+<div class="flex-1">
+<p class="font-body-md text-body-md text-on-surface">Employee 'John Doe' created</p>
+<p class="font-body-sm text-body-sm text-outline mt-1">10 mins ago</p>
+</div>
+</li>
+<li class="px-6 py-4 flex items-start hover:bg-surface-container-low transition-colors group">
+<div class="w-2 h-2 rounded-full bg-[#10B981] mt-2 mr-4 flex-shrink-0"></div>
+<div class="flex-1">
+<p class="font-body-md text-body-md text-on-surface">'Sarah Smith' leave approved</p>
+<p class="font-body-sm text-body-sm text-outline mt-1">45 mins ago</p>
+</div>
+</li>
+<li class="px-6 py-4 flex items-start hover:bg-surface-container-low transition-colors group bg-surface-container-low/50">
+<div class="w-2 h-2 rounded-full bg-[#10B981] mt-2 mr-4 flex-shrink-0"></div>
+<div class="flex-1">
+<p class="font-body-md text-body-md text-on-surface">'Tech Dept' manager updated</p>
+<p class="font-body-sm text-body-sm text-outline mt-1">2 hours ago</p>
+</div>
+</li>
+<li class="px-6 py-4 flex items-start hover:bg-surface-container-low transition-colors group">
+<div class="w-2 h-2 rounded-full bg-[#F59E0B] mt-2 mr-4 flex-shrink-0"></div>
+<div class="flex-1">
+<p class="font-body-md text-body-md text-on-surface">Payroll draft generated</p>
+<p class="font-body-sm text-body-sm text-outline mt-1">yesterday</p>
+</div>
+</li>
+<li class="px-6 py-4 flex items-start hover:bg-surface-container-low transition-colors group">
+<div class="w-2 h-2 rounded-full bg-[#10B981] mt-2 mr-4 flex-shrink-0"></div>
+<div class="flex-1">
+<p class="font-body-md text-body-md text-on-surface">Security policy updated</p>
+<p class="font-body-sm text-body-sm text-outline mt-1">yesterday</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<!-- Quick Actions Panel -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] border border-surface-variant overflow-hidden flex flex-col">
+<div class="px-6 py-5 border-b border-surface-variant bg-surface-container-low/30">
+<h3 class="font-h3 text-h3 text-on-surface">Quick Actions</h3>
+</div>
+<div class="p-6 flex flex-col gap-4">
+<button class="w-full flex items-center justify-center gap-3 bg-primary-container text-on-primary font-label-bold text-label-bold py-3 px-4 rounded-lg shadow-sm hover:bg-primary transition-colors focus:ring-2 focus:ring-primary-container focus:ring-offset-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">payments</span>
+                            Process Payroll
+                        </button>
+<button class="w-full flex items-center justify-center gap-3 bg-surface-container-lowest text-primary-container border border-outline-variant font-label-bold text-label-bold py-3 px-4 rounded-lg shadow-sm hover:bg-surface-container-low transition-colors focus:ring-2 focus:ring-primary-container focus:ring-offset-2">
+<span class="material-symbols-outlined">event_busy</span>
+                            View Pending Leaves
+                        </button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>
