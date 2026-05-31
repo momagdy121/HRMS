@@ -1,53 +1,64 @@
-﻿HR MANAGEMENT SYSTEM
+﻿
+
+
+
+
+HR MANAGEMENT SYSTEM
 Final Comprehensive Specification
-Version 6.0  —  With Full Authentication & Authorization
-ASP.NET Core 10  •  EF Core 10  •  Identity  •  SQL Server  •  Bootstrap 5
+
+Version 7.0  â€”  With Full Authentication & Authorization
+ASP.NET Core 10  â€¢  EF Core 10  â€¢  Identity  â€¢  SQL Server  â€¢  Bootstrap 5
+
+
 What Changed in v7.0 (from v6.0)
 1. Real authentication added: ASP.NET Core Identity with Login, Remember Me, Forgot Password.
-2. Impersonation removed entirely — replaced by real login.
+2. Impersonation removed entirely â€” replaced by real login.
 3. Three Identity roles: HR, DepartmentHead, Employee.
-4. Separate ApplicationUser table (extends IdentityUser<int>) with FK → Employees(Id).
+4. Separate ApplicationUser table (extends IdentityUser<int>) with FK â†’ Employees(Id).
 5. HR creates both Employee record and ApplicationUser account in one transaction.
 6. DepartmentHead is now both an Identity role AND a data relationship (Department.ManagerId).
 7. Manager replacement now also reassigns the DepartmentHead Identity role (same transaction).
 8. Authorization: Area-level via [Authorize(Roles=...)] on base controllers.
-9. ICurrentUserService now reads from ClaimsPrincipal, not session. 10. IsPasswordChangeRequired flag added to ApplicationUser — HR-created accounts must change password on first login. 11. ProcessedBy on Payroll changed to NOT NULL (always set by HR). 12. RejectionReason column added to LeaveRequests. 13. IsDeleted column added to Attendances for cascade on employee soft-delete. 14. DepartmentHead blocked from approving their own leave (FR12 updated). 15. TaskAssignmentPolicy: AssignedById != AssignedToId (self-assignment blocked). 16. Overdue task definition added to Section 8.7. 17. NFR07–NFR09 added: HTTPS/HSTS, pagination, and WCAG 2.1 Level A accessibility.
+9. ICurrentUserService now reads from ClaimsPrincipal, not session. 10. IsPasswordChangeRequired flag added to ApplicationUser â€” HR-created accounts must change password on first login. 11. ProcessedBy on Payroll changed to NOT NULL (always set by HR). 12. RejectionReason column added to LeaveRequests. 13. IsDeleted column added to Attendances for cascade on employee soft-delete. 14. DepartmentHead blocked from approving their own leave (FR12 updated). 15. TaskAssignmentPolicy: AssignedById != AssignedToId (self-assignment blocked). 16. Overdue task definition added to Section 8.7. 17. NFR07â€“NFR09 added: HTTPS/HSTS, pagination, and WCAG 2.1 Level A accessibility. 18. Employee/Profile route defined as read-only â€” only HR can edit via /HR/Employee/Edit/{id}. 19. /HR/Department/Deleted restore route added; IDepartmentService.RestoreAsync() added. 20. Payroll.ProcessedAt set on creation (Draft) â€” not deferred to status change. 21. Task assignment restricted to non-HR employees as assignees (TaskAssignmentPolicy updated). 22. /Account/ChangePassword route added (forced first-login flow). 23. IAccountService.ChangePasswordAsync() added. 24. HSTS middleware placement clarified in Section 10.1. 25. Migration 3 migrationBuilder.Sql() syntax and Down() SQL added. 26. ILeaveService.RejectAsync() updated to accept rejectionReason parameter. 27. Pending leave rejection clarified: no balance change. 28. SoftDeleteEmployeeAsync transaction updated to cascade Attendances.IsDeleted. 29. All services registered as Scoped â€” added to DI section. 30. Seed data table updated: IsHR column added, employees 6-15 deferred.
 Table of Contents
 1. Constitution
 The HR system is built on the following immutable principles:
-Real authentication via ASP.NET Core Identity – email + password, Remember Me, Forgot Password.
+
+Real authentication via ASP.NET Core Identity â€“ email + password, Remember Me, Forgot Password.
 Three Identity roles: HR, DepartmentHead, and Employee.
-Department manager is both a data relationship (Department.ManagerId) AND an Identity role (DepartmentHead) – they must always stay in sync.
-Every department must have exactly one manager – a non-HR, active, non-deleted Employee in the same department who also holds the DepartmentHead role.
-Only DepartmentHeads can assign tasks – HR cannot assign tasks.
-Managers cannot be deleted without replacement – HR must assign a new manager first.
+Department manager is both a data relationship (Department.ManagerId) AND an Identity role (DepartmentHead) â€“ they must always stay in sync.
+Every department must have exactly one manager â€“ a non-HR, active, non-deleted Employee in the same department who also holds the DepartmentHead role.
+Only DepartmentHeads can assign tasks â€“ HR cannot assign tasks.
+Managers cannot be deleted without replacement â€“ HR must assign a new manager first.
 Manager replacement is a single transaction that does four things: (1) update Department.ManagerId, (2) remove DepartmentHead role from old manager's ApplicationUser, (3) add DepartmentHead role to new manager's ApplicationUser, (4) optionally proceed with deletion of original manager.
-When an employee is soft-deleted, ALL tasks they appear in are also soft-deleted – both tasks they created (AssignedById) and tasks assigned to them (AssignedToId). Silent cascade. Tasks are NOT restored if the employee is later restored.
-Soft delete only for Employees and Departments – EmployeeTask has IsDeleted for cascade only.
+When an employee is soft-deleted, ALL tasks they appear in are also soft-deleted â€“ both tasks they created (AssignedById) and tasks assigned to them (AssignedToId). Silent cascade. Tasks are NOT restored if the employee is later restored.
+Soft delete only for Employees and Departments â€“ EmployeeTask has IsDeleted for cascade only.
 A Department cannot be soft-deleted while it has active employees.
 HR creates both the Employee record and the ApplicationUser account in one transaction when adding a new employee.
-All business rules enforced in service layer – Controllers only orchestrate HTTP flow. HR-created employee accounts have IsPasswordChangeRequired = true and must change password on first login before accessing any other page. HTTPS is enforced system-wide via HSTS. All list endpoints are paginated (default 20 per page). DepartmentHead cannot approve their own leave; only HR can. DepartmentHead cannot assign tasks to themselves.
-Policy classes centralise reusable rules – Services call policies, not the other way around.
+All business rules enforced in service layer â€“ Controllers only orchestrate HTTP flow. HR-created employee accounts have IsPasswordChangeRequired = true and must change password on first login before accessing any other page. HTTPS is enforced system-wide via HSTS. All list endpoints are paginated (default 20 per page). DepartmentHead cannot approve their own leave; only HR can. DepartmentHead cannot assign tasks to themselves.
+Policy classes centralise reusable rules â€“ Services call policies, not the other way around. All services and policies are registered as Scoped (builder.Services.AddScoped<IXService, XService>()) in Program.cs.
 Transactions used for all multi-save operations.
 2. System Description
 A web-based HR Management System for small organizations. Built as an educational ASP.NET Core 10 MVC project with a clean 3-tier architecture and real authentication via ASP.NET Core Identity.
+
 Core Features
 Authentication: login/logout, Remember Me, Forgot Password.
-Manage departments (CRUD) – HR only.
-Manage employees (CRUD, soft delete) – HR only. Account creation is part of employee creation.
+Manage departments (CRUD) â€“ HR only.
+Manage employees (CRUD, soft delete) â€“ HR only. Account creation is part of employee creation.
 View employees (all by HR, own department by DepartmentHead, own profile by everyone).
-Assign tasks – Only DepartmentHeads to their own department members.
-Update task status – Only the assigned employee.
-Process payroll (monthly, with itemised bonuses/deductions) – HR only.
+Assign tasks â€“ Only DepartmentHeads to their own department members.
+Update task status â€“ Only the assigned employee.
+Process payroll (monthly, with itemised bonuses/deductions) â€“ HR only.
 View payrolls (all by HR, department by DepartmentHead, own by Employee).
-Request leave (all employees) – With balance validation (Annual, Sick, Unpaid).
-Approve/reject leave requests – HR (all) or DepartmentHead (own department, excluding their own requests).
-Self check-in/out – All employees.
-Mark team attendance – DepartmentHead (own department).
+Request leave (all employees) â€“ With balance validation (Annual, Sick, Unpaid).
+Approve/reject leave requests â€“ HR (all) or DepartmentHead (own department, excluding their own requests).
+Self check-in/out â€“ All employees.
+Mark team attendance â€“ DepartmentHead (own department).
 View attendance reports (all by HR, department by DepartmentHead, own by Employee).
+
 Excluded Intentionally (Future Enhancements)
 Audit logging.
-Email notifications (Forgot Password uses on-screen token for educational purposes – see Section 11).
+Email notifications (Forgot Password uses on-screen token for educational purposes â€“ see Section 11).
 Job posting & applicant tracking.
 3. Requirements
 3.1  Functional Requirements
@@ -56,27 +67,27 @@ Requirement
 FR01
 HR can create, edit, soft-delete departments.
 FR02
-HR can create, edit, soft-delete employees. Creating an employee also creates an ApplicationUser and assigns the correct Identity role — all in one transaction.
+HR can create, edit, soft-delete employees. Creating an employee also creates an ApplicationUser and assigns the correct Identity role â€” all in one transaction.
 FR03
 Each department must have exactly one manager (non-HR, active, same department, holds DepartmentHead role).
 FR04
 HR cannot delete an employee who is a department manager unless replaced first.
 FR05
-DepartmentHeads can assign tasks to employees in their own department.
+DepartmentHeads can assign tasks to non-HR employees in their own department.
 FR06
-Only the assigned employee can update a task's status (Pending → InProgress → Completed).
+Only the assigned employee can update a task's status (Pending â†’ InProgress â†’ Completed).
 FR07
 HR can process monthly payroll for any employee, adding multiple bonus/deduction items.
 FR08
-Payroll NetSalary = BaseSalary + sum(Bonuses) – sum(Deductions), computed by service.
+Payroll NetSalary = BaseSalary + sum(Bonuses) â€“ sum(Deductions), computed by service.
 FR09
-Payroll status flows: Draft → Approved → Paid (no reversal).
+Payroll status flows: Draft â†’ Approved â†’ Paid (no reversal).
 FR10
 Employees can request leave (Annual, Sick, Unpaid) with balance validation (except Unpaid).
 FR11
 Leave requests cannot overlap approved leaves for the same employee.
 FR12
-HR or DepartmentHead can approve/reject leave requests (DepartmentHead only for own department). A DepartmentHead cannot approve or reject their own leave request — those must be handled by HR.
+HR or DepartmentHead can approve/reject leave requests (DepartmentHead only for own department). A DepartmentHead cannot approve or reject their own leave request â€” those must be handled by HR.
 FR13
 Approved leave increments the employee's UsedDays in LeaveBalances.
 FR14
@@ -91,6 +102,7 @@ FR18
 Users authenticate via email + password. Login supports Remember Me. Forgot Password flow generates a reset token displayed on-screen.
 FR19
 Manager replacement is a single transaction: update Department.ManagerId, remove DepartmentHead role from old manager, add DepartmentHead role to new manager.
+
 3.2  Non-Functional Requirements
 ID
 Requirement
@@ -114,16 +126,17 @@ NFR09
 UI must meet WCAG 2.1 Level A accessibility compliance. All form inputs require associated labels; images require alt attributes.
 4. Architecture & Technology Stack
 4.1  3-Tier Architecture
-HRSystem.Web       –  Areas, Controllers, Views, ViewModels
-│
-▼
-HRSystem.Business  –  Services, DTOs, Policies, Validators
-│
-▼
-HRSystem.Data      –  AppDbContext (IdentityDbContext), Models, Configurations, Migrations
-│
-▼
-HRSystem.Common    –  Enums, Constants (RoleNames, etc.)
+HRSystem.Web       â€“  Areas, Controllers, Views, ViewModels
+       â”‚
+       â–¼
+HRSystem.Business  â€“  Services, DTOs, Policies, Validators
+       â”‚
+       â–¼
+HRSystem.Data      â€“  AppDbContext (IdentityDbContext), Models, Configurations, Migrations
+       â”‚
+       â–¼
+HRSystem.Common    â€“  Enums, Constants (RoleNames, etc.)
+
 4.2  Technology Stack
 Component
 Technology
@@ -142,48 +155,50 @@ SQL Server / LocalDB
 LocalDB for dev
 Frontend
 Razor Views + Bootstrap 5
+
 DI
 Built-in DI container
 Scoped services
 Password Reset
 DataProtectorTokenProvider
 On-screen token (no email in dev)
+
 4.3  Folder Structure
 HRSystem.sln
-├── HRSystem.Web
-│   ├── Areas/
-│   │   ├── HR/
-│   │   │   ├── Controllers/   EmployeeController, DepartmentController,
-│   │   │   │              PayrollController, LeaveController, AttendanceController
-│   │   │   └── Views/
-│   │   └── Employee/
-│   │       ├── Controllers/   DashboardController, ProfileController,
-│   │       │              TaskController, PayrollController,
-│   │       │              LeaveController, AttendanceController
-│   │       └── Views/
-│   ├── Controllers/   AccountController  (Login, Logout, ForgotPassword, ResetPassword)
-│   ├── ViewModels/
-│   ├── wwwroot/
-│   └── Program.cs
-├── HRSystem.Business
-│   ├── Interfaces/
-│   │   ├── Services/      IEmployeeService, IDepartmentService, ITaskService,
-│   │   │              IPayrollService, ILeaveService, IAttendanceService,
-│   │   │              IAccountService, ICurrentUserService
-│   │   └── Policies/      IDepartmentManagerPolicy, IEmployeeDeletionPolicy,
-│   │              IDepartmentDeletionPolicy, ITaskAssignmentPolicy
-│   ├── Services/
-│   ├── Policies/
-│   ├── DTOs/
-│   └── Validators/
-├── HRSystem.Data
-│   ├── Context/        AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
-│   ├── Models/         ApplicationUser, Employee, Department, EmployeeTask ...
-│   ├── Configurations/ One Fluent API config file per entity
-│   └── Migrations/
-└── HRSystem.Common
-├── Enums/
-└── Constants/      RoleNames.cs  (HR, DepartmentHead, Employee)
+â”œâ”€â”€ HRSystem.Web
+â”‚   â”œâ”€â”€ Areas/
+â”‚   â”‚   â”œâ”€â”€ HR/
+â”‚   â”‚   â”‚   â”œâ”€â”€ Controllers/   EmployeeController, DepartmentController,
+â”‚   â”‚   â”‚   â”‚              PayrollController, LeaveController, AttendanceController
+â”‚   â”‚   â”‚   â””â”€â”€ Views/
+â”‚   â”‚   â””â”€â”€ Employee/
+â”‚   â”‚       â”œâ”€â”€ Controllers/   DashboardController, ProfileController,
+â”‚   â”‚       â”‚              TaskController, PayrollController,
+â”‚   â”‚       â”‚              LeaveController, AttendanceController
+â”‚   â”‚       â””â”€â”€ Views/
+â”‚   â”œâ”€â”€ Controllers/   AccountController  (Login, Logout, ForgotPassword, ResetPassword)
+â”‚   â”œâ”€â”€ ViewModels/
+â”‚   â”œâ”€â”€ wwwroot/
+â”‚   â””â”€â”€ Program.cs
+â”œâ”€â”€ HRSystem.Business
+â”‚   â”œâ”€â”€ Interfaces/
+â”‚   â”‚   â”œâ”€â”€ Services/      IEmployeeService, IDepartmentService, ITaskService,
+â”‚   â”‚   â”‚              IPayrollService, ILeaveService, IAttendanceService,
+â”‚   â”‚   â”‚              IAccountService, ICurrentUserService
+â”‚   â”‚   â””â”€â”€ Policies/      IDepartmentManagerPolicy, IEmployeeDeletionPolicy,
+â”‚   â”‚              IDepartmentDeletionPolicy, ITaskAssignmentPolicy
+â”‚   â”œâ”€â”€ Services/
+â”‚   â”œâ”€â”€ Policies/
+â”‚   â”œâ”€â”€ DTOs/
+â”‚   â””â”€â”€ Validators/
+â”œâ”€â”€ HRSystem.Data
+â”‚   â”œâ”€â”€ Context/        AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
+â”‚   â”œâ”€â”€ Models/         ApplicationUser, Employee, Department, EmployeeTask ...
+â”‚   â”œâ”€â”€ Configurations/ One Fluent API config file per entity
+â”‚   â””â”€â”€ Migrations/
+â””â”€â”€ HRSystem.Common
+    â”œâ”€â”€ Enums/
+    â””â”€â”€ Constants/      RoleNames.cs  (HR, DepartmentHead, Employee)
 5. Database Schema
 5.1  Identity Tables (Auto-generated by ASP.NET Core Identity)
 Table
@@ -202,38 +217,43 @@ AspNetUserTokens
 Password reset tokens, etc.
 AspNetUserLogins
 External login providers (not used)
+
 5.2  ApplicationUser (extends IdentityUser<int>)
 Design Decision: Separate Tables
 ApplicationUser and Employee are two separate tables linked by a FK.
 ApplicationUser handles only identity concerns (login, password, roles).
 Employee handles all HR data (salary, department, hire date, etc.).
 This keeps concerns separated and makes it easy to add external logins later without touching HR data.
+
 Column
 Type
 Constraints / Notes
 Id
 int
-PRIMARY KEY — inherits from IdentityUser<int>
+PRIMARY KEY â€” inherits from IdentityUser<int>
 UserName
 nvarchar(256)
 Set to employee Email on creation
 Email
 nvarchar(256)
-NOT NULL, UNIQUE — same as Employee.Email
+NOT NULL, UNIQUE â€” same as Employee.Email
 PasswordHash
 nvarchar(max)
 Managed by Identity
 EmployeeId
 int
-NOT NULL, FK → Employees(Id) — one-to-one
+NOT NULL, FK â†’ Employees(Id) â€” one-to-one
 ... (standard Identity columns)
+
 EmailConfirmed, PhoneNumber, LockoutEnd, etc.
 IsPasswordChangeRequired
 bit
-NOT NULL, DEFAULT 1 — set to 0 after the employee changes their password on first login
+NOT NULL, DEFAULT 1 â€” set to 0 after the employee changes their password on first login
+
 One-to-One Constraint
-UNIQUE (EmployeeId) on AspNetUsers — one account per employee, enforced at DB level.
+UNIQUE (EmployeeId) on AspNetUsers â€” one account per employee, enforced at DB level.
 ApplicationUser.UserName = ApplicationUser.Email = Employee.Email (kept in sync on email update).
+
 5.3  Departments
 Column
 Type
@@ -246,13 +266,14 @@ nvarchar(100)
 NOT NULL, UNIQUE
 ManagerId
 int
-NOT NULL (after migration), FK → Employees(Id)
+NOT NULL (after migration), FK â†’ Employees(Id)
 CreatedAt
 datetime2
 NOT NULL, DEFAULT GETUTCDATE()
 IsDeleted
 bit
 NOT NULL, DEFAULT 0
+
 5.4  Employees
 Column
 Type
@@ -268,13 +289,13 @@ nvarchar(100)
 NOT NULL
 Email
 nvarchar(150)
-NOT NULL, UNIQUE — also stored in ApplicationUser.Email
+NOT NULL, UNIQUE â€” also stored in ApplicationUser.Email
 IsHR
 bit
-NOT NULL, DEFAULT 0 — mirrors HR role for quick queries
+NOT NULL, DEFAULT 0 â€” mirrors HR role for quick queries
 DepartmentId
 int
-NOT NULL, FK → Departments(Id)
+NOT NULL, FK â†’ Departments(Id)
 Salary
 decimal(18,2)
 NOT NULL
@@ -290,10 +311,12 @@ NOT NULL, DEFAULT 0
 CreatedAt
 datetime2
 NOT NULL, DEFAULT GETUTCDATE()
+
 IsHR Flag
 Employee.IsHR mirrors whether the linked ApplicationUser holds the HR Identity role.
 It exists purely for efficient queries (e.g. finding eligible managers) without joining Identity tables.
 It must be kept in sync with the actual Identity role whenever a role changes.
+
 5.5  EmployeeTasks
 Column
 Type
@@ -306,19 +329,19 @@ nvarchar(200)
 NOT NULL
 Description
 nvarchar(1000)
-NULL
+NOT NULL â€” set to GETUTCDATE() when payroll is first created (Draft)
 AssignedById
 int
-NOT NULL, FK → Employees(Id) ON DELETE NO ACTION
+NOT NULL, FK â†’ Employees(Id) ON DELETE NO ACTION
 AssignedToId
 int
-NOT NULL, FK → Employees(Id) ON DELETE NO ACTION
+NOT NULL, FK â†’ Employees(Id) ON DELETE NO ACTION
 Status
 tinyint
 NOT NULL, DEFAULT 0 (0=Pending, 1=InProgress, 2=Completed)
 DueDate
 date
-NULL — optional deadline
+NULL â€” optional deadline
 IsDeleted
 bit
 NOT NULL, DEFAULT 0
@@ -327,7 +350,8 @@ datetime2
 NOT NULL, DEFAULT GETUTCDATE()
 UpdatedAt
 datetime2
-NULL — set on every Status change
+NULL â€” set on every Status change
+
 5.6  Payrolls
 Column
 Type
@@ -337,10 +361,10 @@ int
 PRIMARY KEY, IDENTITY(1,1)
 EmployeeId
 int
-NOT NULL, FK → Employees(Id)
+NOT NULL, FK â†’ Employees(Id)
 BaseSalary
 decimal(18,2)
-NOT NULL — snapshot at processing time
+NOT NULL â€” snapshot at processing time
 TotalBonus
 decimal(18,2)
 NOT NULL, DEFAULT 0
@@ -349,10 +373,10 @@ decimal(18,2)
 NOT NULL, DEFAULT 0
 NetSalary
 decimal(18,2)
-NOT NULL — BaseSalary + TotalBonus – TotalDeduction
+NOT NULL â€” BaseSalary + TotalBonus â€“ TotalDeduction
 Month
 int
-NOT NULL (1–12)
+NOT NULL (1â€“12)
 Year
 int
 NOT NULL
@@ -361,15 +385,17 @@ tinyint
 NOT NULL, DEFAULT 0 (0=Draft, 1=Approved, 2=Paid)
 ProcessedBy
 int
-NOT NULL, FK → Employees(Id) — always the HR employee who processed this payroll
+NOT NULL, FK â†’ Employees(Id) â€” always the HR employee who processed this payroll
 ProcessedAt
 datetime2
 NULL
 CreatedAt
 datetime2
 NOT NULL, DEFAULT GETUTCDATE()
+
 Unique Constraint
 UNIQUE (EmployeeId, Month, Year)
+
 5.7  PayrollItems
 Column
 Type
@@ -379,7 +405,7 @@ int
 PRIMARY KEY, IDENTITY(1,1)
 PayrollId
 int
-NOT NULL, FK → Payrolls(Id) ON DELETE CASCADE
+NOT NULL, FK â†’ Payrolls(Id) ON DELETE CASCADE
 ItemType
 tinyint
 NOT NULL (0=Bonus, 1=Deduction)
@@ -389,6 +415,7 @@ NOT NULL
 Amount
 decimal(18,2)
 NOT NULL
+
 5.8  LeaveRequests
 Column
 Type
@@ -398,13 +425,13 @@ int
 PRIMARY KEY, IDENTITY(1,1)
 EmployeeId
 int
-NOT NULL, FK → Employees(Id)
+NOT NULL, FK â†’ Employees(Id)
 StartDate
 date
 NOT NULL
 EndDate
 date
-NOT NULL, ≥ StartDate
+NOT NULL, â‰¥ StartDate
 LeaveType
 tinyint
 NOT NULL (0=Annual, 1=Sick, 2=Unpaid)
@@ -419,13 +446,14 @@ datetime2
 NOT NULL, DEFAULT GETUTCDATE()
 ApprovedBy
 int
-NULL, FK → Employees(Id)
+NULL, FK â†’ Employees(Id)
 ApprovedAt
 datetime2
 NULL
 RejectionReason
 nvarchar(500)
-NULL — populated when Status is set to Rejected; provides explanation to the employee
+NULL â€” populated when Status is set to Rejected; provides explanation to the employee
+
 5.9  LeaveBalances
 Column
 Type
@@ -435,21 +463,23 @@ int
 PRIMARY KEY, IDENTITY(1,1)
 EmployeeId
 int
-NOT NULL, FK → Employees(Id)
+NOT NULL, FK â†’ Employees(Id)
 Year
 int
 NOT NULL
 LeaveType
 tinyint
-NOT NULL (0=Annual, 1=Sick) — Unpaid not tracked
+NOT NULL (0=Annual, 1=Sick) â€” Unpaid not tracked
 TotalDays
 int
 NOT NULL (Annual=20, Sick=10)
 UsedDays
 int
 NOT NULL, DEFAULT 0
+
 Unique Constraint
 UNIQUE (EmployeeId, Year, LeaveType)
+
 5.10  Attendances
 Column
 Type
@@ -459,175 +489,180 @@ int
 PRIMARY KEY, IDENTITY(1,1)
 EmployeeId
 int
-NOT NULL, FK → Employees(Id)
+NOT NULL, FK â†’ Employees(Id)
 Date
 date
 NOT NULL
 CheckInTime
 datetime2
-NULL — presence derived: CheckInTime IS NOT NULL
+NULL â€” presence derived: CheckInTime IS NOT NULL
 CheckOutTime
 datetime2
-NULL — must be after CheckInTime
+NULL â€” must be after CheckInTime
 Notes
 nvarchar(200)
 NULL
 IsDeleted
 bit
-NOT NULL, DEFAULT 0 — soft-deleted when the employee is soft-deleted (cascade, not reversed on restore)
+NOT NULL, DEFAULT 0 â€” soft-deleted when the employee is soft-deleted (cascade, not reversed on restore)
+
 Unique Constraint
 UNIQUE (EmployeeId, Date)
 6. Entity Relationship Overview
 ApplicationUser (AspNetUsers)
-│  Id, Email, PasswordHash, EmployeeId (FK, UNIQUE)
-└── (1:1) Employee
-│  Id, FirstName, LastName, Email, IsHR,
-│  DepartmentId, Salary, HireDate, IsActive, IsDeleted
-│
-├──< (0..*) Payrolls ──< (0..*) PayrollItems  (CASCADE DELETE)
-├──< (0..*) LeaveRequests
-├──< (0..*) LeaveBalances
-├──< (0..*) Attendances
-├──< (0..*) EmployeeTasks  (AssignedToId — tasks assigned to them)
-└──< (0..*) EmployeeTasks  (AssignedById  — tasks they created)
+   â”‚  Id, Email, PasswordHash, EmployeeId (FK, UNIQUE)
+   â””â”€â”€ (1:1) Employee
+               â”‚  Id, FirstName, LastName, Email, IsHR,
+               â”‚  DepartmentId, Salary, HireDate, IsActive, IsDeleted
+               â”‚
+               â”œâ”€â”€< (0..*) Payrolls â”€â”€< (0..*) PayrollItems  (CASCADE DELETE)
+               â”œâ”€â”€< (0..*) LeaveRequests
+               â”œâ”€â”€< (0..*) LeaveBalances
+               â”œâ”€â”€< (0..*) Attendances
+               â”œâ”€â”€< (0..*) EmployeeTasks  (AssignedToId â€” tasks assigned to them)
+               â””â”€â”€< (0..*) EmployeeTasks  (AssignedById  â€” tasks they created)
+
 Departments
-│  Id, Name, ManagerId (FK → Employees.Id)
-└──< (0..*) Employees
-AspNetRoles  ──< AspNetUserRoles ──> ApplicationUser
-Roles: HR | DepartmentHead | Employee
+   â”‚  Id, Name, ManagerId (FK â†’ Employees.Id)
+   â””â”€â”€< (0..*) Employees
+
+AspNetRoles  â”€â”€< AspNetUserRoles â”€â”€> ApplicationUser
+  Roles: HR | DepartmentHead | Employee
 7. Permission Matrix
 Roles are enforced by [Authorize(Roles=...)] on area base controllers. DepartmentHead-specific actions in the Employee area use an additional service-layer check.
+
 Action
 HR
 Employee
 DeptHead
 Authentication
 Login / Logout
-✓
-✓
-✓
+âœ“
+âœ“
+âœ“
 Forgot / Reset Password
-✓
-✓
-✓
+âœ“
+âœ“
+âœ“
 Departments
 CRUD
-✓
-✗
-✗
+âœ“
+âœ—
+âœ—
 List all
-✓
-✗
-✗
+âœ“
+âœ—
+âœ—
 Employees
 Create (+ create account + assign role)
-✓
-✗
-✗
+âœ“
+âœ—
+âœ—
 Edit / Soft-delete
-✓
-✗
-✗
+âœ“
+âœ—
+âœ—
 View all
-✓
-✗
-✗
+âœ“
+âœ—
+âœ—
 View own department
-✓
-✗
-✓
+âœ“
+âœ—
+âœ“
 View own profile
-✓
-✓
-✓
+âœ“
+âœ“
+âœ“
 Tasks
 Assign task (own dept only)
-✗
-✗
-✓
+âœ—
+âœ—
+âœ“
 Edit/cancel own created tasks
-✗
-✗
-✓
+âœ—
+âœ—
+âœ“
 View tasks created
-✗
-✗
-✓
+âœ—
+âœ—
+âœ“
 View own assigned tasks
-✓
-✓
-✓
+âœ“
+âœ“
+âœ“
 Update own task status
-✓
-✓
-✓
+âœ“
+âœ“
+âœ“
 Payroll
 Process payroll
-✓
-✗
-✗
+âœ“
+âœ—
+âœ—
 View all payrolls
-✓
-✗
-✗
+âœ“
+âœ—
+âœ—
 View department payrolls
-✓
-✗
-✓
+âœ“
+âœ—
+âœ“
 View own payslips
-✓
-✓
-✓
+âœ“
+âœ“
+âœ“
 Leave
 Request leave
-✓
-✓
-✓
+âœ“
+âœ“
+âœ“
 Approve/reject (own dept)
-✓
-✗
-✓
+âœ“
+âœ—
+âœ“
 View all requests
-✓
-✗
-✗
+âœ“
+âœ—
+âœ—
 View team pending
-✓
-✗
-✓
+âœ“
+âœ—
+âœ“
 View own requests + balance
-✓
-✓
-✓
+âœ“
+âœ“
+âœ“
 Attendance
 Self check-in / check-out
-✓
-✓
-✓
+âœ“
+âœ“
+âœ“
 Mark team attendance
-✓
-✗
-✓
+âœ“
+âœ—
+âœ“
 View all reports
-✓
-✗
-✗
+âœ“
+âœ—
+âœ—
 View department attendance
-✓
-✗
-✓
+âœ“
+âœ—
+âœ“
 View own history
-✓
-✓
-✓
+âœ“
+âœ“
+âœ“
 8. Business Rules & Invariants
 8.1  Role-Relationship Sync Invariant
-Critical Rule — DepartmentHead Must Stay in Sync
+Critical Rule â€” DepartmentHead Must Stay in Sync
 The DepartmentHead Identity role and Department.ManagerId are two representations of the same fact.
 They MUST always match. Any operation that changes one must change the other in the same transaction:
-•  ReplaceManagerAsync:  remove DeptHead role from old manager, add to new manager, update ManagerId.
-•  SoftDeleteEmployee:   if employee is a manager, block deletion (force replacement first).
-•  CreateEmployee:       if assigned DepartmentHead role, also set Department.ManagerId.
+  â€¢  ReplaceManagerAsync:  remove DeptHead role from old manager, add to new manager, update ManagerId.
+  â€¢  SoftDeleteEmployee:   if employee is a manager, block deletion (force replacement first).
+  â€¢  CreateEmployee:       if assigned DepartmentHead role, also set Department.ManagerId.
+
 8.2  Account Creation Workflow (HR Creates Employee)
 HR fills out the Create Employee form: name, email, department, salary, hire date, role (HR / DepartmentHead / Employee), initial password.
 Service opens a transaction.
@@ -637,6 +672,7 @@ Initial password is set via UserManager.AddPasswordAsync().
 Identity role is assigned via UserManager.AddToRoleAsync().
 If role is DepartmentHead: Department.ManagerId is also updated to this employee's Id.
 Transaction commits. On any failure, all changes are rolled back.
+
 8.3  Department Manager Invariant
 Every department must have exactly one manager at all times.
 The manager must satisfy all four conditions:
@@ -646,37 +682,44 @@ IsActive = true
 IsDeleted = false
 The manager's ApplicationUser must hold the DepartmentHead Identity role.
 HR cannot delete an employee who is a department manager. Replacement must come first.
+
 8.4  Manager Replacement Workflow (FR19)
-Single Transaction — Four Operations
+Single Transaction â€” Four Operations
 1. Validate the new manager (same dept, active, non-HR, non-deleted, not current manager).
 2. Remove DepartmentHead role from old manager's ApplicationUser (UserManager.RemoveFromRoleAsync).
 3. Add DepartmentHead role to new manager's ApplicationUser (UserManager.AddToRoleAsync).
 4. Update Department.ManagerId = newManagerId.
 All four steps happen inside BeginTransactionAsync(). If any step fails, all are rolled back.
 After this succeeds, HR may optionally delete the original manager (now just an Employee).
+
 8.5  Soft-Delete Cascade for Tasks (FR16)
 SoftDeleteAsync(employeeId) must soft-delete all EmployeeTask rows where AssignedById = employeeId OR AssignedToId = employeeId, in the same transaction as the employee soft-delete.
-Silent — no notification raised. No error if the employee had no tasks.
+Silent â€” no notification raised. No error if the employee had no tasks.
 RestoreAsync(employeeId) does NOT restore cascaded tasks. They remain IsDeleted = true.
 All task queries filter: .Where(t => !t.IsDeleted).
+
 8.6  Department Deletion Guard (FR17)
 DepartmentService.SoftDeleteAsync rejects if any Employee with DepartmentId = deptId has IsDeleted = false.
-Error message: 'Cannot delete department “{Name}”: it still has {count} active employee(s). Reassign or remove them first.'
+Error message: 'Cannot delete department â€œ{Name}â€: it still has {count} active employee(s). Reassign or remove them first.'
+
 8.7  Task Rules
 Only employees with the DepartmentHead role (checked via User.IsInRole or service) can assign tasks.
 Tasks can only be assigned to employees in the same department (TaskAssignmentPolicy).
-Status: Pending → InProgress → Completed only. No regression.
+Status: Pending â†’ InProgress â†’ Completed only. No regression.
 Only the assignee (AssignedToId) can update status.
-Only the creator (AssignedById) can edit details — only if Status != Completed. A DepartmentHead cannot assign a task to themselves (TaskAssignmentPolicy: AssignedById != AssignedToId). A task is considered overdue when DueDate IS NOT NULL AND DueDate < GETUTCDATE() AND Status != Completed. Overdue tasks are highlighted in the dashboard.
+Only the creator (AssignedById) can edit details â€” only if Status != Completed. A DepartmentHead cannot assign a task to themselves (TaskAssignmentPolicy: AssignedById != AssignedToId). A task is considered overdue when DueDate IS NOT NULL AND DueDate < GETUTCDATE() AND Status != Completed. Overdue tasks are highlighted in the dashboard.
+
 8.8  Payroll Rules
-UNIQUE (EmployeeId, Month, Year) — one payroll per employee per month.
-BaseSalary is a snapshot; NetSalary = BaseSalary + TotalBonus – TotalDeduction.
-Status: Draft → Approved → Paid (no reversal, no editing after Approved).
+UNIQUE (EmployeeId, Month, Year) â€” one payroll per employee per month.
+BaseSalary is a snapshot; NetSalary = BaseSalary + TotalBonus â€“ TotalDeduction.
+Status: Draft â†’ Approved â†’ Paid (no reversal, no editing after Approved).
+
 8.9  Leave Rules
-EndDate ≥ StartDate. No overlapping approved leaves. A DepartmentHead cannot approve or reject their own leave request — only HR can action their requests.
+EndDate â‰¥ StartDate. No overlapping approved leaves. A DepartmentHead cannot approve or reject their own leave request â€” only HR can action their requests.
 Balance checked before submission for Annual/Sick. Unpaid: no limit, no balance row.
-On approval: UsedDays += calendar days. On rejection of approved leave: UsedDays -= days.
+On approval: UsedDays += calendar days. On rejection of already-approved leave: UsedDays -= days. On rejection of pending leave: no balance change (UsedDays was never incremented).
 Auto-create balance row for future years (Annual=20, Sick=10).
+
 8.10  Attendance Rules
 UNIQUE (EmployeeId, Date). IsPresent derived from CheckInTime IS NOT NULL.
 No double check-in. Check-out requires prior check-in. CheckOut > CheckIn.
@@ -685,19 +728,20 @@ No double check-in. Check-out requires prior check-in. CheckOut > CheckIn.
 Interface
 Key Methods
 IAccountService
-CreateAccountAsync(employeeId, email, password, role), ForgotPasswordAsync(email), ResetPasswordAsync(email, token, newPassword), ChangeRoleAsync(employeeId, newRole) — used during manager replacement
+CreateAccountAsync(employeeId, email, password, role), ForgotPasswordAsync(email), ResetPasswordAsync(email, token, newPassword), ChangeRoleAsync(employeeId, newRole) â€” used during manager replacement, ChangePasswordAsync(userId, newPassword) â€” sets new password and flips IsPasswordChangeRequired = false
 IEmployeeService
 GetAllAsync(), GetByDepartmentAsync(), GetDeletedAsync(), CreateAsync() (calls IAccountService inside transaction), UpdateAsync(), SoftDeleteAsync() (cascades tasks), RestoreAsync(), CanDeleteAsync()
 IDepartmentService
-GetAllAsync(), CreateAsync(), UpdateAsync(), SoftDeleteAsync() (blocked if employees exist), ReplaceManagerAsync() (transactional — calls IAccountService for role swap)
+GetAllAsync(), GetDeletedAsync(), CreateAsync(), UpdateAsync(), SoftDeleteAsync() (blocked if employees exist), RestoreAsync(), ReplaceManagerAsync() (transactional â€” calls IAccountService for role swap)
 ITaskService
 AssignAsync(), UpdateStatusAsync(), EditTaskAsync(), GetByManagerAsync(), GetByEmployeeAsync(), CancelTaskAsync()
 IPayrollService
 ProcessAsync(), AddPayrollItemAsync(), UpdateStatusAsync(), GetByEmployeeAsync(), GetByDepartmentAsync()
 ILeaveService
-RequestAsync(), ApproveAsync(), RejectAsync(), GetBalanceAsync(), GetPendingByDepartmentAsync()
+RequestAsync(), ApproveAsync(), RejectAsync(id, rejectionReason) â€” populates LeaveRequest.RejectionReason, GetBalanceAsync(), GetPendingByDepartmentAsync()
 IAttendanceService
 CheckInAsync(), CheckOutAsync(), MarkTeamAttendanceAsync(), GetByEmployeeAsync(), GetByDepartmentAsync()
+
 9.2  Policy Classes
 Policy
 Methods
@@ -706,44 +750,51 @@ DepartmentManagerPolicy
 IsValidManager(Employee, Department)
 EmployeeService, DepartmentService
 EmployeeDeletionPolicy
-CanDeleteAsync(int employeeId) — checks if dept manager
+CanDeleteAsync(int employeeId) â€” checks if dept manager
 EmployeeService
 DepartmentDeletionPolicy
-CanDeleteAsync(int deptId) — checks for active employees
+CanDeleteAsync(int deptId) â€” checks for active employees
 DepartmentService
 TaskAssignmentPolicy
-CanAssign(Employee assigner, Employee assignee)
+CanAssign(Employee assigner, Employee assignee) â€” checks: assigner is DeptHead, same department, assignee.IsHR = false, assigner != assignee
 TaskService
+
 9.3  ICurrentUserService  (Scoped)
 Now reads identity from ClaimsPrincipal (HttpContext.User), not from session.
+
 public interface ICurrentUserService
 {
-// Reads the NameIdentifier claim (ApplicationUser.Id)
-int  GetCurrentUserId();
-// Reads role claims from ClaimsPrincipal
-bool IsHR();
-bool IsDepartmentHead();
-// Loads Employee via ApplicationUser.EmployeeId; cached per request
-Task<Employee> GetCurrentEmployeeAsync();
+    // Reads the NameIdentifier claim (ApplicationUser.Id)
+    int  GetCurrentUserId();
+
+    // Reads role claims from ClaimsPrincipal
+    bool IsHR();
+    bool IsDepartmentHead();
+
+    // Loads Employee via ApplicationUser.EmployeeId; cached per request
+    Task<Employee> GetCurrentEmployeeAsync();
 }
-// Implementation — one DB hit per request:
+
+// Implementation â€” one DB hit per request:
 private Employee? _cached;
 public async Task<Employee> GetCurrentEmployeeAsync()
 {
-if (_cached != null) return _cached;
-var userId = GetCurrentUserId();
-var user   = await _userManager.FindByIdAsync(userId.ToString())
-?? throw new UnauthorizedException();
-_cached = await _db.Employees.FindAsync(user.EmployeeId)
-?? throw new NotFoundException("Employee record not found.");
-return _cached;
+    if (_cached != null) return _cached;
+    var userId = GetCurrentUserId();
+    var user   = await _userManager.FindByIdAsync(userId.ToString())
+                 ?? throw new UnauthorizedException();
+    _cached = await _db.Employees.FindAsync(user.EmployeeId)
+              ?? throw new NotFoundException("Employee record not found.");
+    return _cached;
 }
+
 9.4  Transaction Handling
-CreateEmployeeAsync — transaction: create Employee + create ApplicationUser + assign role (+ update ManagerId if DeptHead).
-ReplaceManagerAsync — transaction: remove old role + add new role + update ManagerId.
-SoftDeleteEmployeeAsync — transaction: soft-delete Employee + cascade tasks (both FK directions).
-ProcessPayrollAsync — transaction: create Payroll + create PayrollItems.
-Simple single-entity updates — EF Core default transaction.
+CreateEmployeeAsync â€” transaction: create Employee + create ApplicationUser + assign role (+ update ManagerId if DeptHead).
+ReplaceManagerAsync â€” transaction: remove old role + add new role + update ManagerId.
+SoftDeleteEmployeeAsync â€” transaction: soft-delete Employee + cascade tasks (both FK directions) + cascade Attendances (set IsDeleted = true for all records where EmployeeId = employeeId).
+ProcessPayrollAsync â€” transaction: create Payroll + create PayrollItems.
+Simple single-entity updates â€” EF Core default transaction.
+
 9.5  Exception Types
 Exception
 When Thrown
@@ -762,24 +813,28 @@ GlobalFilter: redirect to /Account/Login
 // HRSystem.Common/Constants/RoleNames.cs
 public static class RoleNames
 {
-public const string HR             = "HR";
-public const string DepartmentHead = "DepartmentHead";
-public const string Employee       = "Employee";
-public const string AllRoles       = "HR,DepartmentHead,Employee";
+    public const string HR             = "HR";
+    public const string DepartmentHead = "DepartmentHead";
+    public const string Employee       = "Employee";
+    public const string AllRoles       = "HR,DepartmentHead,Employee";
 }
+
 // HR Area base controller
 [Area("HR")]
 [Authorize(Roles = RoleNames.HR)]
 public abstract class HRBaseController : Controller { }
+
 // Employee Area base controller (all three roles)
 [Area("Employee")]
 [Authorize(Roles = RoleNames.AllRoles)]
 public abstract class EmployeeBaseController : Controller { }
-// Program.cs — redirect unauthenticated users
-// Enforce HTTPS and HSTS app.UseHttpsRedirection(); app.UseHsts(); builder.Services.ConfigureApplicationCookie(options => {
-options.LoginPath    = "/Account/Login";
-options.AccessDeniedPath = "/Account/AccessDenied";
+
+// Program.cs â€” redirect unauthenticated users
+// --- SERVICE REGISTRATION (before builder.Build()) --- builder.Services.ConfigureApplicationCookie(options => {     options.LoginPath = "/Account/Login";     options.AccessDeniedPath = "/Account/AccessDenied"; }); // --- MIDDLEWARE PIPELINE (after var app = builder.Build()) --- app.UseHsts();                  // HTTPS enforcement app.UseHttpsRedirection();     // redirect HTTP â†’ HTTPS app.UseAuthentication(); app.UseAuthorization();
+    options.LoginPath    = "/Account/Login";
+    options.AccessDeniedPath = "/Account/AccessDenied";
 });
+
 10.2  Account Controller Routes (No Area)
 Action
 Method
@@ -817,11 +872,21 @@ AccessDenied
 GET
 /Account/AccessDenied
 Friendly 403 page
-Forgot Password — Educational Approach (No Email Service)
+ChangePassword
+GET
+/Account/ChangePassword
+Forced change form â€” shown when IsPasswordChangeRequired = true
+ChangePassword
+POST
+/Account/ChangePassword
+Set new password, set IsPasswordChangeRequired = false, redirect to dashboard
+
+Forgot Password â€” Educational Approach (No Email Service)
 After generating the reset token, the system displays the full reset link directly on the confirmation page.
 In a production system, this link would be sent via email (SendGrid, SMTP, etc.).
 This keeps the educational project functional without requiring email infrastructure.
 The reset link format: /Account/ResetPassword?email={email}&token={encodedToken}
+
 10.3  HR Area Routes
 Controller
 Action
@@ -863,6 +928,10 @@ Department
 ReplaceManager
 GET|POST /HR/Department/ReplaceManager/{id}
 Replace manager + role swap
+Department
+Deleted
+GET /HR/Department/Deleted
+Soft-deleted departments list (restore)
 Payroll
 Index
 GET /HR/Payroll
@@ -887,6 +956,7 @@ Attendance
 Index
 GET /HR/Attendance
 Full attendance report
+
 10.4  Employee Area Routes
 Controller
 Action
@@ -899,7 +969,7 @@ Always
 Profile
 Index
 /Employee/Profile
-Always
+Always â€” read-only; editing is HR-only via /HR/Employee/Edit/{id}
 Task
 MyTasks
 /Employee/Task
@@ -959,77 +1029,85 @@ DepartmentHead only
 11. Authentication
 11.1  Identity Configuration (Program.cs)
 builder.Services.AddIdentity<ApplicationUser, IdentityRole<int>>(options => {
-options.Password.RequiredLength         = 8;
-options.Password.RequireUppercase       = true;
-options.Password.RequireDigit           = true;
-options.Password.RequireNonAlphanumeric = true;
-options.Lockout.MaxFailedAccessAttempts = 5;
-options.Lockout.DefaultLockoutTimeSpan  = TimeSpan.FromMinutes(15);
-options.User.RequireUniqueEmail          = true;
+    options.Password.RequiredLength         = 8;
+    options.Password.RequireUppercase       = true;
+    options.Password.RequireDigit           = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.DefaultLockoutTimeSpan  = TimeSpan.FromMinutes(15);
+    options.User.RequireUniqueEmail          = true;
 })
 .AddEntityFrameworkStores<AppDbContext>()
 .AddDefaultTokenProviders();
+
 builder.Services.ConfigureApplicationCookie(options => {
-options.LoginPath        = "/Account/Login";
-options.AccessDeniedPath = "/Account/AccessDenied";
-options.SlidingExpiration = true;
-options.ExpireTimeSpan   = TimeSpan.FromDays(14);  // Remember Me
+    options.LoginPath        = "/Account/Login";
+    options.AccessDeniedPath = "/Account/AccessDenied";
+    options.SlidingExpiration = true;
+    options.ExpireTimeSpan   = TimeSpan.FromDays(14);  // Remember Me
 });
+
 11.2  Login Flow
-User visits any protected route → redirected to /Account/Login.
+User visits any protected route â†’ redirected to /Account/Login.
 User enters email, password, and optionally checks Remember Me.
 SignInManager.PasswordSignInAsync(email, password, rememberMe, lockoutOnFailure: true).
 On success: if IsPasswordChangeRequired = true, redirect to /Account/ChangePassword (mandatory); otherwise redirect to return URL (or /Employee dashboard).
 On failure: show validation error. After 5 failures: account locked for 15 minutes.
+
 11.3  Forgot Password Flow
 User visits /Account/ForgotPassword and submits their email.
 UserManager.GeneratePasswordResetTokenAsync(user) generates a secure token.
-The full reset URL is displayed on the confirmation page (educational shortcut — no email sent).
+The full reset URL is displayed on the confirmation page (educational shortcut â€” no email sent).
 User copies the link, visits /Account/ResetPassword?email=...&token=...
 User enters and confirms new password. UserManager.ResetPasswordAsync() validates token + sets password.
 On success: redirect to /Account/Login with success message.
+
 11.4  AppDbContext
 public class AppDbContext
-: IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
+    : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
 {
-public DbSet<Employee>      Employees      { get; set; }
-public DbSet<Department>    Departments    { get; set; }
-public DbSet<EmployeeTask>  EmployeeTasks  { get; set; }
-public DbSet<Payroll>       Payrolls       { get; set; }
-public DbSet<PayrollItem>   PayrollItems   { get; set; }
-public DbSet<LeaveRequest>  LeaveRequests  { get; set; }
-public DbSet<LeaveBalance>  LeaveBalances  { get; set; }
-public DbSet<Attendance>    Attendances    { get; set; }
-protected override void OnModelCreating(ModelBuilder builder)
-{
-base.OnModelCreating(builder);  // MUST call base for Identity tables
-builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
-}
+    public DbSet<Employee>      Employees      { get; set; }
+    public DbSet<Department>    Departments    { get; set; }
+    public DbSet<EmployeeTask>  EmployeeTasks  { get; set; }
+    public DbSet<Payroll>       Payrolls       { get; set; }
+    public DbSet<PayrollItem>   PayrollItems   { get; set; }
+    public DbSet<LeaveRequest>  LeaveRequests  { get; set; }
+    public DbSet<LeaveBalance>  LeaveBalances  { get; set; }
+    public DbSet<Attendance>    Attendances    { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);  // MUST call base for Identity tables
+        builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+    }
 }
 12. Seeding Strategy
 12.1  Principles
 All seed data uses fixed dates (e.g. new DateTime(2024, 1, 1)). Never DateTime.UtcNow.
 EF Core HasData for static data (departments, employees). Identity users seeded in code (not HasData) because UserManager is required for password hashing.
-Seed runs in Program.cs on application start if data is absent.
+Seed runs in Program.cs on application start if data is absent. Execution order is mandatory: (1) dotnet ef database update, (2) SeedRolesAsync() â€” must complete before (3) SeedUsersAsync(). Roles must exist before users can be assigned to them.
+
 12.2  Migration Steps (Resolving Circular Dependency)
 Migration
 Action
 Migration 1
 Create all tables including Identity tables. Department.ManagerId nullable, no FK yet.
 Migration 2
-Seed Departments (Id=1 HR, Id=2 IT) with ManagerId = NULL. Seed Employees Id 1–15.
+Seed Departments (Id=1 HR, Id=2 IT) with ManagerId = NULL. Seed Employees Id 1â€“15.
 Migration 3
-UPDATE Departments: set ManagerId=2 (HR dept), ManagerId=3 (IT dept).
+Hand-write raw SQL in Up() and Down(). Up(): migrationBuilder.Sql("UPDATE Departments SET ManagerId = 2 WHERE Id = 1"); migrationBuilder.Sql("UPDATE Departments SET ManagerId = 3 WHERE Id = 2"); Down(): migrationBuilder.Sql("UPDATE Departments SET ManagerId = NULL WHERE Id IN (1, 2)");
 Migration 4
-ALTER Department.ManagerId to NOT NULL, add FK → Employees(Id).
+ALTER Department.ManagerId to NOT NULL, add FK â†’ Employees(Id).
 Migration 5
 Seed LeaveBalances for year 2025 for all employees.
+
 Identity Seed (In Code, Not HasData)
 Identity users cannot use EF Core HasData because password hashing requires UserManager.
 Instead, seed in Program.cs using a helper that runs once if no users exist:
-1. CreateAsync(new ApplicationUser { Email = ..., EmployeeId = ... }, password)
-2. AddToRoleAsync(user, RoleNames.HR / DepartmentHead / Employee)
+  1. CreateAsync(new ApplicationUser { Email = ..., EmployeeId = ... }, password)
+  2. AddToRoleAsync(user, RoleNames.HR / DepartmentHead / Employee)
 Roles (HR, DepartmentHead, Employee) are seeded using RoleManager.CreateAsync first.
+
 12.3  Sample Seed Data
 Emp Id
 Name
@@ -1061,7 +1139,7 @@ Charlie Davis
 Employee
 1 (HR)
 charlie@hr.com / Charlie@1234
-6–15
+6â€“15
 ...
 Employee
 mix
@@ -1089,80 +1167,88 @@ LeaveService, balances, request form, approve/reject (HR + DeptHead), auto-creat
 Week 6
 AttendanceService, check-in/out, mark team, reports.
 7: Dashboard & Polish
-Week 7–8
+Week 7â€“8
 Dashboard with real queries, overdue task highlighting, access denied page, responsive review, final test pass.
 14. Error Handling & User Feedback
-BusinessRuleException — Service layer rule violation. GlobalFilter: sets TempData["Error"], redirects back.
-NotFoundException — Entity not found. GlobalFilter: redirects to list view with error message.
-UnauthorizedException — Missing or invalid claim. GlobalFilter: redirects to /Account/Login.
+BusinessRuleException â€” Service layer rule violation. GlobalFilter: sets TempData["Error"], redirects back.
+NotFoundException â€” Entity not found. GlobalFilter: redirects to list view with error message.
+UnauthorizedException â€” Missing or invalid claim. GlobalFilter: redirects to /Account/Login.
 Access denied (wrong role): redirected to /Account/AccessDenied by cookie middleware.
 Login lockout: show friendly message with time remaining. Do not reveal whether email exists (Forgot Password shows generic success message regardless).
 All forms use server-side validation summaries. Client-side validation optional.
 15. Testing Checklist
 Authentication
-✅  Valid email + password — login succeeds, redirected to /Employee.
-✅  Wrong password — login fails with error. After 5 attempts: account locked.
-✅  Remember Me checked — auth cookie persists beyond session.
-✅  Remember Me unchecked — cookie expires with browser session.
-✅  Forgot Password with valid email — reset link shown on screen.
-✅  Forgot Password with unknown email — same generic success message (no user enumeration).
-✅  Reset Password with valid token — password changed, redirect to login.
-✅  Reset Password with expired/invalid token — rejected with error.
-✅  Unauthenticated user visits /HR/Employee — redirected to /Account/Login.
-✅  Employee (non-HR) visits /HR/Employee — redirected to /Account/AccessDenied.
+âœ…  Valid email + password â€” login succeeds, redirected to /Employee.
+âœ…  Wrong password â€” login fails with error. After 5 attempts: account locked.
+âœ…  Remember Me checked â€” auth cookie persists beyond session.
+âœ…  Remember Me unchecked â€” cookie expires with browser session.
+âœ…  Forgot Password with valid email â€” reset link shown on screen.
+âœ…  Forgot Password with unknown email â€” same generic success message (no user enumeration).
+âœ…  Reset Password with valid token â€” password changed, redirect to login.
+âœ…  Reset Password with expired/invalid token â€” rejected with error.
+âœ…  Unauthenticated user visits /HR/Employee â€” redirected to /Account/Login.
+âœ…  Employee (non-HR) visits /HR/Employee â€” redirected to /Account/AccessDenied. âœ…  New HR-created employee first login â€” redirected to /Account/ChangePassword before any other page. âœ…  After changing password â€” IsPasswordChangeRequired = false, redirected to dashboard. âœ…  HTTP request to any page â€” redirected to HTTPS (NFR07).
+
 Employee & Account Creation
-✅  HR creates employee — Employee record + ApplicationUser + role created in one transaction.
-✅  New employee can log in with the password set by HR.
-✅  Duplicate email — rejected at both Employee and Identity level.
-✅  Creating a DepartmentHead employee — Department.ManagerId updated in same transaction.
-✅  Soft-delete employee who is NOT a manager — tasks cascade-deleted (both FK directions).
-✅  Soft-delete employee who IS a manager — blocked, link to Replace Manager.
-✅  Restore soft-deleted employee — back in active list; tasks remain deleted.
+âœ…  HR creates employee â€” Employee record + ApplicationUser + role created in one transaction.
+âœ…  New employee can log in with the password set by HR.
+âœ…  Duplicate email â€” rejected at both Employee and Identity level.
+âœ…  Creating a DepartmentHead employee â€” Department.ManagerId updated in same transaction.
+âœ…  Soft-delete employee who is NOT a manager â€” tasks cascade-deleted (both FK directions).
+âœ…  Soft-delete employee who IS a manager â€” blocked, link to Replace Manager.
+âœ…  Restore soft-deleted employee â€” back in active list; tasks remain deleted.
+
 Manager Replacement (FR19 Role Sync)
-✅  Replace manager — old manager loses DepartmentHead role; new manager gains it; Department.ManagerId updated; all in one transaction.
-✅  After replacement, old manager can log in but no longer sees DeptHead-only pages.
-✅  New manager can immediately see and use DeptHead-only features.
-✅  Replace with invalid employee (different dept, HR, inactive) — rejected.
-✅  Any failure mid-transaction — all changes rolled back; roles and ManagerId unchanged.
+âœ…  Replace manager â€” old manager loses DepartmentHead role; new manager gains it; Department.ManagerId updated; all in one transaction.
+âœ…  After replacement, old manager can log in but no longer sees DeptHead-only pages.
+âœ…  New manager can immediately see and use DeptHead-only features.
+âœ…  Replace with invalid employee (different dept, HR, inactive) â€” rejected.
+âœ…  Any failure mid-transaction â€” all changes rolled back; roles and ManagerId unchanged.
+
 Department Management
-✅  Create dept with valid manager — succeeds.
-✅  Create dept without manager — rejected.
-✅  Assign HR as manager — rejected.
-✅  Soft-delete dept with active employees — blocked (FR17).
-✅  Soft-delete dept after employees removed — succeeds.
+âœ…  Create dept with valid manager â€” succeeds.
+âœ…  Create dept without manager â€” rejected.
+âœ…  Assign HR as manager â€” rejected.
+âœ…  Soft-delete dept with active employees â€” blocked (FR17).
+âœ…  Soft-delete dept after employees removed â€” succeeds.
+
 Task Management
-✅  DeptHead assigns task to own dept employee — succeeds.
-✅  DeptHead assigns task to different dept employee — rejected.
-✅  HR tries to assign task — rejected.
-✅  Employee updates own task: Pending → InProgress → Completed — succeeds.
-✅  Status regression (Completed → InProgress) — rejected.
-✅  Update task assigned to someone else — rejected.
-✅  Edit completed task — rejected.
+âœ…  DeptHead assigns task to own dept employee â€” succeeds.
+âœ…  DeptHead assigns task to different dept employee â€” rejected.
+âœ…  HR tries to assign task â€” rejected.
+âœ…  Employee updates own task: Pending â†’ InProgress â†’ Completed â€” succeeds.
+âœ…  Status regression (Completed â†’ InProgress) â€” rejected.
+âœ…  Update task assigned to someone else â€” rejected.
+âœ…  Edit completed task â€” rejected. âœ…  DeptHead assigns task to themselves â€” rejected (self-assignment policy). âœ…  DeptHead assigns task to an HR employee â€” rejected (non-HR restriction).
+
 Payroll
-✅  HR processes payroll — record + items created; NetSalary correct.
-✅  Duplicate month/year — rejected.
-✅  Edit after Approved — rejected.
-✅  Draft → Approved → Paid transitions — all succeed.
-✅  Employee views own payslip with itemised breakdown.
+âœ…  HR processes payroll â€” record + items created; NetSalary correct.
+âœ…  Duplicate month/year â€” rejected.
+âœ…  Edit after Approved â€” rejected.
+âœ…  Draft â†’ Approved â†’ Paid transitions â€” all succeed.
+âœ…  Employee views own payslip with itemised breakdown.
+
 Leave
-✅  Request with sufficient balance — succeeds.
-✅  Request with insufficient balance — rejected.
-✅  Overlapping approved leave — rejected.
-✅  DeptHead approves own dept leave — UsedDays increments.
-✅  DeptHead approves other dept leave — rejected.
-✅  Future year leave — balance auto-created.
-✅  Unpaid leave — no balance check, no row touched.
+âœ…  Request with sufficient balance â€” succeeds.
+âœ…  Request with insufficient balance â€” rejected.
+âœ…  Overlapping approved leave â€” rejected.
+âœ…  DeptHead approves own dept leave â€” UsedDays increments.
+âœ…  DeptHead approves other dept leave â€” rejected.
+âœ…  Future year leave â€” balance auto-created.
+âœ…  Unpaid leave â€” no balance check, no row touched. âœ…  DeptHead attempts to approve their own leave â€” rejected with error (FR12). âœ…  HR approves DeptHeadâ€™s own leave request â€” succeeds. âœ…  Rejection of pending leave â€” no change to UsedDays. âœ…  Rejection of already-approved leave â€” UsedDays decremented correctly.
+
 Attendance
-✅  Check-in — record created.
-✅  Double check-in — rejected.
-✅  Check-out without check-in — rejected.
-✅  CheckOut before CheckIn — rejected.
-✅  DeptHead marks team attendance — succeeds.
-✅  DeptHead marks other dept attendance — rejected.
+âœ…  Check-in â€” record created.
+âœ…  Double check-in â€” rejected.
+âœ…  Check-out without check-in â€” rejected.
+âœ…  CheckOut before CheckIn â€” rejected.
+âœ…  DeptHead marks team attendance â€” succeeds.
+âœ…  DeptHead marks other dept attendance â€” rejected.
+
 Cascade on Soft Delete (FR16)
-✅  Soft-delete employee with created tasks — AssignedById tasks → IsDeleted = true.
-✅  Soft-delete employee with assigned tasks — AssignedToId tasks → IsDeleted = true.
-✅  Soft-delete with both created + assigned tasks — all deleted, no duplicates.
-✅  Soft-delete with no tasks — no side effects, transaction commits.
-✅  Restore employee — tasks remain IsDeleted = true.
-✅  Task lists never show IsDeleted = true tasks.
+âœ…  Soft-delete employee with created tasks â€” AssignedById tasks â†’ IsDeleted = true.
+âœ…  Soft-delete employee with assigned tasks â€” AssignedToId tasks â†’ IsDeleted = true.
+âœ…  Soft-delete with both created + assigned tasks â€” all deleted, no duplicates.
+âœ…  Soft-delete with no tasks â€” no side effects, transaction commits.
+âœ…  Restore employee â€” tasks remain IsDeleted = true.
+âœ…  Task lists never show IsDeleted = true tasks. âœ…  Employee list with 21+ records â€” paginated, page 2 shows correct records (NFR08). âœ…  Page size defaults to 20 per page.

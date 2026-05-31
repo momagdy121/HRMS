@@ -1,6 +1,9 @@
 using HRSystem.Common.Constants;
+using HRSystem.Business;
+using HRSystem.Data;
 using HRSystem.Data.Context;
 using HRSystem.Data.Models;
+using HRSystem.Web.Filters;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,14 +15,22 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole<int>>(options =>
+builder.Services.AddHrmsDataServices();
+builder.Services.AddHrmsBusinessServices();
+
+builder.Services
+    .AddIdentity<ApplicationUser, IdentityRole<int>>(options =>
     {
         options.SignIn.RequireConfirmedAccount = false;
     })
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add<HrmsExceptionFilter>();
+});
+builder.Services.AddScoped<HrmsExceptionFilter>();
 
 var app = builder.Build();
 

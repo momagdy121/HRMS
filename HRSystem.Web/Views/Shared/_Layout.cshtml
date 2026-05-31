@@ -119,6 +119,12 @@
 
 @if (hideShell)
 {
+    @if (TempData["Error"] is string shellError)
+    {
+        <div class="fixed top-4 left-1/2 z-50 w-full max-w-md -translate-x-1/2 rounded-lg border border-error/30 bg-error-container px-4 py-3 text-on-error-container shadow-lg" role="alert">
+            @shellError
+        </div>
+    }
     @RenderBody()
 }
 else
@@ -144,6 +150,12 @@ else
 
         <!-- Page Content -->
         <main class="flex-1 overflow-y-auto bg-surface p-4 md:p-8">
+            @if (TempData["Error"] is string errorMessage)
+            {
+                <div class="mb-4 rounded-lg border border-error/30 bg-error-container px-4 py-3 text-on-error-container" role="alert">
+                    @errorMessage
+                </div>
+            }
             @RenderBody()
         </main>
     </div>

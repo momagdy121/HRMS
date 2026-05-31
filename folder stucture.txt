@@ -1,0 +1,233 @@
+HRSystem.sln
+├── HRSystem.Web
+│   ├── Areas
+│   │   ├── HR
+│   │   │   ├── Controllers
+│   │   │   │   ├── AttendanceController.cs
+│   │   │   │   ├── DepartmentController.cs
+│   │   │   │   ├── EmployeeController.cs
+│   │   │   │   ├── LeaveController.cs
+│   │   │   │   └── PayrollController.cs
+│   │   │   └── Views
+│   │   │       ├── Attendance
+│   │   │       │   └── Index.cshtml
+│   │   │       ├── Department
+│   │   │       │   ├── Create.cshtml
+│   │   │       │   ├── Deleted.cshtml
+│   │   │       │   ├── Edit.cshtml
+│   │   │       │   └── Index.cshtml
+│   │   │       ├── Employee
+│   │   │       │   ├── Create.cshtml
+│   │   │       │   ├── Deleted.cshtml
+│   │   │       │   ├── Edit.cshtml
+│   │   │       │   └── Index.cshtml
+│   │   │       ├── Leave
+│   │   │       │   └── Index.cshtml
+│   │   │       ├── Payroll
+│   │   │       │   ├── Index.cshtml
+│   │   │       │   └── Process.cshtml
+│   │   │       ├── Shared
+│   │   │       │   └── _HRLayout.cshtml
+│   │   │       ├── _ViewImports.cshtml
+│   │   │       └── _ViewStart.cshtml
+│   │   ├── DepartmentHead
+│   │   │   ├── Controllers
+│   │   │   │   ├── AttendanceController.cs
+│   │   │   │   ├── DashboardController.cs
+│   │   │   │   ├── LeaveController.cs
+│   │   │   │   ├── PayrollController.cs
+│   │   │   │   └── TaskController.cs
+│   │   │   └── Views
+│   │   │       ├── Attendance
+│   │   │       │   └── MarkTeam.cshtml
+│   │   │       ├── Dashboard
+│   │   │       │   └── Index.cshtml
+│   │   │       ├── Leave
+│   │   │       │   └── TeamPending.cshtml
+│   │   │       ├── Payroll
+│   │   │       │   └── Department.cshtml
+│   │   │       ├── Task
+│   │   │       │   ├── Assign.cshtml
+│   │   │       │   ├── Edit.cshtml
+│   │   │       │   └── Manage.cshtml
+│   │   │       ├── Shared
+│   │   │       │   └── _DeptHeadLayout.cshtml
+│   │   │       ├── _ViewImports.cshtml
+│   │   │       └── _ViewStart.cshtml
+│   │   └── Employee
+│   │       ├── Controllers
+│   │       │   ├── AttendanceController.cs
+│   │       │   ├── DashboardController.cs
+│   │       │   ├── LeaveController.cs
+│   │       │   ├── PayrollController.cs
+│   │       │   ├── ProfileController.cs
+│   │       │   └── TaskController.cs
+│   │       └── Views
+│   │           ├── Attendance
+│   │           │   └── MyHistory.cshtml
+│   │           ├── Dashboard
+│   │           │   └── Index.cshtml
+│   │           ├── Leave
+│   │           │   ├── MyRequests.cshtml
+│   │           │   └── Request.cshtml
+│   │           ├── Payroll
+│   │           │   └── MyPayslips.cshtml
+│   │           ├── Profile
+│   │           │   └── Index.cshtml
+│   │           ├── Task
+│   │           │   └── MyTasks.cshtml
+│   │           ├── Shared
+│   │           │   └── _EmployeeLayout.cshtml
+│   │           ├── _ViewImports.cshtml
+│   │           └── _ViewStart.cshtml
+│   ├── Controllers
+│   │   └── AccountController.cs
+│   ├── Filters
+│   │   └── HrmsExceptionFilter.cs
+│   ├── Views
+│   │   ├── Account
+│   │   │   ├── ChangePassword.cshtml
+│   │   │   ├── ForgotPassword.cshtml
+│   │   │   ├── Login.cshtml
+│   │   │   └── ResetPassword.cshtml
+│   │   ├── Shared
+│   │   │   ├── _Layout.cshtml
+│   │   │   ├── _LoginPartial.cshtml
+│   │   │   ├── AccessDenied.cshtml
+│   │   │   └── Error.cshtml
+│   │   ├── _ViewImports.cshtml
+│   │   └── _ViewStart.cshtml
+│   ├── ViewModels
+│   │   ├── Account
+│   │   │   ├── ChangePasswordVM.cs
+│   │   │   ├── ForgotPasswordVM.cs
+│   │   │   ├── LoginVM.cs
+│   │   │   └── ResetPasswordVM.cs
+│   │   ├── DepartmentHead
+│   │   │   ├── Attendance
+│   │   │   │   └── MarkTeamVM.cs
+│   │   │   ├── Dashboard
+│   │   │   │   └── DeptHeadDashboardVM.cs
+│   │   │   ├── Leave
+│   │   │   │   └── TeamPendingVM.cs
+│   │   │   ├── Payroll
+│   │   │   │   └── DeptPayrollVM.cs
+│   │   │   └── Task
+│   │   │       ├── AssignTaskVM.cs
+│   │   │       ├── EditTaskVM.cs
+│   │   │       └── ManageTasksVM.cs
+│   │   ├── Employee
+│   │   │   ├── Attendance
+│   │   │   │   └── MyAttendanceVM.cs
+│   │   │   ├── Dashboard
+│   │   │   │   └── EmployeeDashboardVM.cs
+│   │   │   ├── Leave
+│   │   │   │   ├── MyRequestsVM.cs
+│   │   │   │   └── RequestLeaveVM.cs
+│   │   │   ├── Payroll
+│   │   │   │   └── PayslipVM.cs
+│   │   │   └── Task
+│   │   │       └── MyTasksVM.cs
+│   │   └── HR
+│   │       ├── Attendance
+│   │       │   └── AttendanceReportVM.cs
+│   │       ├── Department
+│   │       │   ├── CreateDepartmentVM.cs
+│   │       │   ├── DepartmentListVM.cs
+│   │       │   └── ReplaceManagerVM.cs
+│   │       ├── Employee
+│   │       │   ├── CreateEmployeeVM.cs
+│   │       │   ├── EditEmployeeVM.cs
+│   │       │   └── EmployeeListVM.cs
+│   │       ├── Leave
+│   │       │   └── LeaveListVM.cs
+│   │       └── Payroll
+│   │           ├── PayrollListVM.cs
+│   │           └── ProcessPayrollVM.cs
+│   ├── wwwroot
+│   │   ├── css
+│   │   │   └── site.css
+│   │   ├── js
+│   │   │   └── site.js
+│   │   └── lib
+│   ├── appsettings.Development.json
+│   ├── appsettings.json
+│   └── Program.cs
+├── HRSystem.Business
+│   ├── DTOs
+│   │   ├── AssignTaskDto.cs
+│   │   ├── CreateEmployeeDto.cs
+│   │   ├── EmployeeSummaryDto.cs
+│   │   ├── ProcessPayrollDto.cs
+│   │   ├── RequestLeaveDto.cs
+│   │   └── UpdateEmployeeDto.cs
+│   ├── Exceptions
+│   │   ├── BusinessRuleException.cs
+│   │   ├── NotFoundException.cs
+│   │   └── UnauthorizedException.cs
+│   ├── Interfaces
+│   │   ├── Policies
+│   │   │   ├── IDepartmentDeletionPolicy.cs
+│   │   │   ├── IDepartmentManagerPolicy.cs
+│   │   │   ├── IEmployeeDeletionPolicy.cs
+│   │   │   └── ITaskAssignmentPolicy.cs
+│   │   └── Services
+│   │       ├── IAccountService.cs
+│   │       ├── IAttendanceService.cs
+│   │       ├── ICurrentUserService.cs
+│   │       ├── IDepartmentService.cs
+│   │       ├── IEmployeeService.cs
+│   │       ├── ILeaveService.cs
+│   │       ├── IPayrollService.cs
+│   │       └── ITaskService.cs
+│   ├── Policies
+│   │   ├── DepartmentDeletionPolicy.cs
+│   │   ├── DepartmentManagerPolicy.cs
+│   │   ├── EmployeeDeletionPolicy.cs
+│   │   └── TaskAssignmentPolicy.cs
+│   └── Services
+│       ├── AccountService.cs
+│       ├── AttendanceService.cs
+│       ├── CurrentUserService.cs
+│       ├── DepartmentService.cs
+│       ├── EmployeeService.cs
+│       ├── LeaveService.cs
+│       ├── PayrollService.cs
+│       └── TaskService.cs
+├── HRSystem.Data
+│   ├── Configurations
+│   │   ├── ApplicationUserConfiguration.cs
+│   │   ├── AttendanceConfiguration.cs
+│   │   ├── DepartmentConfiguration.cs
+│   │   ├── EmployeeConfiguration.cs
+│   │   ├── EmployeeTaskConfiguration.cs
+│   │   ├── LeaveBalanceConfiguration.cs
+│   │   ├── LeaveRequestConfiguration.cs
+│   │   ├── PayrollConfiguration.cs
+│   │   └── PayrollItemConfiguration.cs
+│   ├── Context
+│   │   └── AppDbContext.cs
+│   ├── Migrations
+│   │   ├── Migration1_CreateAllTables.cs
+│   │   ├── Migration2_SeedDepartmentsEmployees.cs
+│   │   ├── Migration3_SetManagerIds.cs
+│   │   ├── Migration4_ConstrainManagerId.cs
+│   │   └── Migration5_SeedLeaveBalances.cs
+│   └── Models
+│       ├── ApplicationUser.cs
+│       ├── Attendance.cs
+│       ├── Department.cs
+│       ├── Employee.cs
+│       ├── EmployeeTask.cs
+│       ├── LeaveBalance.cs
+│       ├── LeaveRequest.cs
+│       ├── Payroll.cs
+│       └── PayrollItem.cs
+└── HRSystem.Common
+    ├── Constants
+    │   └── RoleNames.cs
+    └── Enums
+        ├── ItemType.cs
+        ├── LeaveType.cs
+        ├── PayrollStatus.cs
+        └── TaskStatus.cs
