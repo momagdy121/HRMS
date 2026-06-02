@@ -1,226 +1,167 @@
+@model HrPayrollIndexViewModel
 @{
-    ViewBag.Title = "payroll_management_hrms_portal";
+    ViewBag.Title = "Payroll - HRMS Portal";
 }
 
-<!-- SideNavBar Shell -->
+<div class="max-w-7xl mx-auto space-y-6">
+    <div class="flex justify-between items-end">
+        <div>
+            <h2 class="font-h1 text-h1 text-on-surface">Payroll</h2>
+            <p class="font-body-md text-body-md text-on-surface-variant mt-1">Process and manage employee payroll</p>
+        </div>
+        <a asp-action="Index" asp-route-showProcess="true" class="bg-primary-container text-on-primary px-6 py-2.5 rounded-lg font-label-bold flex items-center gap-2 hover:bg-primary transition-colors shadow-sm">
+            <span class="material-symbols-outlined text-sm">add</span>Process Payroll
+        </a>
+    </div>
 
-<!-- Main Content Canvas -->
+    <form asp-action="Index" method="get" class="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-white rounded-xl shadow-sm border border-slate-100">
+        <div class="flex flex-col gap-1.5">
+            <label class="font-label-bold text-slate-500 text-[11px] uppercase tracking-wider">Department</label>
+            <select name="departmentId" class="border-slate-200 rounded-lg text-sm font-body-md px-3 py-2">
+                <option value="">All Departments</option>
+                @foreach (var dept in Model.Departments)
+                {
+                    <option value="@dept.Id" selected="@(Model.DepartmentFilter == dept.Id)">@dept.Name</option>
+                }
+            </select>
+        </div>
+        <div class="flex flex-col gap-1.5">
+            <label class="font-label-bold text-slate-500 text-[11px] uppercase tracking-wider">Month</label>
+            <select name="month" class="border-slate-200 rounded-lg text-sm font-body-md px-3 py-2">
+                <option value="">All Months</option>
+                @for (var m = 1; m <= 12; m++)
+                {
+                    <option value="@m" selected="@(Model.MonthFilter == m)">@PayrollDisplayHelper.GetMonthName(m)</option>
+                }
+            </select>
+        </div>
+        <div class="flex flex-col gap-1.5">
+            <label class="font-label-bold text-slate-500 text-[11px] uppercase tracking-wider">Year</label>
+            <select name="year" class="border-slate-200 rounded-lg text-sm font-body-md px-3 py-2">
+                <option value="">All Years</option>
+                @for (var y = DateTime.UtcNow.Year; y >= DateTime.UtcNow.Year - 3; y--)
+                {
+                    <option value="@y" selected="@(Model.YearFilter == y)">@y</option>
+                }
+            </select>
+        </div>
+        <div class="flex flex-col gap-1.5">
+            <label class="font-label-bold text-slate-500 text-[11px] uppercase tracking-wider">Status</label>
+            <select name="status" class="border-slate-200 rounded-lg text-sm font-body-md px-3 py-2">
+                <option value="">All Statuses</option>
+                @foreach (var status in Enum.GetValues<HRSystem.Common.Enums.PayrollStatus>())
+                {
+                    <option value="@((int)status)" selected="@(Model.StatusFilter == status)">@PayrollDisplayHelper.GetStatusLabel(status)</option>
+                }
+            </select>
+        </div>
+        <div class="md:col-span-4 flex justify-end">
+            <button type="submit" class="px-6 py-2 bg-primary-container text-on-primary rounded-lg font-label-bold">Apply Filters</button>
+        </div>
+    </form>
 
-<!-- TopNavBar Shell -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100">
+            <p class="text-xs font-label-bold text-slate-500 uppercase tracking-widest">Total Net (filtered)</p>
+            <p class="text-xl font-bold text-primary mt-1">@PayrollDisplayHelper.FormatCurrency(Model.TotalNetForPeriod)</p>
+        </div>
+        <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100">
+            <p class="text-xs font-label-bold text-slate-500 uppercase tracking-widest">Pending Approvals</p>
+            <p class="text-xl font-bold text-primary mt-1">@Model.PendingApprovalCount</p>
+        </div>
+    </div>
 
-<!-- Page Content -->
-<div class="p-8 flex flex-col gap-8 flex-1">
-<!-- Header Section -->
-<div class="flex justify-between items-end">
-<div>
-<h2 class="font-h1 text-h1 text-primary">Payroll</h2>
-<p class="font-body-md text-secondary mt-1">Process and manage employee payroll</p>
-</div>
-<a asp-action="ProcessStep1" class="bg-[#1F4E79] text-white px-6 py-2.5 rounded-xl font-label-bold flex items-center gap-2 hover:bg-primary transition-colors shadow-sm">
-<span class="material-symbols-outlined text-[20px]" data-icon="add">add</span>
-                    Process Payroll
-                </a>
-</div>
-<!-- Bento Filter Bar -->
-<div class="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-white rounded-xl shadow-sm border border-slate-100">
-<div class="flex flex-col gap-1.5">
-<label class="font-label-bold text-slate-500 text-[11px] uppercase tracking-wider">Department</label>
-<select class="form-select border-slate-200 rounded-lg text-sm font-body-md focus:border-primary focus:ring-0">
-<option>All Departments</option>
-<option>Engineering</option>
-<option>Human Resources</option>
-<option>Marketing</option>
-<option>Sales</option>
-</select>
-</div>
-<div class="flex flex-col gap-1.5">
-<label class="font-label-bold text-slate-500 text-[11px] uppercase tracking-wider">Month</label>
-<select class="form-select border-slate-200 rounded-lg text-sm font-body-md focus:border-primary focus:ring-0">
-<option>October</option>
-<option>September</option>
-<option>August</option>
-</select>
-</div>
-<div class="flex flex-col gap-1.5">
-<label class="font-label-bold text-slate-500 text-[11px] uppercase tracking-wider">Year</label>
-<select class="form-select border-slate-200 rounded-lg text-sm font-body-md focus:border-primary focus:ring-0">
-<option>2025</option>
-<option>2024</option>
-</select>
-</div>
-<div class="flex flex-col gap-1.5">
-<label class="font-label-bold text-slate-500 text-[11px] uppercase tracking-wider">Status</label>
-<select class="form-select border-slate-200 rounded-lg text-sm font-body-md focus:border-primary focus:ring-0">
-<option>All Statuses</option>
-<option>Draft</option>
-<option>Approved</option>
-<option>Paid</option>
-</select>
-</div>
-</div>
-<!-- Payroll Table -->
-<div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-<table class="w-full text-left border-collapse">
-<thead class="bg-slate-50 border-b border-slate-100">
-<tr>
-<th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Employee</th>
-<th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Month/Year</th>
-<th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Base Salary</th>
-<th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Bonuses</th>
-<th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Deductions</th>
-<th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Net Salary</th>
-<th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Status</th>
-<th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider text-right">Actions</th>
-</tr>
-</thead>
-<tbody class="font-body-md text-on-surface">
-<!-- Row 1 -->
-<tr class="striped-row hover:bg-slate-50/80 transition-colors">
-<td class="px-6 py-4">
-<div class="flex items-center gap-3">
-<div class="h-9 w-9 rounded-full bg-slate-200 overflow-hidden">
-<img alt="John Doe" class="h-full w-full object-cover" data-alt="A clean, professional headshot of a smiling young man in a minimalist white background, wearing a neat grey polo shirt. The lighting is soft and high-key, emphasizing a modern corporate aesthetic with natural skin tones and a sharp, clear focus on his friendly expression." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC82S3WliAhErs9aaJnPigvGGwEt7hpBmb64qTuZHdG8lKTTk-XR4GaVVk2LSUZgftuGQnkTUvTLK0q4eNAoaH17VyQzxxlfLS9c5RA9TdkrAi2lWVTyKbEbcVJtV7JwcH4JB5EB8RysjNmtDrflaaqqzZP9t6JaUUV1voHVKI0tGwHViVO7m4h5ROESCANsj_zpbAfGnJamt-eG5DtFXrlgnJ7iThZHTTOQ8LtUuSQHdYchWIUP8b9aIo6Zu3yoMKw6THlifA4og"/>
-</div>
-<span class="font-semibold text-primary">John Doe</span>
-</div>
-</td>
-<td class="px-6 py-4">Oct 2025</td>
-<td class="px-6 py-4">$6,500</td>
-<td class="px-6 py-4 text-green-600">+$500</td>
-<td class="px-6 py-4 text-error">-$240</td>
-<td class="px-6 py-4 font-bold">$6,760</td>
-<td class="px-6 py-4">
-<span class="bg-slate-100 text-slate-600 px-3 py-1 rounded-full font-badge text-badge">Draft</span>
-</td>
-<td class="px-6 py-4 text-right">
-<button class="text-secondary hover:text-primary transition-colors">
-<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
-</button>
-</td>
-</tr>
-<!-- Row 2 -->
-<tr class="striped-row hover:bg-slate-50/80 transition-colors">
-<td class="px-6 py-4">
-<div class="flex items-center gap-3">
-<div class="h-9 w-9 rounded-full bg-slate-200 overflow-hidden">
-<img alt="Jane Smith" class="h-full w-full object-cover" data-alt="Close-up professional portrait of a professional woman with a calm, intelligent gaze. She has dark hair and wears elegant tortoiseshell glasses. The background is a soft-focus corporate office with bright, natural lighting. The overall color palette is airy and light, with subtle blues and whites reflecting a corporate modernist brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1XK0hlBL-JrCcwSVPpgY5DFCTCxk1aRwFIfLE1641kQCDKLUP6xMcZIrtDLGNC3IBzIVpy6apn3MsCGTEsxdGakSlkMttMuO_Fi-auSRb_tLFiJw5nhHUUAO6UFCQ_u8lcMBmImZ11tNvQsdg9VnuZM-EzUvo7Lnc10xUCyQQrI_9mOsMIzSBjAOKCfQLHSBiUBoT9dJqWNMi5k1PmhTV9x9m8E6O6D9KwQKM_ZBVB-ebs0ewfeVsKDJpaasbin8GTvhiZ4OI1Q"/>
-</div>
-<span class="font-semibold text-primary">Jane Smith</span>
-</div>
-</td>
-<td class="px-6 py-4">Oct 2025</td>
-<td class="px-6 py-4">$8,000</td>
-<td class="px-6 py-4 text-green-600">+$1,000</td>
-<td class="px-6 py-4 text-error">-$300</td>
-<td class="px-6 py-4 font-bold">$8,700</td>
-<td class="px-6 py-4">
-<span class="bg-amber-50 text-amber-600 px-3 py-1 rounded-full font-badge text-badge">Approved</span>
-</td>
-<td class="px-6 py-4 text-right">
-<button class="text-secondary hover:text-primary transition-colors">
-<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
-</button>
-</td>
-</tr>
-<!-- Row 3 -->
-<tr class="striped-row hover:bg-slate-50/80 transition-colors">
-<td class="px-6 py-4">
-<div class="flex items-center gap-3">
-<div class="h-9 w-9 rounded-full bg-slate-200 overflow-hidden">
-<img alt="Michael Johnson" class="h-full w-full object-cover" data-alt="A portrait of a senior professional male executive with a kind smile and graying temples. He is wearing a dark navy suit and light blue shirt. The setting is a bright, high-end corporate lobby with expansive glass and modern furniture. The lighting is soft but directed, creating a sense of reliability and institutional trust." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOxVhAAYTpIS10HWMbhCZb1QOVixP3sUtOBORX8SC4GKzlyVML-CmSmBjG4C2WqwwDoj1hxxf5OAH4PhGR0EtE96lNRhQS6VwNpXVTx7_zCQQRxBPK4KzbyDNixX8KHTdtCpKi3J7XtGHQ0s0h2l1g9FiREfKXW5dN0Jjhdl67bUb5qDNquHpzRRbW3JT9T6F7QWpBrelDWqYFyTH3jqjzPjkPLiQor4rasHf6q4k6AdW_t7US-p1AuJNK6r7t-wFsQJJQcvdWCw"/>
-</div>
-<span class="font-semibold text-primary">Michael Johnson</span>
-</div>
-</td>
-<td class="px-6 py-4">Oct 2025</td>
-<td class="px-6 py-4">$5,200</td>
-<td class="px-6 py-4 text-green-600">+$200</td>
-<td class="px-6 py-4 text-error">-$150</td>
-<td class="px-6 py-4 font-bold">$5,250</td>
-<td class="px-6 py-4">
-<span class="bg-green-50 text-green-600 px-3 py-1 rounded-full font-badge text-badge">Paid</span>
-</td>
-<td class="px-6 py-4 text-right">
-<button class="text-secondary hover:text-primary transition-colors">
-<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
-</button>
-</td>
-</tr>
-<!-- Row 4 -->
-<tr class="striped-row hover:bg-slate-50/80 transition-colors">
-<td class="px-6 py-4">
-<div class="flex items-center gap-3">
-<div class="h-9 w-9 rounded-full bg-slate-200 overflow-hidden">
-<img alt="Emily Wong" class="h-full w-full object-cover" data-alt="A professional headshot of a young woman of Asian descent with a friendly, professional demeanor. She is wearing a modern charcoal-colored blouse and stands against a clean, light-colored architectural background with geometric lines. The image captures a bright, corporate modernist vibe with exceptional clarity and soft, even lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3C2Xfe0ezQwgubeXJC83lc0LMNxJ7-lwHGa88DEzyQgTfm-7XN79qmHCKpo2XSudCBrNEDyL0w-D-isOW5gFRl34zOGMlAIVHdJLFx2YosF5O3-QVzAdg_dYeGxSw7gB0r3giO3ZDVJJHrcOzMDIdxyOOy5Exm5__Fib3GvKpWe2zKwBJnfGQ2hAHnCYFIkBChRiHx5TqWt09d7zfnblRDwwNmh3TZim01X6-ulSacalCje6mhSJZ_mesOSK58pGnbY_RYEHIGQ"/>
-</div>
-<span class="font-semibold text-primary">Emily Wong</span>
-</div>
-</td>
-<td class="px-6 py-4">Sep 2025</td>
-<td class="px-6 py-4">$7,200</td>
-<td class="px-6 py-4 text-green-600">+$0</td>
-<td class="px-6 py-4 text-error">-$180</td>
-<td class="px-6 py-4 font-bold">$7,020</td>
-<td class="px-6 py-4">
-<span class="bg-green-50 text-green-600 px-3 py-1 rounded-full font-badge text-badge">Paid</span>
-</td>
-<td class="px-6 py-4 text-right">
-<button class="text-secondary hover:text-primary transition-colors">
-<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
-</button>
-</td>
-</tr>
-</tbody>
-</table>
-<!-- Pagination Footer -->
-<div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
-<p class="text-sm text-secondary">Showing 1 to 4 of 48 entries</p>
-<div class="flex items-center gap-2">
-<button class="p-2 border border-slate-200 rounded-lg hover:bg-white text-secondary disabled:opacity-50" disabled="">
-<span class="material-symbols-outlined text-[20px]" data-icon="chevron_left">chevron_left</span>
-</button>
-<div class="flex items-center gap-1">
-<button class="px-3.5 py-1.5 rounded-lg bg-primary text-white text-sm font-semibold">1</button>
-<button class="px-3.5 py-1.5 rounded-lg hover:bg-white text-secondary text-sm font-medium">2</button>
-<button class="px-3.5 py-1.5 rounded-lg hover:bg-white text-secondary text-sm font-medium">3</button>
-<span class="px-2 text-secondary">...</span>
-<button class="px-3.5 py-1.5 rounded-lg hover:bg-white text-secondary text-sm font-medium">12</button>
-</div>
-<button class="p-2 border border-slate-200 rounded-lg hover:bg-white text-secondary">
-<span class="material-symbols-outlined text-[20px]" data-icon="chevron_right">chevron_right</span>
-</button>
-</div>
-</div>
-</div>
-<!-- Stats Overlay Bento Element (Extra Context) -->
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-<div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-center gap-4">
-<div class="h-12 w-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">
-<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
-</div>
-<div>
-<p class="text-xs font-label-bold text-slate-500 uppercase tracking-widest">Total Monthly Payroll</p>
-<p class="text-xl font-bold text-primary">$246,850.00</p>
-</div>
-</div>
-<div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-center gap-4">
-<div class="h-12 w-12 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center">
-<span class="material-symbols-outlined" data-icon="pending">pending</span>
-</div>
-<div>
-<p class="text-xs font-label-bold text-slate-500 uppercase tracking-widest">Pending Approvals</p>
-<p class="text-xl font-bold text-primary">12 Records</p>
-</div>
-</div>
-<div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-center gap-4">
-<div class="h-12 w-12 rounded-full bg-green-50 text-green-600 flex items-center justify-center">
-<span class="material-symbols-outlined" data-icon="check_circle">check_circle</span>
-</div>
-<div>
-<p class="text-xs font-label-bold text-slate-500 uppercase tracking-widest">Payouts Success Rate</p>
-<p class="text-xl font-bold text-primary">98.5%</p>
-</div>
-</div>
-</div>
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-slate-50 border-b border-slate-100">
+                    <tr>
+                        <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Employee</th>
+                        <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Month/Year</th>
+                        <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Base Salary</th>
+                        <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Bonuses</th>
+                        <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Deductions</th>
+                        <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Net Salary</th>
+                        <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 font-body-md text-on-surface">
+                    @if (Model.Payrolls.Count == 0)
+                    {
+                        <tr><td colspan="8" class="px-6 py-12 text-center text-on-surface-variant">No payroll records found.</td></tr>
+                    }
+                    @foreach (var payroll in Model.Payrolls)
+                    {
+                        <tr class="hover:bg-slate-50/80 transition-colors">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-xs">@payroll.EmployeeInitials</div>
+                                    <div>
+                                        <p class="font-semibold">@payroll.EmployeeName</p>
+                                        <p class="text-body-sm text-slate-500">@payroll.DepartmentName</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">@PayrollDisplayHelper.GetPeriodLabel(payroll.Month, payroll.Year)</td>
+                            <td class="px-6 py-4">@PayrollDisplayHelper.FormatCurrency(payroll.BaseSalary)</td>
+                            <td class="px-6 py-4 text-green-600">+@PayrollDisplayHelper.FormatCurrency(payroll.TotalBonus)</td>
+                            <td class="px-6 py-4 text-error">-@PayrollDisplayHelper.FormatCurrency(payroll.TotalDeduction)</td>
+                            <td class="px-6 py-4 font-bold">@PayrollDisplayHelper.FormatCurrency(payroll.NetSalary)</td>
+                            <td class="px-6 py-4">
+                                <span class="@PayrollDisplayHelper.GetStatusBadgeClass(payroll.Status) px-3 py-1 rounded-full text-xs font-medium">@PayrollDisplayHelper.GetStatusLabel(payroll.Status)</span>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <a asp-action="Detail" asp-route-id="@payroll.Id" class="text-secondary hover:text-primary" title="View / Manage">
+                                    <span class="material-symbols-outlined">visibility</span>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @await Html.PartialAsync("_Pagination", Model)
+    </div>
 </div>
 
+@section Modals {
+    <div id="processPayrollModal" class="modal-overlay @(Model.ShowProcessModal ? "active" : "")">
+        <div class="modal-content w-full max-w-md mx-4 p-xl">
+            <div class="flex justify-between items-center mb-lg">
+                <h3 class="font-h2 text-h2 text-on-surface">Process Payroll</h3>
+                <a asp-action="Index" class="p-1 text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">close</span></a>
+            </div>
+            <form asp-action="Process" method="post" class="space-y-md">
+                @Html.AntiForgeryToken()
+                <partial name="_ModalFormErrors" model="@("ProcessForm")" />
+                <div>
+                    <label asp-for="ProcessForm.EmployeeId" class="block font-label-bold text-on-surface-variant mb-xs"></label>
+                    <select asp-for="ProcessForm.EmployeeId" asp-items="@(new SelectList(Model.Employees, "Id", "Name"))" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md">
+                        <option value="">Select employee</option>
+                    </select>
+                    <span asp-validation-for="ProcessForm.EmployeeId" class="text-error font-body-sm"></span>
+                </div>
+                <div class="grid grid-cols-2 gap-md">
+                    <div>
+                        <label asp-for="ProcessForm.Month" class="block font-label-bold text-on-surface-variant mb-xs"></label>
+                        <select asp-for="ProcessForm.Month" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md">
+                            @for (var m = 1; m <= 12; m++)
+                            {
+                                <option value="@m">@PayrollDisplayHelper.GetMonthName(m)</option>
+                            }
+                        </select>
+                    </div>
+                    <div>
+                        <label asp-for="ProcessForm.Year" class="block font-label-bold text-on-surface-variant mb-xs"></label>
+                        <input asp-for="ProcessForm.Year" type="number" min="2000" max="2100" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md" />
+                    </div>
+                </div>
+                <div class="flex justify-end gap-md pt-md border-t border-outline-variant/30">
+                    <a asp-action="Index" class="px-6 py-2 border border-outline-variant rounded-lg text-on-surface-variant font-label-bold">Cancel</a>
+                    <button type="submit" class="px-6 py-2 bg-primary-container text-on-primary rounded-lg font-label-bold shadow-sm">Create Draft</button>
+                </div>
+            </form>
+        </div>
+    </div>
+}

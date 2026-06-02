@@ -42,8 +42,14 @@ public class DepartmentService : IDepartmentService
         return PagedResultMapper.Map(result);
     }
 
+    public async Task<Department> GetByIdAsync(int departmentId, CancellationToken cancellationToken = default) =>
+        await _unitOfWork.Departments.GetByIdAsync(departmentId, cancellationToken)
+        ?? throw new NotFoundException("Department not found.", "Department", "Index", "HR");
+
     public async Task<Department> CreateAsync(CreateDepartmentDto dto, CancellationToken cancellationToken = default)
     {
+        await EnsureNameAvailableForCreateAsync(dto.Name, cancellationToken);
+
         var manager = await _unitOfWork.Employees.GetByIdAsync(dto.ManagerId, cancellationToken)
                       ?? throw new NotFoundException("Manager employee not found.", "Department", "Index", "HR");
 
@@ -74,6 +80,8 @@ public class DepartmentService : IDepartmentService
     {
         var department = await _unitOfWork.Departments.GetByIdAsync(dto.Id, cancellationToken)
                          ?? throw new NotFoundException("Department not found.", "Department", "Index", "HR");
+
+        await EnsureNameAvailableForUpdateAsync(dto.Name, dto.Id, cancellationToken);
 
         DepartmentMapper.UpdateFromDto(department, dto);
         _unitOfWork.Departments.Update(department);
@@ -110,6 +118,38 @@ public class DepartmentService : IDepartmentService
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 
+    public async Task<Department> RestoreWithManagerAsync(int departmentId, int managerId, CancellationToken cancellationToken = default)
+    {
+        var department = await _unitOfWork.Departments.GetByIdAsync(departmentId, cancellationToken)
+                         ?? throw new NotFoundException("Department not found.", "Department", "Index", "HR");
+
+        if (!department.IsDeleted)
+            throw new BusinessRuleException("Department is not deleted.");
+
+        var manager = await _unitOfWork.Employees.GetByIdAsync(managerId, cancellationToken)
+                      ?? throw new NotFoundException("Manager employee not found.", "Department", "Index", "HR");
+
+        if (manager.IsHR || !manager.IsActive || manager.IsDeleted)
+        {
+            throw new BusinessRuleException("Manager must be a non-HR, active employee.");
+        }
+
+        DepartmentLifecycle.MarkRestored(department);
+        department.ManagerId = managerId;
+        _unitOfWork.Departments.Update(department);
+
+        if (manager.DepartmentId != department.Id)
+        {
+            manager.DepartmentId = department.Id;
+            _unitOfWork.Employees.Update(manager);
+        }
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await _accountService.ChangeRoleAsync(manager.Id, RoleNames.DepartmentHead, cancellationToken);
+
+        return department;
+    }
+
     public async Task ReplaceManagerAsync(int departmentId, int newManagerId, CancellationToken cancellationToken = default)
     {
         var department = await _unitOfWork.Departments.GetByIdAsync(departmentId, cancellationToken)
@@ -121,18 +161,29 @@ public class DepartmentService : IDepartmentService
         var newManager = await _unitOfWork.Employees.GetByIdAsync(newManagerId, cancellationToken)
                          ?? throw new NotFoundException("New manager not found.", "Department", "Index", "HR");
 
-        if (!_managerPolicy.IsValidManager(newManager, department))
+        if (newManager.IsHR || !newManager.IsActive || newManager.IsDeleted)
         {
             throw new BusinessRuleException(
-                "New manager must be a non-HR, active employee in this department.");
+                "New manager must be a non-HR, active employee.");
         }
 
         var oldManagerId = department.ManagerId;
+        var oldManager = await _unitOfWork.Employees.GetByIdAsync(oldManagerId, cancellationToken);
 
         await using var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
         try
         {
-            await _accountService.ChangeRoleAsync(oldManagerId, RoleNames.Employee, cancellationToken);
+            if (newManager.DepartmentId != department.Id)
+            {
+                newManager.DepartmentId = department.Id;
+                _unitOfWork.Employees.Update(newManager);
+            }
+
+            if (oldManagerId != newManagerId && oldManager?.DepartmentId == departmentId)
+            {
+                await _accountService.ChangeRoleAsync(oldManagerId, RoleNames.Employee, cancellationToken);
+            }
+
             await _accountService.ChangeRoleAsync(newManagerId, RoleNames.DepartmentHead, cancellationToken);
 
             department.ManagerId = newManagerId;
@@ -146,5 +197,35 @@ public class DepartmentService : IDepartmentService
             await transaction.RollbackAsync(cancellationToken);
             throw;
         }
+    }
+
+    private async Task EnsureNameAvailableForCreateAsync(string name, CancellationToken cancellationToken)
+    {
+        var normalized = name.Trim();
+        var existing = await _unitOfWork.Departments.GetByNameAsync(normalized, cancellationToken);
+        if (existing == null)
+            return;
+
+        if (existing.IsDeleted)
+        {
+            throw new SoftDeletedNameConflictException("Department", existing.Id, existing.Name);
+        }
+
+        throw new BusinessRuleException("A department with this name already exists.");
+    }
+
+    private async Task EnsureNameAvailableForUpdateAsync(string name, int departmentId, CancellationToken cancellationToken)
+    {
+        var normalized = name.Trim();
+        var existing = await _unitOfWork.Departments.GetByNameAsync(normalized, cancellationToken);
+        if (existing == null || existing.Id == departmentId)
+            return;
+
+        if (existing.IsDeleted)
+        {
+            throw new SoftDeletedNameConflictException("Department", existing.Id, existing.Name);
+        }
+
+        throw new BusinessRuleException("A department with this name already exists.");
     }
 }

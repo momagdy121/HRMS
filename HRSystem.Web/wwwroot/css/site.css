@@ -87,6 +87,11 @@ body {
     background: linear-gradient(90deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
 }
 
+/* === Validation === */
+.validation-summary-valid {
+    display: none;
+}
+
 /* === Modal Overlay === */
 .modal-overlay {
     position: fixed;

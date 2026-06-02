@@ -1,5 +1,6 @@
 using HRSystem.Data.Common;
 using HRSystem.Data.Models;
+using HRSystem.Common.Enums;
 
 namespace HRSystem.Data.Interfaces;
 
@@ -14,6 +15,15 @@ public interface IPayrollRepository
     Task<PagedList<Payroll>> GetByDepartmentPagedAsync(int departmentId, int page, int pageSize, CancellationToken cancellationToken = default);
 
     Task<PagedList<Payroll>> GetAllPagedAsync(int page, int pageSize, CancellationToken cancellationToken = default);
+
+    Task<PagedList<Payroll>> GetFilteredPagedAsync(
+        int? departmentId,
+        int? month,
+        int? year,
+        PayrollStatus? status,
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken = default);
 
     Task AddAsync(Payroll payroll, CancellationToken cancellationToken = default);
 

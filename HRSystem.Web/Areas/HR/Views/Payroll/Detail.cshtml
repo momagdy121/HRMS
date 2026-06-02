@@ -1,0 +1,247 @@
+@model HrPayrollDetailViewModel
+@{
+    ViewBag.Title = $"Payroll — {Model.EmployeeName} - HRMS Portal";
+}
+
+<div class="max-w-4xl mx-auto space-y-6">
+    <div class="flex justify-between items-start">
+        <div>
+            <a asp-action="Index" class="text-primary-container hover:underline text-sm font-medium mb-2 inline-flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">arrow_back</span>Back to Payroll
+            </a>
+            <h2 class="font-h1 text-h1 text-on-surface">@Model.EmployeeName</h2>
+            <p class="font-body-md text-on-surface-variant mt-1">
+                @PayrollDisplayHelper.GetPeriodLabel(Model.Month, Model.Year) · @Model.DepartmentName
+            </p>
+        </div>
+        <span class="@PayrollDisplayHelper.GetStatusBadgeClass(Model.Status) px-3 py-1 rounded-full text-sm font-medium">
+            @PayrollDisplayHelper.GetStatusLabel(Model.Status)
+        </span>
+    </div>
+
+    <partial name="_PayslipDetail" model="@(new PayslipViewModel {
+        Id = Model.Id,
+        EmployeeName = Model.EmployeeName,
+        DepartmentName = Model.DepartmentName,
+        Month = Model.Month,
+        Year = Model.Year,
+        BaseSalary = Model.BaseSalary,
+        TotalBonus = Model.TotalBonus,
+        TotalDeduction = Model.TotalDeduction,
+        NetSalary = Model.NetSalary,
+        Status = Model.Status,
+        Items = Model.Items,
+        ShowLineItems = !Model.CanManageItems
+    })" />
+
+    @if (Model.CanManageItems)
+    {
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100">
+                <h3 class="font-h3 text-h3 text-on-surface">Bonuses & Deductions</h3>
+                <p class="text-body-sm text-on-surface-variant mt-1">Edit or remove line items while payroll is in Draft status.</p>
+            </div>
+            @if (Model.Items.Count == 0)
+            {
+                <p class="px-6 py-8 text-center text-on-surface-variant">No bonuses or deductions added yet.</p>
+            }
+            else
+            {
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-50 border-b border-slate-100">
+                            <tr>
+                                <th class="px-6 py-3 font-label-bold text-slate-500 uppercase tracking-wider text-xs">Type</th>
+                                <th class="px-6 py-3 font-label-bold text-slate-500 uppercase tracking-wider text-xs">Description</th>
+                                <th class="px-6 py-3 font-label-bold text-slate-500 uppercase tracking-wider text-xs">Amount</th>
+                                <th class="px-6 py-3 font-label-bold text-slate-500 uppercase tracking-wider text-xs text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            @foreach (var item in Model.Items)
+                            {
+                                <tr class="hover:bg-slate-50/80">
+                                    <td class="px-6 py-4">
+                                        <span class="@(item.ItemType == HRSystem.Common.Enums.ItemType.Bonus ? "text-green-600" : "text-error") font-medium">
+                                            @PayrollDisplayHelper.GetItemTypeLabel(item.ItemType)
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4">@item.Description</td>
+                                    <td class="px-6 py-4 font-medium">
+                                        @(item.ItemType == HRSystem.Common.Enums.ItemType.Bonus ? "+" : "-")@PayrollDisplayHelper.FormatCurrency(item.Amount)
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <a asp-action="Detail" asp-route-id="@Model.Id" asp-route-editItemId="@item.Id" class="p-1.5 text-slate-500 hover:text-primary rounded inline-flex" title="Edit">
+                                            <span class="material-symbols-outlined text-sm">edit</span>
+                                        </a>
+                                        <a asp-action="Detail" asp-route-id="@Model.Id" asp-route-removeItemId="@item.Id" class="p-1.5 text-error hover:bg-error/10 rounded inline-flex" title="Remove">
+                                            <span class="material-symbols-outlined text-sm">delete</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    }
+    else if (Model.Status != HRSystem.Common.Enums.PayrollStatus.Draft && Model.Items.Count > 0)
+    {
+        <div class="bg-amber-50 border border-amber-100 rounded-lg px-4 py-3 text-body-sm text-amber-800">
+            Line items are locked after the payroll is approved or paid.
+        </div>
+    }
+
+    @if (Model.CanAddItems)
+    {
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <h3 class="font-h3 text-h3 text-on-surface mb-md">Add Bonus or Deduction</h3>
+            <form asp-action="AddItem" method="post" class="space-y-md">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="AddItemForm.PayrollId" />
+                <partial name="_ModalFormErrors" model="@("AddItemForm")" />
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+                    <div>
+                        <label asp-for="AddItemForm.ItemType" class="block font-label-bold text-on-surface-variant mb-xs"></label>
+                        <select asp-for="AddItemForm.ItemType" asp-items="Html.GetEnumSelectList<HRSystem.Common.Enums.ItemType>()" class="w-full border border-outline-variant rounded-lg px-md py-2 font-body-md"></select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label asp-for="AddItemForm.Description" class="block font-label-bold text-on-surface-variant mb-xs"></label>
+                        <input asp-for="AddItemForm.Description" class="w-full border border-outline-variant rounded-lg px-md py-2 font-body-md" placeholder="e.g. Performance bonus, Tax deduction" />
+                        <span asp-validation-for="AddItemForm.Description" class="text-error font-body-sm"></span>
+                    </div>
+                </div>
+                <div class="w-full md:w-48">
+                    <label asp-for="AddItemForm.Amount" class="block font-label-bold text-on-surface-variant mb-xs"></label>
+                    <input asp-for="AddItemForm.Amount" type="number" step="0.01" min="0.01" class="w-full border border-outline-variant rounded-lg px-md py-2 font-body-md" />
+                    <span asp-validation-for="AddItemForm.Amount" class="text-error font-body-sm"></span>
+                </div>
+                <button type="submit" class="px-6 py-2 bg-primary-container text-on-primary rounded-lg font-label-bold shadow-sm">Add Item</button>
+            </form>
+        </div>
+    }
+
+    <div class="flex flex-wrap gap-3">
+        @if (Model.CanApprove)
+        {
+            <button type="button" onclick="openModal('approvePayrollModal')" class="px-6 py-2.5 bg-amber-600 text-white rounded-lg font-label-bold shadow-sm hover:bg-amber-700">
+                Approve Payroll
+            </button>
+        }
+        @if (Model.CanMarkPaid)
+        {
+            <button type="button" onclick="openModal('markPaidModal')" class="px-6 py-2.5 bg-green-600 text-white rounded-lg font-label-bold shadow-sm hover:bg-green-700">
+                Mark as Paid
+            </button>
+        }
+    </div>
+</div>
+
+@section Modals {
+    @if (Model.CanApprove)
+    {
+        <div id="approvePayrollModal" class="modal-overlay">
+            <div class="modal-content w-full max-w-sm mx-4 p-xl text-center">
+                <div class="w-16 h-16 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mx-auto mb-lg">
+                    <span class="material-symbols-outlined text-[32px]" style="font-variation-settings: 'FILL' 1;">task_alt</span>
+                </div>
+                <h3 class="font-h3 text-h3 text-on-surface mb-sm">Approve Payroll?</h3>
+                <p class="font-body-md text-body-md text-on-surface-variant mb-lg">
+                    Approve payroll for <strong>@Model.EmployeeName</strong>
+                    (@PayrollDisplayHelper.GetPeriodLabel(Model.Month, Model.Year)) —
+                    net <strong>@PayrollDisplayHelper.FormatCurrency(Model.NetSalary)</strong>
+                </p>
+                <form asp-action="Approve" method="post" class="flex justify-center gap-md">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="button" onclick="closeModal('approvePayrollModal')" class="px-6 py-2 border border-outline-variant rounded-lg text-on-surface-variant font-label-bold">Cancel</button>
+                    <button type="submit" class="px-6 py-2 bg-amber-600 text-white rounded-lg font-label-bold shadow-sm hover:bg-amber-700">Approve</button>
+                </form>
+            </div>
+        </div>
+    }
+
+    @if (Model.CanMarkPaid)
+    {
+        <div id="markPaidModal" class="modal-overlay">
+            <div class="modal-content w-full max-w-sm mx-4 p-xl text-center">
+                <div class="w-16 h-16 rounded-full bg-green-50 text-green-600 flex items-center justify-center mx-auto mb-lg">
+                    <span class="material-symbols-outlined text-[32px]" style="font-variation-settings: 'FILL' 1;">payments</span>
+                </div>
+                <h3 class="font-h3 text-h3 text-on-surface mb-sm">Mark as Paid?</h3>
+                <p class="font-body-md text-body-md text-on-surface-variant mb-lg">
+                    Confirm payment of <strong>@PayrollDisplayHelper.FormatCurrency(Model.NetSalary)</strong>
+                    to <strong>@Model.EmployeeName</strong>
+                    for @PayrollDisplayHelper.GetPeriodLabel(Model.Month, Model.Year).
+                </p>
+                <form asp-action="MarkPaid" method="post" class="flex justify-center gap-md">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="button" onclick="closeModal('markPaidModal')" class="px-6 py-2 border border-outline-variant rounded-lg text-on-surface-variant font-label-bold">Cancel</button>
+                    <button type="submit" class="px-6 py-2 bg-green-600 text-white rounded-lg font-label-bold shadow-sm hover:bg-green-700">Confirm Payment</button>
+                </form>
+            </div>
+        </div>
+    }
+
+    @if (Model.EditItemForm != null)
+    {
+        <div id="editPayrollItemModal" class="modal-overlay active">
+            <div class="modal-content w-full max-w-md mx-4 p-xl">
+                <div class="flex justify-between items-center mb-lg">
+                    <h3 class="font-h2 text-h2 text-on-surface">Edit Line Item</h3>
+                    <a asp-action="Detail" asp-route-id="@Model.Id" class="p-1 text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">close</span></a>
+                </div>
+                <form asp-action="EditItem" method="post" class="space-y-md">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="EditItemForm!.Id" />
+                    <input type="hidden" asp-for="EditItemForm!.PayrollId" />
+                    <partial name="_ModalFormErrors" model="@("EditItemForm")" />
+                    <div>
+                        <label asp-for="EditItemForm.ItemType" class="block font-label-bold text-on-surface-variant mb-xs"></label>
+                        <select asp-for="EditItemForm.ItemType" asp-items="Html.GetEnumSelectList<HRSystem.Common.Enums.ItemType>()" class="w-full border border-outline-variant rounded-lg px-md py-2 font-body-md"></select>
+                    </div>
+                    <div>
+                        <label asp-for="EditItemForm.Description" class="block font-label-bold text-on-surface-variant mb-xs"></label>
+                        <input asp-for="EditItemForm.Description" class="w-full border border-outline-variant rounded-lg px-md py-2 font-body-md" />
+                        <span asp-validation-for="EditItemForm.Description" class="text-error font-body-sm"></span>
+                    </div>
+                    <div>
+                        <label asp-for="EditItemForm.Amount" class="block font-label-bold text-on-surface-variant mb-xs"></label>
+                        <input asp-for="EditItemForm.Amount" type="number" step="0.01" min="0.01" class="w-full border border-outline-variant rounded-lg px-md py-2 font-body-md" />
+                        <span asp-validation-for="EditItemForm.Amount" class="text-error font-body-sm"></span>
+                    </div>
+                    <div class="flex justify-end gap-md pt-md border-t border-outline-variant/30">
+                        <a asp-action="Detail" asp-route-id="@Model.Id" class="px-6 py-2 border border-outline-variant rounded-lg text-on-surface-variant font-label-bold">Cancel</a>
+                        <button type="submit" class="px-6 py-2 bg-primary-container text-on-primary rounded-lg font-label-bold shadow-sm">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    }
+
+    @if (Model.RemoveItemTarget != null)
+    {
+        <div id="removePayrollItemModal" class="modal-overlay active">
+            <div class="modal-content w-full max-w-sm mx-4 p-xl text-center">
+                <div class="w-16 h-16 rounded-full bg-error-container text-error flex items-center justify-center mx-auto mb-lg">
+                    <span class="material-symbols-outlined text-[32px]" style="font-variation-settings: 'FILL' 1;">delete</span>
+                </div>
+                <h3 class="font-h3 text-h3 text-on-surface mb-sm">Remove Line Item?</h3>
+                <p class="font-body-md text-body-md text-on-surface-variant mb-lg">
+                    Remove @PayrollDisplayHelper.GetItemTypeLabel(Model.RemoveItemTarget.ItemType):
+                    <strong>@Model.RemoveItemTarget.Description</strong>
+                    (@PayrollDisplayHelper.FormatCurrency(Model.RemoveItemTarget.Amount))?
+                </p>
+                <form asp-action="RemoveItem" method="post" class="flex justify-center gap-md">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.RemoveItemTarget.Id" />
+                    <input type="hidden" name="payrollId" value="@Model.RemoveItemTarget.PayrollId" />
+                    <a asp-action="Detail" asp-route-id="@Model.Id" class="px-6 py-2 border border-outline-variant rounded-lg text-on-surface-variant font-label-bold">Cancel</a>
+                    <button type="submit" class="px-6 py-2 bg-error text-on-error rounded-lg font-label-bold shadow-sm">Remove</button>
+                </form>
+            </div>
+        </div>
+    }
+}

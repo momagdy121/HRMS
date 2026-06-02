@@ -18,6 +18,14 @@ public class DepartmentRepository : IDepartmentRepository
     public Task<Department?> GetByIdAsync(int id, CancellationToken cancellationToken = default) =>
         _context.Departments.FirstOrDefaultAsync(d => d.Id == id, cancellationToken);
 
+    public Task<Department?> GetByNameAsync(string name, CancellationToken cancellationToken = default)
+    {
+        var normalized = name.Trim();
+        return _context.Departments.FirstOrDefaultAsync(
+            d => d.Name.ToLower() == normalized.ToLower(),
+            cancellationToken);
+    }
+
     public Task<Department?> GetByManagerIdAsync(int managerId, CancellationToken cancellationToken = default) =>
         _context.Departments.FirstOrDefaultAsync(
             d => d.ManagerId == managerId && !d.IsDeleted,

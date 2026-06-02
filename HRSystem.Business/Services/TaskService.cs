@@ -33,13 +33,16 @@ public class TaskService : ITaskService
             throw new BusinessRuleException("Only department heads can assign tasks.");
 
         var assigner = await _currentUser.GetCurrentEmployeeAsync(cancellationToken);
+        var managedDepartment = await _unitOfWork.Departments.GetByManagerIdAsync(assigner.Id, cancellationToken)
+            ?? throw new BusinessRuleException("You are not assigned as a department manager.");
+
         var assignee = await _unitOfWork.Employees.GetByIdAsync(dto.AssignedToId, cancellationToken)
                        ?? throw new NotFoundException("Assignee not found.");
 
-        if (!_assignmentPolicy.CanAssign(assigner, assignee))
+        if (!_assignmentPolicy.CanAssign(assigner, assignee, managedDepartment.Id))
         {
             throw new BusinessRuleException(
-                "Tasks can only be assigned to non-HR employees in your department (not yourself).");
+                "Tasks can only be assigned to active, non-HR employees in your department (not yourself).");
         }
 
         var task = EmployeeTaskMapper.FromDto(dto, assigner.Id, assignee.Id);
@@ -49,20 +52,25 @@ public class TaskService : ITaskService
         return task;
     }
 
-    public async Task UpdateStatusAsync(int taskId, EmployeeTaskStatus status, CancellationToken cancellationToken = default)
+    public async Task UpdateStatusAsync(UpdateTaskStatusDto dto, CancellationToken cancellationToken = default)
     {
-        var task = await GetActiveTaskAsync(taskId, cancellationToken);
+        var task = await GetActiveTaskAsync(dto.TaskId, cancellationToken);
         var currentEmployee = await _currentUser.GetCurrentEmployeeAsync(cancellationToken);
 
         if (task.AssignedToId != currentEmployee.Id)
             throw new BusinessRuleException("Only the assigned employee can update task status.");
 
-        if (!IsValidStatusTransition(task.Status, status))
+        if (!IsValidStatusTransition(task.Status, dto.Status))
         {
             throw new BusinessRuleException("Invalid status transition. Allowed: Pending → InProgress → Completed.");
         }
 
-        TaskWorkflow.UpdateStatus(task, status);
+        if (dto.Status == EmployeeTaskStatus.Completed && string.IsNullOrWhiteSpace(dto.CompletionNotes))
+        {
+            throw new BusinessRuleException("Completion details are required when marking a task as completed.");
+        }
+
+        TaskWorkflow.UpdateStatus(task, dto.Status, dto.CompletionNotes);
         _unitOfWork.EmployeeTasks.Update(task);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }

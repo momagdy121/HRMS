@@ -22,15 +22,33 @@ builder.Services
     .AddIdentity<ApplicationUser, IdentityRole<int>>(options =>
     {
         options.SignIn.RequireConfirmedAccount = false;
+        options.Password.RequireDigit = true;
+        options.Password.RequireLowercase = true;
+        options.Password.RequireUppercase = true;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequiredLength = 8;
+        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+        options.Lockout.MaxFailedAccessAttempts = 5;
+        options.Lockout.AllowedForNewUsers = true;
     })
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+    options.AccessDeniedPath = "/Account/AccessDenied";
+    options.SlidingExpiration = true;
+    options.ExpireTimeSpan = TimeSpan.FromHours(8);
+});
+
 builder.Services.AddControllersWithViews(options =>
 {
     options.Filters.Add<HrmsExceptionFilter>();
+    options.Filters.Add<RequirePasswordChangeFilter>();
 });
 builder.Services.AddScoped<HrmsExceptionFilter>();
+builder.Services.AddScoped<RequirePasswordChangeFilter>();
 
 var app = builder.Build();
 

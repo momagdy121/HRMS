@@ -539,6 +539,10 @@ namespace HRSystem.Data.Migrations
                     b.Property<int>("AssignedToId")
                         .HasColumnType("int");
 
+                    b.Property<string>("CompletionNotes")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -606,6 +610,7 @@ namespace HRSystem.Data.Migrations
                             Id = 3,
                             AssignedById = 3,
                             AssignedToId = 5,
+                            CompletionNotes = "Updated checklist published at https://intranet/hr/policy-checklist",
                             CreatedAt = new DateTime(2025, 2, 10, 9, 0, 0, 0, DateTimeKind.Utc),
                             DueDate = new DateOnly(2025, 9, 1),
                             IsDeleted = false,

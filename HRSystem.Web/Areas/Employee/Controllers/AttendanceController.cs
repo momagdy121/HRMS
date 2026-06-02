@@ -1,18 +1,19 @@
+using HRSystem.Business.Interfaces.Services;
+using HRSystem.Data.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HRSystem.Web.Areas.Employee.Controllers;
 
-[Area("Employee")]
-public class AttendanceController : Controller
+public class AttendanceController : EmployeeBaseController
 {
-    // Employee: My Attendance
-    public IActionResult Index()
+    public AttendanceController(ICurrentUserService currentUser, IUnitOfWork unitOfWork)
+        : base(currentUser, unitOfWork)
     {
-        ViewBag.Role = "Employee";
-        ViewBag.ActivePage = "Attendance";
-        ViewBag.UserName = "Alice Brown";
-        ViewBag.UserTitle = "Employee — Engineering";
-        ViewBag.SearchPlaceholder = "Search attendance...";
+    }
+
+    public async Task<IActionResult> Index()
+    {
+        await SetLayoutAsync("Attendance", "Search attendance...");
         return View();
     }
 }

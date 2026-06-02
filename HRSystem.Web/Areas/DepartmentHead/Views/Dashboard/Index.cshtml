@@ -1,11 +1,11 @@
+@model HRSystem.Web.ViewModels.Dashboard.DepartmentHeadDashboardViewModel
 @{
-    ViewBag.Title = "Engineering Department - HRMS Portal";
+    ViewBag.Title = $"{Model.DepartmentName} Department - HRMS Portal";
 }
 
 <div class="max-w-7xl mx-auto">
-    <!-- Header -->
     <div class="mb-lg">
-        <h1 class="font-h1 text-h1 text-primary-container mb-xs">Engineering Department</h1>
+        <h1 class="font-h1 text-h1 text-primary-container mb-xs">@Model.DepartmentName Department</h1>
         <p class="font-body-lg text-body-lg text-secondary">Team overview and management</p>
     </div>
 
@@ -18,7 +18,7 @@
                 </div>
             </div>
             <div>
-                <h3 class="font-h1 text-h1 text-on-surface mb-xs">58</h3>
+                <h3 class="font-h1 text-h1 text-on-surface mb-xs">@Model.ActiveEmployees</h3>
                 <p class="font-body-sm text-body-sm text-on-surface-variant">Active employees</p>
             </div>
         </div>
@@ -30,7 +30,7 @@
                 </div>
             </div>
             <div class="relative z-10">
-                <h3 class="font-h1 text-h1 text-on-surface mb-xs">4</h3>
+                <h3 class="font-h1 text-h1 text-on-surface mb-xs">@Model.PendingLeaveRequests</h3>
                 <p class="font-body-sm text-body-sm text-error flex items-center font-medium">
                     <span class="material-symbols-outlined text-[16px] mr-1">info</span>Requires action
                 </p>
@@ -43,11 +43,11 @@
                 </div>
             </div>
             <div>
-                <h3 class="font-h1 text-h1 text-on-surface mb-xs">52</h3>
+                <h3 class="font-h1 text-h1 text-on-surface mb-xs">@Model.PresentThisMonth</h3>
                 <div class="w-full bg-surface-variant rounded-full h-1.5 mb-1.5 mt-2">
-                    <div class="bg-[#059669] h-1.5 rounded-full" style="width: 89%"></div>
+                    <div class="bg-[#059669] h-1.5 rounded-full" style="width: @Model.AttendancePercent%"></div>
                 </div>
-                <p class="font-body-sm text-body-sm text-on-surface-variant">89% attendance</p>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">@Model.AttendancePercent% attendance</p>
             </div>
         </div>
         <div class="bg-surface-container-lowest p-md rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] border border-surface-container flex flex-col justify-between">
@@ -57,7 +57,7 @@
                 </div>
             </div>
             <div>
-                <h3 class="font-h1 text-h1 text-on-surface mb-xs">7</h3>
+                <h3 class="font-h1 text-h1 text-on-surface mb-xs">@Model.OverdueTasks</h3>
                 <p class="font-body-sm text-body-sm text-[#b45309] flex items-center font-medium">
                     <span class="material-symbols-outlined text-[16px] mr-1">warning</span>Needs attention
                 </p>

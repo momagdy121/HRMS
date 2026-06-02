@@ -1,11 +1,11 @@
+@model HRSystem.Web.ViewModels.Dashboard.EmployeeDashboardViewModel
 @{
     ViewBag.Title = "My Dashboard - HRMS Portal";
 }
 
 <div class="max-w-7xl mx-auto">
-    <!-- Welcome Header -->
     <div class="mb-lg">
-        <h1 class="font-h1 text-h1 text-primary-container mb-xs">Welcome back, Alice!</h1>
+        <h1 class="font-h1 text-h1 text-primary-container mb-xs">Welcome back, @Model.FirstName!</h1>
         <p class="font-body-lg text-body-lg text-secondary">Here's your personal dashboard overview</p>
     </div>
 
@@ -16,9 +16,12 @@
                 <div class="p-2 bg-primary-fixed/20 rounded-lg text-primary-container">
                     <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">assignment</span>
                 </div>
-                <span class="text-[#b45309] bg-[#fef3c7] text-xs font-bold px-2 py-0.5 rounded-full">3 due soon</span>
+                @if (Model.TasksDueSoon > 0)
+                {
+                    <span class="text-[#b45309] bg-[#fef3c7] text-xs font-bold px-2 py-0.5 rounded-full">@Model.TasksDueSoon due soon</span>
+                }
             </div>
-            <h3 class="font-h1 text-h1 text-on-surface mb-xs">5</h3>
+            <h3 class="font-h1 text-h1 text-on-surface mb-xs">@Model.ActiveTasks</h3>
             <p class="font-body-sm text-body-sm text-on-surface-variant">Active Tasks</p>
         </div>
         <div class="bg-surface-container-lowest p-md rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] border border-surface-container">
@@ -27,7 +30,7 @@
                     <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">event_available</span>
                 </div>
             </div>
-            <h3 class="font-h1 text-h1 text-on-surface mb-xs">12</h3>
+            <h3 class="font-h1 text-h1 text-on-surface mb-xs">@Model.LeaveBalanceDays</h3>
             <p class="font-body-sm text-body-sm text-on-surface-variant">Leave Balance (days)</p>
         </div>
         <div class="bg-surface-container-lowest p-md rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] border border-surface-container">
@@ -36,7 +39,7 @@
                     <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">pending_actions</span>
                 </div>
             </div>
-            <h3 class="font-h1 text-h1 text-on-surface mb-xs">22</h3>
+            <h3 class="font-h1 text-h1 text-on-surface mb-xs">@Model.DaysPresentThisMonth</h3>
             <p class="font-body-sm text-body-sm text-on-surface-variant">Days Present (this month)</p>
         </div>
         <div class="bg-surface-container-lowest p-md rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] border border-surface-container">
@@ -45,7 +48,7 @@
                     <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">payments</span>
                 </div>
             </div>
-            <h3 class="font-h1 text-h1 text-on-surface mb-xs">$5,850</h3>
+            <h3 class="font-h1 text-h1 text-on-surface mb-xs">@Model.LastNetSalary.ToString("C0")</h3>
             <p class="font-body-sm text-body-sm text-on-surface-variant">Last Net Salary</p>
         </div>
     </div>

@@ -5,8 +5,9 @@ namespace HRSystem.Business.Policies;
 
 public class TaskAssignmentPolicy : ITaskAssignmentPolicy
 {
-    public bool CanAssign(Employee assigner, Employee assignee) =>
-        assigner.DepartmentId == assignee.DepartmentId
+    public bool CanAssign(Employee assigner, Employee assignee, int departmentId) =>
+        assignee.DepartmentId == departmentId
+        && assigner.DepartmentId == departmentId
         && !assignee.IsHR
         && assigner.Id != assignee.Id
         && assigner.IsActive

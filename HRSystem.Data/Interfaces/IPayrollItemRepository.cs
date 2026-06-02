@@ -10,5 +10,11 @@ public interface IPayrollItemRepository
 
     Task<decimal> GetDeductionTotalAsync(int payrollId, CancellationToken cancellationToken = default);
 
+    Task<PayrollItem?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
+
     Task AddAsync(PayrollItem item, CancellationToken cancellationToken = default);
+
+    void Update(PayrollItem item);
+
+    void Delete(PayrollItem item);
 }

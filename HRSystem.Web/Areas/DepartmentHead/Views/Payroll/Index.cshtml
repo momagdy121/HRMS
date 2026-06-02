@@ -1,66 +1,75 @@
+@model DeptHeadPayrollIndexViewModel
 @{
     ViewBag.Title = "Department Payroll - HRMS Portal";
 }
 
 <div class="max-w-7xl mx-auto space-y-6">
-    <div><h2 class="font-h1 text-h1 text-on-surface">Department Payroll</h2><p class="font-body-md text-body-md text-on-surface-variant mt-1">Engineering team payroll records</p></div>
+    <div>
+        <h2 class="font-h1 text-h1 text-on-surface">Department Payroll</h2>
+        <p class="font-body-md text-body-md text-on-surface-variant mt-1">@Model.DepartmentName team payroll records</p>
+    </div>
 
     <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-        <table class="w-full text-left border-collapse">
-            <thead class="bg-slate-50 border-b border-slate-100">
-                <tr>
-                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Employee</th>
-                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Month/Year</th>
-                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Base Salary</th>
-                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Net Salary</th>
-                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Status</th>
-                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider text-right">Actions</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-100 font-body-md text-on-surface">
-                <tr class="hover:bg-slate-50 transition-colors">
-                    <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-bold text-xs">AB</div><span class="font-medium">Alice Brown</span></div></td>
-                    <td class="px-6 py-4">Oct 2025</td><td class="px-6 py-4">$6,000</td><td class="px-6 py-4 font-bold">$5,850</td>
-                    <td class="px-6 py-4"><span class="bg-green-50 text-green-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Paid</span></td>
-                    <td class="px-6 py-4 text-right"><button onclick="openModal('deptPayslipModal')" class="text-secondary hover:text-primary"><span class="material-symbols-outlined">visibility</span></button></td>
-                </tr>
-                <tr class="bg-slate-50/30 hover:bg-slate-50 transition-colors">
-                    <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-xs">JD</div><span class="font-medium">John Doe</span></div></td>
-                    <td class="px-6 py-4">Oct 2025</td><td class="px-6 py-4">$6,500</td><td class="px-6 py-4 font-bold">$6,760</td>
-                    <td class="px-6 py-4"><span class="bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded-full text-xs font-medium">Draft</span></td>
-                    <td class="px-6 py-4 text-right"><button class="text-secondary hover:text-primary"><span class="material-symbols-outlined">visibility</span></button></td>
-                </tr>
-                <tr class="hover:bg-slate-50 transition-colors">
-                    <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-xs">EW</div><span class="font-medium">Emily Wong</span></div></td>
-                    <td class="px-6 py-4">Oct 2025</td><td class="px-6 py-4">$7,200</td><td class="px-6 py-4 font-bold">$7,020</td>
-                    <td class="px-6 py-4"><span class="bg-green-50 text-green-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Paid</span></td>
-                    <td class="px-6 py-4 text-right"><button class="text-secondary hover:text-primary"><span class="material-symbols-outlined">visibility</span></button></td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-slate-50 border-b border-slate-100">
+                    <tr>
+                        <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Employee</th>
+                        <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Month/Year</th>
+                        <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Base Salary</th>
+                        <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Net Salary</th>
+                        <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider text-right">Details</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 font-body-md text-on-surface">
+                    @if (Model.Payrolls.Count == 0)
+                    {
+                        <tr><td colspan="6" class="px-6 py-12 text-center text-on-surface-variant">No payroll records for your department.</td></tr>
+                    }
+                    @foreach (var payroll in Model.Payrolls)
+                    {
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-xs">@payroll.EmployeeInitials</div>
+                                    <span class="font-medium">@payroll.EmployeeName</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">@PayrollDisplayHelper.GetPeriodLabel(payroll.Month, payroll.Year)</td>
+                            <td class="px-6 py-4">@PayrollDisplayHelper.FormatCurrency(payroll.BaseSalary)</td>
+                            <td class="px-6 py-4 font-bold">@PayrollDisplayHelper.FormatCurrency(payroll.NetSalary)</td>
+                            <td class="px-6 py-4">
+                                <span class="@PayrollDisplayHelper.GetStatusBadgeClass(payroll.Status) px-2.5 py-0.5 rounded-full text-xs font-medium">@PayrollDisplayHelper.GetStatusLabel(payroll.Status)</span>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <a asp-action="Index" asp-route-detailId="@payroll.Id" class="text-secondary hover:text-primary" title="View payslip">
+                                    <span class="material-symbols-outlined">visibility</span>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @await Html.PartialAsync("_Pagination", Model)
     </div>
 </div>
 
-@section Modals {
-    <div id="deptPayslipModal" class="modal-overlay">
-        <div class="modal-content w-full max-w-lg mx-4 p-xl">
-            <div class="flex justify-between items-center mb-lg">
-                <h3 class="font-h2 text-h2 text-on-surface">Payslip — Alice Brown</h3>
-                <button onclick="closeModal('deptPayslipModal')" class="p-1 text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">close</span></button>
-            </div>
-            <div class="border border-outline-variant/30 rounded-lg overflow-hidden">
-                <div class="grid grid-cols-2 gap-0">
-                    <div class="p-md border-b border-r border-outline-variant/30"><p class="text-body-sm text-on-surface-variant">Period</p><p class="font-label-bold text-on-surface">October 2025</p></div>
-                    <div class="p-md border-b border-outline-variant/30"><p class="text-body-sm text-on-surface-variant">Base Salary</p><p class="font-label-bold text-on-surface">$6,000.00</p></div>
-                    <div class="p-md border-b border-r border-outline-variant/30"><p class="text-body-sm text-on-surface-variant">Bonuses</p><p class="font-label-bold text-green-600">+$0.00</p></div>
-                    <div class="p-md border-b border-outline-variant/30"><p class="text-body-sm text-on-surface-variant">Deductions</p><p class="font-label-bold text-error">-$150.00</p></div>
+@if (Model.PayslipDetail != null)
+{
+    @section Modals {
+        <div id="deptPayslipModal" class="modal-overlay active">
+            <div class="modal-content w-full max-w-lg mx-4 p-xl">
+                <div class="flex justify-between items-center mb-lg">
+                    <h3 class="font-h2 text-h2 text-on-surface">Payslip — @Model.PayslipDetail.EmployeeName</h3>
+                    <a asp-action="Index" class="p-1 text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">close</span></a>
                 </div>
-                <div class="p-md bg-primary-fixed/10 flex justify-between items-center">
-                    <p class="font-label-bold text-primary-container">Net Salary</p>
-                    <p class="font-h3 text-h3 text-primary-container">$5,850.00</p>
+                <partial name="_PayslipDetail" model="Model.PayslipDetail" />
+                <div class="flex justify-end mt-lg">
+                    <a asp-action="Index" class="px-6 py-2 border border-outline-variant rounded-lg text-on-surface-variant font-label-bold">Close</a>
                 </div>
             </div>
-            <div class="flex justify-end mt-lg"><button onclick="closeModal('deptPayslipModal')" class="px-6 py-2 border border-outline-variant rounded-lg text-on-surface-variant font-label-bold">Close</button></div>
         </div>
-    </div>
+    }
 }

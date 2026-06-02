@@ -33,4 +33,11 @@ public static class PayrollItemMapper
             Description = dto.Description.Trim(),
             Amount = dto.Amount
         };
+
+    public static void UpdateFromDto(PayrollItem item, EditPayrollItemDto dto)
+    {
+        item.ItemType = dto.ItemType;
+        item.Description = dto.Description.Trim();
+        item.Amount = dto.Amount;
+    }
 }

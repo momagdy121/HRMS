@@ -41,6 +41,53 @@ public class LeaveRequestRepository : ILeaveRequestRepository
             .OrderByDescending(l => l.RequestDate)
             .ToPagedListAsync(page, pageSize, cancellationToken);
 
+    public Task<PagedList<LeaveRequest>> GetFilteredPagedAsync(
+        LeaveRequestStatus? status,
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken = default)
+    {
+        var query = _context.LeaveRequests.AsNoTracking().AsQueryable();
+
+        if (status.HasValue)
+            query = query.Where(l => l.Status == status.Value);
+
+        return query
+            .OrderByDescending(l => l.RequestDate)
+            .ToPagedListAsync(page, pageSize, cancellationToken);
+    }
+
+    public Task<PagedList<LeaveRequest>> GetByEmployeePagedAsync(
+        int employeeId,
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken = default) =>
+        _context.LeaveRequests
+            .AsNoTracking()
+            .Where(l => l.EmployeeId == employeeId)
+            .OrderByDescending(l => l.RequestDate)
+            .ToPagedListAsync(page, pageSize, cancellationToken);
+
+    public Task<PagedList<LeaveRequest>> GetByDepartmentPagedAsync(
+        int departmentId,
+        LeaveRequestStatus? status,
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken = default)
+    {
+        var query = _context.LeaveRequests
+            .AsNoTracking()
+            .Where(l => _context.Employees.Any(e =>
+                e.Id == l.EmployeeId && e.DepartmentId == departmentId && !e.IsDeleted));
+
+        if (status.HasValue)
+            query = query.Where(l => l.Status == status.Value);
+
+        return query
+            .OrderByDescending(l => l.RequestDate)
+            .ToPagedListAsync(page, pageSize, cancellationToken);
+    }
+
     public Task<bool> HasOverlappingApprovedAsync(int employeeId, DateOnly startDate, DateOnly endDate, int? excludeRequestId = null, CancellationToken cancellationToken = default) =>
         _context.LeaveRequests.AnyAsync(
             l => l.EmployeeId == employeeId

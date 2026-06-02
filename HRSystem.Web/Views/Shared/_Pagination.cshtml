@@ -1,0 +1,38 @@
+@model dynamic
+@{
+    int page = Model.Page;
+    int totalPages = Model.TotalPages;
+    int totalCount = Model.TotalCount;
+    int pageSize = Model.PageSize;
+    var action = ViewContext.RouteData.Values["action"]?.ToString() ?? "Index";
+    var start = totalCount == 0 ? 0 : ((page - 1) * pageSize) + 1;
+    var end = Math.Min(page * pageSize, totalCount);
+}
+
+<div class="bg-surface-container-low px-4 py-3 border-t border-outline-variant/30 flex items-center justify-between">
+    <div class="font-body-sm text-on-surface-variant">
+        Showing <span class="font-medium text-on-surface">@start</span> to <span class="font-medium text-on-surface">@end</span> of <span class="font-medium text-on-surface">@totalCount</span> entries
+    </div>
+    @if (totalPages > 1)
+    {
+        <div class="flex gap-1">
+            @if (page > 1)
+            {
+                <a asp-action="@action" asp-all-route-data="@(new Dictionary<string, string?> { ["page"] = (page - 1).ToString() })" class="px-3 py-1 border border-outline-variant/50 rounded text-on-surface hover:bg-surface-container">Previous</a>
+            }
+            else
+            {
+                <span class="px-3 py-1 border border-outline-variant/50 rounded text-on-surface-variant opacity-50">Previous</span>
+            }
+            <span class="px-3 py-1 bg-primary text-on-primary rounded font-medium">@(page)</span>
+            @if (page < totalPages)
+            {
+                <a asp-action="@action" asp-all-route-data="@(new Dictionary<string, string?> { ["page"] = (page + 1).ToString() })" class="px-3 py-1 border border-outline-variant/50 rounded text-on-surface hover:bg-surface-container">Next</a>
+            }
+            else
+            {
+                <span class="px-3 py-1 border border-outline-variant/50 rounded text-on-surface-variant opacity-50">Next</span>
+            }
+        </div>
+    }
+</div>

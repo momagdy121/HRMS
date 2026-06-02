@@ -40,10 +40,13 @@
             <span class="material-symbols-outlined">settings</span>
             <span class="text-body-md">Settings</span>
         </a>
-        <a asp-controller="Account" asp-action="Logout" class="flex items-center gap-md px-md py-sm transition-colors duration-200 text-on-primary-container/80 hover:bg-on-primary-fixed-variant/10 hover:text-on-primary-container">
-            <span class="material-symbols-outlined">logout</span>
-            <span class="text-body-md">Logout</span>
-        </a>
+        <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="w-full">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="flex items-center gap-md w-full px-md py-sm transition-colors duration-200 text-on-primary-container/80 hover:bg-on-primary-fixed-variant/10 hover:text-on-primary-container text-left">
+                <span class="material-symbols-outlined">logout</span>
+                <span class="text-body-md">Logout</span>
+            </button>
+        </form>
     </nav>
 </aside>
 

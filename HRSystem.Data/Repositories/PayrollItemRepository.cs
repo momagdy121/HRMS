@@ -34,4 +34,11 @@ public class PayrollItemRepository : IPayrollItemRepository
 
     public async Task AddAsync(PayrollItem item, CancellationToken cancellationToken = default) =>
         await _context.PayrollItems.AddAsync(item, cancellationToken);
+
+    public Task<PayrollItem?> GetByIdAsync(int id, CancellationToken cancellationToken = default) =>
+        _context.PayrollItems.FirstOrDefaultAsync(i => i.Id == id, cancellationToken);
+
+    public void Update(PayrollItem item) => _context.PayrollItems.Update(item);
+
+    public void Delete(PayrollItem item) => _context.PayrollItems.Remove(item);
 }

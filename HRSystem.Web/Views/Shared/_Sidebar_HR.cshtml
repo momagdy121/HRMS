@@ -75,10 +75,13 @@
                 </a>
             </li>
             <li>
-                <a asp-controller="Account" asp-action="Logout" class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all">
-                    <span class="material-symbols-outlined mr-3">logout</span>
-                    Logout
-                </a>
+                <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="w-full">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="flex items-center w-full px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all text-left">
+                        <span class="material-symbols-outlined mr-3">logout</span>
+                        Logout
+                    </button>
+                </form>
             </li>
         </ul>
     </div>

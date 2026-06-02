@@ -12,6 +12,8 @@ public interface IEmployeeService
 
     Task<PagedResult<Employee>> GetDeletedAsync(int page = 1, int pageSize = 20, CancellationToken cancellationToken = default);
 
+    Task<Employee> GetByIdAsync(int employeeId, CancellationToken cancellationToken = default);
+
     Task<Employee> CreateAsync(CreateEmployeeDto dto, CancellationToken cancellationToken = default);
 
     Task UpdateAsync(UpdateEmployeeDto dto, CancellationToken cancellationToken = default);

@@ -1,54 +1,44 @@
+@model HRSystem.Web.ViewModels.HR.EmployeeIndexViewModel
 @{
     ViewBag.Title = "Employees - HRMS Portal";
+    var isDeletedView = ViewContext.RouteData.Values["action"]?.ToString() == "Deleted";
 }
 
 <div class="max-w-7xl mx-auto space-y-6">
-    <!-- Header Section -->
     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
             <h2 class="font-h1 text-h1 text-on-surface">Employees</h2>
-            <p class="font-body-md text-body-md text-on-surface-variant mt-1">Manage all active employees</p>
+            <p class="font-body-md text-body-md text-on-surface-variant mt-1">
+                @(isDeletedView ? "Restore soft-deleted employees" : "Manage all active employees")
+            </p>
         </div>
     </div>
 
-    <!-- Sub-nav Pills -->
     <div class="flex border-b border-outline-variant/30">
-        <button class="px-4 py-3 font-label-bold text-label-bold text-primary border-b-2 border-primary relative">Active Employees</button>
-        <button class="px-4 py-3 font-label-bold text-label-bold text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/30 transition-colors">Deleted Employees</button>
+        <a asp-action="Index" class="px-4 py-3 font-label-bold text-label-bold @(isDeletedView ? "text-on-surface-variant hover:text-on-surface" : "text-primary border-b-2 border-primary")">Active Employees</a>
+        <a asp-action="Deleted" class="px-4 py-3 font-label-bold text-label-bold @(!isDeletedView ? "text-on-surface-variant hover:text-on-surface" : "text-primary border-b-2 border-primary")">Deleted Employees</a>
     </div>
 
-    <!-- Toolbar -->
     <div class="bg-surface-container-lowest p-4 rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] border border-outline-variant/20 flex flex-col sm:flex-row gap-4 items-center justify-between">
-        <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-            <div class="relative w-full sm:w-72">
-                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/70 text-lg">search</span>
-                <input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border border-outline-variant/50 rounded-lg focus:bg-surface-container-lowest focus:border-primary focus:ring-1 focus:ring-primary transition-all font-body-sm text-on-surface" placeholder="Search by name or email" type="text" />
-            </div>
-            <div class="relative w-full sm:w-48">
-                <select class="w-full pl-3 pr-10 py-2 bg-surface-container-low border border-outline-variant/50 rounded-lg focus:bg-surface-container-lowest focus:border-primary focus:ring-1 focus:ring-primary transition-all font-body-sm text-on-surface appearance-none">
-                    <option value="">All Departments</option>
-                    <option value="engineering">Engineering</option>
-                    <option value="design">Design</option>
-                    <option value="marketing">Marketing</option>
-                    <option value="sales">Sales</option>
-                </select>
-                <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant/70 pointer-events-none">arrow_drop_down</span>
-            </div>
-        </div>
-        <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
-            <button class="p-2 border border-outline-variant/50 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" title="Filter">
-                <span class="material-symbols-outlined text-sm">filter_list</span>
-            </button>
-            <button class="p-2 border border-outline-variant/50 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" title="Export">
-                <span class="material-symbols-outlined text-sm">download</span>
-            </button>
-            <button onclick="openModal('addEmployeeModal')" class="bg-primary text-on-primary px-4 py-2 rounded-lg font-label-bold text-label-bold hover:bg-primary/90 transition-colors shadow-sm flex items-center gap-2 whitespace-nowrap ml-2">
+        <form method="get" asp-action="@(isDeletedView ? "Deleted" : "Index")" class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+            @if (!isDeletedView)
+            {
+                <div class="relative w-full sm:w-48">
+                    <select name="departmentId" asp-for="DepartmentFilter" asp-items="@(new SelectList(Model.Departments, "Id", "Name", Model.DepartmentFilter))" class="w-full pl-3 pr-10 py-2 bg-surface-container-low border border-outline-variant/50 rounded-lg font-body-sm text-on-surface">
+                        <option value="">All Departments</option>
+                    </select>
+                </div>
+            }
+            <button type="submit" class="px-4 py-2 bg-primary-container text-on-primary rounded-lg font-label-bold text-label-bold">Apply</button>
+        </form>
+        @if (!isDeletedView)
+        {
+            <a asp-action="Index" asp-route-showCreate="true" class="bg-primary text-on-primary px-4 py-2 rounded-lg font-label-bold text-label-bold hover:bg-primary/90 transition-colors shadow-sm flex items-center gap-2">
                 <span class="material-symbols-outlined text-sm">add</span>Add Employee
-            </button>
-        </div>
+            </a>
+        }
     </div>
 
-    <!-- Data Table -->
     <div class="bg-surface-container-lowest rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] border border-outline-variant/20 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
@@ -63,292 +53,223 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-outline-variant/20">
-                    <!-- Row 1: John Doe -->
-                    <tr class="hover:bg-surface-container/50 transition-colors group">
-                        <td class="py-3 px-4">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-sm">JD</div>
-                                <span class="font-body-md text-body-md font-medium text-on-surface">John Doe</span>
-                            </div>
-                        </td>
-                        <td class="py-3 px-4 font-body-sm text-body-sm text-on-surface-variant">john.doe@company.com</td>
-                        <td class="py-3 px-4 font-body-sm text-body-sm text-on-surface">Engineering</td>
-                        <td class="py-3 px-4"></td>
-                        <td class="py-3 px-4 font-body-sm text-body-sm text-on-surface-variant">Oct 12, 2022</td>
-                        <td class="py-3 px-4 text-right">
-                            <div class="flex justify-end gap-2">
-                                <button onclick="openModal('editEmployeeModal')" class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-primary/10 rounded transition-colors" title="Edit">
-                                    <span class="material-symbols-outlined text-sm">edit</span>
-                                </button>
-                                <button onclick="openModal('deleteEmployeeModal')" class="p-1.5 text-error hover:bg-error/10 rounded transition-colors" title="Delete">
-                                    <span class="material-symbols-outlined text-sm">delete</span>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    <!-- Row 2: Jane Smith (Manager) -->
-                    <tr class="bg-[#F8FAFC]/50 hover:bg-surface-container/50 transition-colors group">
-                        <td class="py-3 px-4">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-bold text-sm">JS</div>
-                                <span class="font-body-md text-body-md font-medium text-on-surface">Jane Smith</span>
-                            </div>
-                        </td>
-                        <td class="py-3 px-4 font-body-sm text-body-sm text-on-surface-variant">jane.smith@company.com</td>
-                        <td class="py-3 px-4 font-body-sm text-body-sm text-on-surface">Design</td>
-                        <td class="py-3 px-4">
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary-container/10 text-primary-container uppercase tracking-wider">Manager</span>
-                        </td>
-                        <td class="py-3 px-4 font-body-sm text-body-sm text-on-surface-variant">Jan 05, 2021</td>
-                        <td class="py-3 px-4 text-right">
-                            <div class="flex justify-end gap-2">
-                                <button onclick="openModal('editEmployeeModal')" class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-primary/10 rounded transition-colors" title="Edit">
-                                    <span class="material-symbols-outlined text-sm">edit</span>
-                                </button>
-                                <button onclick="showToast('managerDeleteToast', 4000)" class="p-1.5 text-error hover:bg-error/10 rounded transition-colors" title="Delete">
-                                    <span class="material-symbols-outlined text-sm">delete</span>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    <!-- Row 3: Michael Johnson -->
-                    <tr class="hover:bg-surface-container/50 transition-colors group">
-                        <td class="py-3 px-4">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-sm">MJ</div>
-                                <span class="font-body-md text-body-md font-medium text-on-surface">Michael Johnson</span>
-                            </div>
-                        </td>
-                        <td class="py-3 px-4 font-body-sm text-body-sm text-on-surface-variant">m.johnson@company.com</td>
-                        <td class="py-3 px-4 font-body-sm text-body-sm text-on-surface">Marketing</td>
-                        <td class="py-3 px-4"></td>
-                        <td class="py-3 px-4 font-body-sm text-body-sm text-on-surface-variant">Mar 18, 2023</td>
-                        <td class="py-3 px-4 text-right">
-                            <div class="flex justify-end gap-2">
-                                <button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-primary/10 rounded transition-colors" title="Edit">
-                                    <span class="material-symbols-outlined text-sm">edit</span>
-                                </button>
-                                <button onclick="openModal('deleteEmployeeModal')" class="p-1.5 text-error hover:bg-error/10 rounded transition-colors" title="Delete">
-                                    <span class="material-symbols-outlined text-sm">delete</span>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    <!-- Row 4: Emily Wong -->
-                    <tr class="bg-[#F8FAFC]/50 hover:bg-surface-container/50 transition-colors group">
-                        <td class="py-3 px-4">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-bold text-sm">EW</div>
-                                <span class="font-body-md text-body-md font-medium text-on-surface">Emily Wong</span>
-                            </div>
-                        </td>
-                        <td class="py-3 px-4 font-body-sm text-body-sm text-on-surface-variant">ewong@company.com</td>
-                        <td class="py-3 px-4 font-body-sm text-body-sm text-on-surface">Engineering</td>
-                        <td class="py-3 px-4"></td>
-                        <td class="py-3 px-4 font-body-sm text-body-sm text-on-surface-variant">Nov 02, 2023</td>
-                        <td class="py-3 px-4 text-right">
-                            <div class="flex justify-end gap-2">
-                                <button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-primary/10 rounded transition-colors" title="Edit">
-                                    <span class="material-symbols-outlined text-sm">edit</span>
-                                </button>
-                                <button onclick="openModal('deleteEmployeeModal')" class="p-1.5 text-error hover:bg-error/10 rounded transition-colors" title="Delete">
-                                    <span class="material-symbols-outlined text-sm">delete</span>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    <!-- Row 5: David Chen (Manager) -->
-                    <tr class="hover:bg-surface-container/50 transition-colors group">
-                        <td class="py-3 px-4">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-sm">DC</div>
-                                <span class="font-body-md text-body-md font-medium text-on-surface">David Chen</span>
-                            </div>
-                        </td>
-                        <td class="py-3 px-4 font-body-sm text-body-sm text-on-surface-variant">d.chen@company.com</td>
-                        <td class="py-3 px-4 font-body-sm text-body-sm text-on-surface">Sales</td>
-                        <td class="py-3 px-4">
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary-container/10 text-primary-container uppercase tracking-wider">Manager</span>
-                        </td>
-                        <td class="py-3 px-4 font-body-sm text-body-sm text-on-surface-variant">Aug 14, 2019</td>
-                        <td class="py-3 px-4 text-right">
-                            <div class="flex justify-end gap-2">
-                                <button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-primary/10 rounded transition-colors" title="Edit">
-                                    <span class="material-symbols-outlined text-sm">edit</span>
-                                </button>
-                                <button onclick="showToast('managerDeleteToast', 4000)" class="p-1.5 text-error hover:bg-error/10 rounded transition-colors" title="Delete">
-                                    <span class="material-symbols-outlined text-sm">delete</span>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
+                    @foreach (var employee in Model.Employees)
+                    {
+                        <tr class="hover:bg-surface-container/50 transition-colors">
+                            <td class="py-3 px-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-sm">@employee.Initials</div>
+                                    <span class="font-body-md font-medium text-on-surface">@employee.FullName</span>
+                                </div>
+                            </td>
+                            <td class="py-3 px-4 font-body-sm text-on-surface-variant">@employee.Email</td>
+                            <td class="py-3 px-4 font-body-sm text-on-surface">@employee.DepartmentName</td>
+                            <td class="py-3 px-4">
+                                @if (employee.IsManager)
+                                {
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary-container/10 text-primary-container uppercase tracking-wider">Manager</span>
+                                }
+                            </td>
+                            <td class="py-3 px-4 font-body-sm text-on-surface-variant">@employee.HireDate.ToString("MMM dd, yyyy")</td>
+                            <td class="py-3 px-4 text-right">
+                                <div class="flex justify-end gap-2">
+                                    @if (isDeletedView)
+                                    {
+                                        <form asp-action="Restore" method="post" class="inline">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@employee.Id" />
+                                            <button type="submit" class="p-1.5 text-primary hover:bg-primary/10 rounded transition-colors" title="Restore">
+                                                <span class="material-symbols-outlined text-sm">restore</span>
+                                            </button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <a asp-action="Index" asp-route-editId="@employee.Id" class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-primary/10 rounded transition-colors inline-flex" title="Edit">
+                                            <span class="material-symbols-outlined text-sm">edit</span>
+                                        </a>
+                                        @if (employee.CanDelete)
+                                        {
+                                            <form asp-action="Delete" method="post" class="inline" onsubmit="return confirm('Delete this employee?');">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@employee.Id" />
+                                                <button type="submit" class="p-1.5 text-error hover:bg-error/10 rounded transition-colors" title="Delete">
+                                                    <span class="material-symbols-outlined text-sm">delete</span>
+                                                </button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <button type="button" onclick="showToast('managerDeleteToast', 4000)" class="p-1.5 text-error hover:bg-error/10 rounded transition-colors" title="Delete">
+                                                <span class="material-symbols-outlined text-sm">delete</span>
+                                            </button>
+                                        }
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    @if (!Model.Employees.Any())
+                    {
+                        <tr><td colspan="6" class="py-8 text-center font-body-md text-on-surface-variant">No employees found.</td></tr>
+                    }
                 </tbody>
             </table>
         </div>
-        <!-- Pagination -->
-        <div class="bg-surface-container-low px-4 py-3 border-t border-outline-variant/30 flex items-center justify-between">
-            <div class="font-body-sm text-body-sm text-on-surface-variant">
-                Showing <span class="font-medium text-on-surface">1</span> to <span class="font-medium text-on-surface">10</span> of <span class="font-medium text-on-surface">1,248</span> entries
-            </div>
-            <div class="flex gap-1">
-                <button class="px-3 py-1 border border-outline-variant/50 rounded text-on-surface-variant hover:bg-surface-container disabled:opacity-50 disabled:cursor-not-allowed" disabled>Previous</button>
-                <button class="px-3 py-1 bg-primary text-on-primary rounded font-medium">1</button>
-                <button class="px-3 py-1 border border-outline-variant/50 rounded text-on-surface hover:bg-surface-container">2</button>
-                <button class="px-3 py-1 border border-outline-variant/50 rounded text-on-surface hover:bg-surface-container">3</button>
-                <span class="px-2 py-1 text-on-surface-variant">...</span>
-                <button class="px-3 py-1 border border-outline-variant/50 rounded text-on-surface hover:bg-surface-container">125</button>
-                <button class="px-3 py-1 border border-outline-variant/50 rounded text-on-surface hover:bg-surface-container">Next</button>
-            </div>
-        </div>
+        @await Html.PartialAsync("_Pagination", Model)
     </div>
 </div>
 
-@section Modals {
-    <!-- Add Employee Modal -->
-    <div id="addEmployeeModal" class="modal-overlay">
-        <div class="modal-content w-full max-w-lg mx-4 p-xl">
-            <div class="flex justify-between items-center mb-lg">
-                <h3 class="font-h2 text-h2 text-on-surface">Add Employee</h3>
-                <button onclick="closeModal('addEmployeeModal')" class="p-1 text-on-surface-variant hover:text-on-surface rounded-lg hover:bg-surface-container transition-colors">
-                    <span class="material-symbols-outlined">close</span>
-                </button>
+@if (!isDeletedView)
+{
+    @section Modals {
+        <div id="addEmployeeModal" class="modal-overlay @(Model.ShowCreateModal ? "active" : "")">
+            <div class="modal-content w-full max-w-lg mx-4 p-xl">
+                <div class="flex justify-between items-center mb-lg">
+                    <h3 class="font-h2 text-h2 text-on-surface">Add Employee</h3>
+                    <a asp-action="Index" class="p-1 text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">close</span></a>
+                </div>
+                <form asp-action="Create" method="post" class="space-y-md">
+                    @Html.AntiForgeryToken()
+                    <partial name="_ModalFormErrors" model="@("CreateForm")" />
+                    <div class="grid grid-cols-2 gap-md">
+                        <div>
+                            <label asp-for="CreateForm.FirstName" class="block font-label-bold text-label-bold text-on-surface-variant mb-xs"></label>
+                            <input asp-for="CreateForm.FirstName" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md" />
+                            <span asp-validation-for="CreateForm.FirstName" class="text-error font-body-sm"></span>
+                        </div>
+                        <div>
+                            <label asp-for="CreateForm.LastName" class="block font-label-bold text-label-bold text-on-surface-variant mb-xs"></label>
+                            <input asp-for="CreateForm.LastName" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md" />
+                            <span asp-validation-for="CreateForm.LastName" class="text-error font-body-sm"></span>
+                        </div>
+                    </div>
+                    <div>
+                        <label asp-for="CreateForm.Email" class="block font-label-bold text-label-bold text-on-surface-variant mb-xs"></label>
+                        <input asp-for="CreateForm.Email" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md" />
+                        <span asp-validation-for="CreateForm.Email" class="text-error font-body-sm"></span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-md">
+                        <div>
+                            <label asp-for="CreateForm.DepartmentId" class="block font-label-bold text-label-bold text-on-surface-variant mb-xs"></label>
+                            <select asp-for="CreateForm.DepartmentId" asp-items="@(new SelectList(Model.Departments, "Id", "Name"))" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md">
+                                <option value="">Select department</option>
+                            </select>
+                            <span asp-validation-for="CreateForm.DepartmentId" class="text-error font-body-sm"></span>
+                        </div>
+                        <div>
+                            <label asp-for="CreateForm.HireDate" class="block font-label-bold text-label-bold text-on-surface-variant mb-xs"></label>
+                            <input asp-for="CreateForm.HireDate" type="date" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md" />
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-md">
+                        <div>
+                            <label asp-for="CreateForm.Salary" class="block font-label-bold text-label-bold text-on-surface-variant mb-xs"></label>
+                            <input asp-for="CreateForm.Salary" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md" />
+                        </div>
+                        <div>
+                            <label asp-for="CreateForm.Role" class="block font-label-bold text-label-bold text-on-surface-variant mb-xs"></label>
+                            <select asp-for="CreateForm.Role" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md">
+                                <option value="Employee">Employee</option>
+                                <option value="DepartmentHead">DepartmentHead</option>
+                                <option value="HR">HR</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-md">
+                        <div>
+                            <label asp-for="CreateForm.InitialPassword" class="block font-label-bold text-label-bold text-on-surface-variant mb-xs"></label>
+                            <input asp-for="CreateForm.InitialPassword" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md" />
+                            <span asp-validation-for="CreateForm.InitialPassword" class="text-error font-body-sm"></span>
+                        </div>
+                        <div>
+                            <label asp-for="CreateForm.ConfirmPassword" class="block font-label-bold text-label-bold text-on-surface-variant mb-xs"></label>
+                            <input asp-for="CreateForm.ConfirmPassword" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md" />
+                            <span asp-validation-for="CreateForm.ConfirmPassword" class="text-error font-body-sm"></span>
+                        </div>
+                    </div>
+                    <div class="flex justify-end gap-md pt-md border-t border-outline-variant/30">
+                        <a asp-action="Index" class="px-6 py-2 border border-outline-variant rounded-lg font-label-bold">Cancel</a>
+                        <button type="submit" class="px-6 py-2 bg-primary-container text-on-primary rounded-lg font-label-bold shadow-sm">Add Employee</button>
+                    </div>
+                </form>
             </div>
-            <form class="space-y-md">
-                <div class="grid grid-cols-2 gap-md">
-                    <div>
-                        <label class="block font-label-bold text-label-bold text-on-surface-variant mb-xs">First Name</label>
-                        <input type="text" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none" placeholder="John" />
-                    </div>
-                    <div>
-                        <label class="block font-label-bold text-label-bold text-on-surface-variant mb-xs">Last Name</label>
-                        <input type="text" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none" placeholder="Doe" />
-                    </div>
-                </div>
-                <div>
-                    <label class="block font-label-bold text-label-bold text-on-surface-variant mb-xs">Email</label>
-                    <input type="email" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none" placeholder="john.doe@company.com" />
-                </div>
-                <div class="grid grid-cols-2 gap-md">
-                    <div>
-                        <label class="block font-label-bold text-label-bold text-on-surface-variant mb-xs">Department</label>
-                        <select class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none appearance-none">
-                            <option>Select department</option>
-                            <option>Engineering</option>
-                            <option>Design</option>
-                            <option>Marketing</option>
-                            <option>Sales</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block font-label-bold text-label-bold text-on-surface-variant mb-xs">Hire Date</label>
-                        <input type="date" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none" />
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 gap-md">
-                    <div>
-                        <label class="block font-label-bold text-label-bold text-on-surface-variant mb-xs">Base Salary</label>
-                        <input type="number" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none" placeholder="5000" />
-                    </div>
-                    <div>
-                        <label class="block font-label-bold text-label-bold text-on-surface-variant mb-xs">Role</label>
-                        <select class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none appearance-none">
-                            <option>Employee</option>
-                            <option>DepartmentHead</option>
-                            <option>HR</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 gap-md">
-                    <div>
-                        <label class="block font-label-bold text-label-bold text-on-surface-variant mb-xs">Password</label>
-                        <input type="password" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none" placeholder="••••••••" />
-                    </div>
-                    <div>
-                        <label class="block font-label-bold text-label-bold text-on-surface-variant mb-xs">Confirm Password</label>
-                        <input type="password" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none" placeholder="••••••••" />
-                    </div>
-                </div>
-                <div class="flex justify-end gap-md pt-md border-t border-outline-variant/30">
-                    <button type="button" onclick="closeModal('addEmployeeModal')" class="px-6 py-2 border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors font-label-bold">Cancel</button>
-                    <button type="button" class="px-6 py-2 bg-primary-container text-on-primary rounded-lg hover:bg-primary transition-colors font-label-bold shadow-sm">Add Employee</button>
-                </div>
-            </form>
         </div>
-    </div>
 
-    <!-- Edit Employee Modal (Jane Smith) -->
-    <div id="editEmployeeModal" class="modal-overlay">
-        <div class="modal-content w-full max-w-lg mx-4 p-xl">
-            <div class="flex justify-between items-center mb-lg">
-                <h3 class="font-h2 text-h2 text-on-surface">Edit Employee</h3>
-                <button onclick="closeModal('editEmployeeModal')" class="p-1 text-on-surface-variant hover:text-on-surface rounded-lg hover:bg-surface-container transition-colors">
-                    <span class="material-symbols-outlined">close</span>
-                </button>
+        @if (Model.EditForm != null)
+        {
+            <div id="editEmployeeModal" class="modal-overlay active">
+                <div class="modal-content w-full max-w-lg mx-4 p-xl">
+                    <div class="flex justify-between items-center mb-lg">
+                        <h3 class="font-h2 text-h2 text-on-surface">Edit Employee</h3>
+                        <a asp-action="Index" class="p-1 text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">close</span></a>
+                    </div>
+                    <form asp-action="Edit" method="post" class="space-y-md">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="EditForm!.Id" />
+                        <partial name="_ModalFormErrors" model="@("EditForm")" />
+                        <div class="grid grid-cols-2 gap-md">
+                            <div>
+                                <label asp-for="EditForm.FirstName" class="block font-label-bold text-label-bold text-on-surface-variant mb-xs"></label>
+                                <input asp-for="EditForm.FirstName" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md" />
+                            </div>
+                            <div>
+                                <label asp-for="EditForm.LastName" class="block font-label-bold text-label-bold text-on-surface-variant mb-xs"></label>
+                                <input asp-for="EditForm.LastName" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md" />
+                            </div>
+                        </div>
+                        <div>
+                            <label asp-for="EditForm.Email" class="block font-label-bold text-label-bold text-on-surface-variant mb-xs"></label>
+                            <input asp-for="EditForm.Email" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md" />
+                        </div>
+                        <div class="grid grid-cols-2 gap-md">
+                            <div>
+                                <label asp-for="EditForm.DepartmentId" class="block font-label-bold text-label-bold text-on-surface-variant mb-xs"></label>
+                                <select asp-for="EditForm.DepartmentId" asp-items="@(new SelectList(Model.Departments, "Id", "Name"))" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md"></select>
+                            </div>
+                            <div>
+                                <label asp-for="EditForm.Salary" class="block font-label-bold text-label-bold text-on-surface-variant mb-xs"></label>
+                                <input asp-for="EditForm.Salary" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md" />
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-md">
+                            <div>
+                                <label asp-for="EditForm.HireDate" class="block font-label-bold text-label-bold text-on-surface-variant mb-xs"></label>
+                                <input asp-for="EditForm.HireDate" type="date" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md" />
+                            </div>
+                            <div class="flex items-end pb-2">
+                                <label class="flex items-center gap-2 font-body-sm">
+                                    <input asp-for="EditForm.IsActive" type="checkbox" class="rounded" />
+                                    <span asp-for="EditForm.IsActive"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="flex justify-end gap-md pt-md border-t border-outline-variant/30">
+                            <a asp-action="Index" class="px-6 py-2 border border-outline-variant rounded-lg font-label-bold">Cancel</a>
+                            <button type="submit" class="px-6 py-2 bg-primary-container text-on-primary rounded-lg font-label-bold shadow-sm">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <form class="space-y-md">
-                <div class="grid grid-cols-2 gap-md">
-                    <div>
-                        <label class="block font-label-bold text-label-bold text-on-surface-variant mb-xs">First Name</label>
-                        <input type="text" value="Jane" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none" />
-                    </div>
-                    <div>
-                        <label class="block font-label-bold text-label-bold text-on-surface-variant mb-xs">Last Name</label>
-                        <input type="text" value="Smith" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none" />
-                    </div>
-                </div>
-                <div>
-                    <label class="block font-label-bold text-label-bold text-on-surface-variant mb-xs">Email</label>
-                    <input type="email" value="jane.smith@company.com" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none" />
-                </div>
-                <div class="grid grid-cols-2 gap-md">
-                    <div>
-                        <label class="block font-label-bold text-label-bold text-on-surface-variant mb-xs">Department</label>
-                        <select class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md text-on-surface appearance-none">
-                            <option>Engineering</option>
-                            <option selected>Design</option>
-                            <option>Marketing</option>
-                            <option>Sales</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block font-label-bold text-label-bold text-on-surface-variant mb-xs">Base Salary</label>
-                        <input type="number" value="8000" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none" />
-                    </div>
-                </div>
-                <div class="flex justify-end gap-md pt-md border-t border-outline-variant/30">
-                    <button type="button" onclick="closeModal('editEmployeeModal')" class="px-6 py-2 border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors font-label-bold">Cancel</button>
-                    <button type="button" class="px-6 py-2 bg-primary-container text-on-primary rounded-lg hover:bg-primary transition-colors font-label-bold shadow-sm">Save Changes</button>
-                </div>
-            </form>
-        </div>
-    </div>
+        }
 
-    <!-- Delete Employee Confirmation Modal -->
-    <div id="deleteEmployeeModal" class="modal-overlay">
-        <div class="modal-content w-full max-w-sm mx-4 p-xl text-center">
-            <div class="w-16 h-16 rounded-full bg-error-container text-error flex items-center justify-center mx-auto mb-lg">
-                <span class="material-symbols-outlined text-[32px]" style="font-variation-settings: 'FILL' 1;">warning</span>
-            </div>
-            <h3 class="font-h3 text-h3 text-on-surface mb-sm">Delete Employee?</h3>
-            <p class="font-body-md text-body-md text-on-surface-variant mb-lg">This action will soft-delete this employee. They can be restored from the "Deleted Employees" tab.</p>
-            <div class="flex justify-center gap-md">
-                <button onclick="closeModal('deleteEmployeeModal')" class="px-6 py-2 border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors font-label-bold">Cancel</button>
-                <button class="px-6 py-2 bg-error text-on-error rounded-lg hover:bg-error/90 transition-colors font-label-bold shadow-sm">Delete</button>
+        <div class="toast-container">
+            <div id="managerDeleteToast" class="toast toast-error">
+                <span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">error</span>
+                <div class="flex-1">
+                    <p class="font-label-bold text-on-surface text-sm">Cannot delete manager</p>
+                    <p class="font-body-sm text-on-surface-variant">Assign a replacement manager before deleting this employee.</p>
+                </div>
+                <button onclick="hideToast('managerDeleteToast')" class="text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined text-sm">close</span></button>
             </div>
         </div>
-    </div>
+    }
 
-    <!-- Manager Delete Error Toast -->
-    <div class="toast-container">
-        <div id="managerDeleteToast" class="toast toast-error">
-            <span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">error</span>
-            <div class="flex-1">
-                <p class="font-label-bold text-on-surface text-sm">Cannot delete manager</p>
-                <p class="font-body-sm text-body-sm text-on-surface-variant">Please reassign the department manager before deleting this employee.</p>
-            </div>
-            <button onclick="hideToast('managerDeleteToast')" class="text-on-surface-variant hover:text-on-surface">
-                <span class="material-symbols-outlined text-sm">close</span>
-            </button>
-        </div>
-    </div>
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+        @if (Model.ShowCreateModal || Model.EditForm != null)
+        {
+            <script>document.addEventListener('DOMContentLoaded', () => { document.body.style.overflow = 'hidden'; });</script>
+        }
+    }
 }

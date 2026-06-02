@@ -1,12 +1,12 @@
+@model HRSystem.Web.ViewModels.Dashboard.HrDashboardViewModel
 @{
     ViewBag.Title = "HR Dashboard - HRMS Portal";
 }
 
 <div class="max-w-7xl mx-auto space-y-6">
-    <!-- Header -->
     <div>
         <h2 class="font-h1 text-h1 text-on-surface">Dashboard</h2>
-        <p class="font-body-md text-body-md text-on-surface-variant mt-1">Welcome back, Sarah. Here's your HR overview.</p>
+        <p class="font-body-md text-body-md text-on-surface-variant mt-1">Welcome back, @Model.FirstName. Here's your HR overview.</p>
     </div>
 
     <!-- Stat Cards -->
@@ -19,7 +19,7 @@
                 </div>
             </div>
             <div>
-                <h3 class="font-h1 text-h1 text-on-surface mb-xs">1,248</h3>
+                <h3 class="font-h1 text-h1 text-on-surface mb-xs">@Model.TotalEmployees.ToString("N0")</h3>
                 <p class="font-body-sm text-body-sm text-on-surface-variant">Total Employees</p>
             </div>
         </div>
@@ -31,7 +31,7 @@
                 </div>
             </div>
             <div>
-                <h3 class="font-h1 text-h1 text-on-surface mb-xs">8</h3>
+                <h3 class="font-h1 text-h1 text-on-surface mb-xs">@Model.ActiveDepartments</h3>
                 <p class="font-body-sm text-body-sm text-on-surface-variant">Active Departments</p>
             </div>
         </div>
@@ -44,7 +44,7 @@
                 </div>
             </div>
             <div class="relative z-10">
-                <h3 class="font-h1 text-h1 text-on-surface mb-xs">12</h3>
+                <h3 class="font-h1 text-h1 text-on-surface mb-xs">@Model.PendingLeaveRequests</h3>
                 <p class="font-body-sm text-body-sm text-error flex items-center font-medium">
                     <span class="material-symbols-outlined text-[16px] mr-1">info</span>
                     Pending Leave Requests
@@ -59,7 +59,7 @@
                 </div>
             </div>
             <div>
-                <h3 class="font-h1 text-h1 text-on-surface mb-xs">$246K</h3>
+                <h3 class="font-h1 text-h1 text-on-surface mb-xs">@Model.MonthlyPayrollTotal.ToString("C0")</h3>
                 <p class="font-body-sm text-body-sm text-on-surface-variant">Monthly Payroll</p>
             </div>
         </div>

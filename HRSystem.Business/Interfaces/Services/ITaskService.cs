@@ -9,7 +9,7 @@ public interface ITaskService
 {
     Task<EmployeeTask> AssignAsync(AssignTaskDto dto, CancellationToken cancellationToken = default);
 
-    Task UpdateStatusAsync(int taskId, EmployeeTaskStatus status, CancellationToken cancellationToken = default);
+    Task UpdateStatusAsync(UpdateTaskStatusDto dto, CancellationToken cancellationToken = default);
 
     Task EditTaskAsync(EditTaskDto dto, CancellationToken cancellationToken = default);
 

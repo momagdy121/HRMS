@@ -20,4 +20,21 @@ public interface ILeaveService
     Task<PagedResult<LeaveRequest>> GetAllPendingAsync(int page = 1, int pageSize = 20, CancellationToken cancellationToken = default);
 
     Task<PagedResult<LeaveRequest>> GetAllAsync(int page = 1, int pageSize = 20, CancellationToken cancellationToken = default);
+
+    Task<PagedResult<LeaveRequest>> GetFilteredAsync(
+        LeaveRequestStatus? status,
+        int page = 1,
+        int pageSize = 20,
+        CancellationToken cancellationToken = default);
+
+    Task<PagedResult<LeaveRequest>> GetByEmployeeAsync(int employeeId, int page = 1, int pageSize = 20, CancellationToken cancellationToken = default);
+
+    Task<PagedResult<LeaveRequest>> GetByDepartmentAsync(
+        int departmentId,
+        LeaveRequestStatus? status = null,
+        int page = 1,
+        int pageSize = 20,
+        CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<LeaveBalance>> GetEmployeeBalancesAsync(int employeeId, int year, CancellationToken cancellationToken = default);
 }

@@ -10,6 +10,7 @@ public class EmployeeTaskConfiguration : IEntityTypeConfiguration<EmployeeTask>
     {
         entity.Property(x => x.Title).IsRequired().HasMaxLength(200);
         entity.Property(x => x.Description).HasMaxLength(1000);
+        entity.Property(x => x.CompletionNotes).HasMaxLength(2000);
         entity.Property(x => x.IsDeleted).HasDefaultValue(false);
         entity.Property(x => x.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
 
@@ -58,6 +59,7 @@ public class EmployeeTaskConfiguration : IEntityTypeConfiguration<EmployeeTask>
                 AssignedToId = 5,
                 Status = global::HRSystem.Common.Enums.TaskStatus.Completed,
                 DueDate = new DateOnly(2025, 9, 1),
+                CompletionNotes = "Updated checklist published at https://intranet/hr/policy-checklist",
                 IsDeleted = false,
                 CreatedAt = SeedValues.TaskCreatedAt1,
                 UpdatedAt = SeedValues.TaskUpdatedAt1

@@ -1,253 +1,226 @@
+@model HRSystem.Web.ViewModels.HR.DepartmentIndexViewModel
 @{
     ViewBag.Title = "Departments - HRMS Portal";
+    var isDeletedView = ViewContext.RouteData.Values["action"]?.ToString() == "Deleted";
 }
 
 <div class="max-w-7xl mx-auto space-y-lg">
-    <!-- Header Section -->
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
             <h2 class="font-h1 text-h1 text-on-background">Departments</h2>
-            <p class="font-body-md text-body-md text-secondary">Manage organization structure</p>
+            <p class="font-body-md text-body-md text-secondary">@(isDeletedView ? "Restore deleted departments" : "Manage organization structure")</p>
         </div>
         <div class="flex items-center gap-sm bg-surface-container-high p-1 rounded-full w-fit">
-            <button class="px-6 py-2 rounded-full bg-white shadow-sm text-label-bold text-primary-container font-semibold">Active Departments</button>
-            <button class="px-6 py-2 rounded-full text-label-bold text-secondary hover:text-primary-container transition-colors">Deleted Departments</button>
+            <a asp-action="Index" class="px-6 py-2 rounded-full text-label-bold @(isDeletedView ? "text-secondary hover:text-primary-container" : "bg-white shadow-sm text-primary-container font-semibold")">Active Departments</a>
+            <a asp-action="Deleted" class="px-6 py-2 rounded-full text-label-bold @(!isDeletedView ? "text-secondary hover:text-primary-container" : "bg-white shadow-sm text-primary-container font-semibold")">Deleted Departments</a>
         </div>
     </div>
 
-    <!-- Main Card -->
     <div class="bg-surface-container-lowest rounded-2xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] border border-slate-200/50 overflow-hidden">
-        <!-- Toolbar -->
         <div class="px-lg py-md border-b border-slate-100 flex items-center justify-between">
-            <div class="flex items-center gap-md">
-                <div class="relative">
-                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
-                    <input class="pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-body-sm text-secondary focus:ring-1 focus:ring-primary outline-none w-64" placeholder="Search by name" type="text" />
-                </div>
-            </div>
-            <button onclick="openModal('createDeptModal')" class="flex items-center gap-2 bg-primary-container text-white px-6 py-2.5 rounded-lg text-label-bold shadow-md hover:bg-primary transition-all active:scale-95">
-                <span class="material-symbols-outlined text-sm">add</span>
-                Create Department
-            </button>
+            @if (!isDeletedView)
+            {
+                <div></div>
+                <a asp-action="Index" asp-route-showCreate="true" class="flex items-center gap-2 bg-primary-container text-white px-6 py-2.5 rounded-lg text-label-bold shadow-md hover:bg-primary transition-all">
+                    <span class="material-symbols-outlined text-sm">add</span>Create Department
+                </a>
+            }
         </div>
 
-        <!-- Table -->
         <div class="overflow-x-auto">
             <table class="w-full text-left bg-slate-50/20">
                 <thead>
                     <tr class="bg-slate-50/50">
-                        <th class="px-lg py-4 font-label-bold text-label-bold text-slate-500 uppercase tracking-wider">Name</th>
-                        <th class="px-lg py-4 font-label-bold text-label-bold text-slate-500 uppercase tracking-wider">Manager</th>
-                        <th class="px-lg py-4 font-label-bold text-label-bold text-slate-500 uppercase tracking-wider text-center">Employee Count</th>
-                        <th class="px-lg py-4 font-label-bold text-label-bold text-slate-500 uppercase tracking-wider text-right">Actions</th>
+                        <th class="px-lg py-4 font-label-bold text-slate-500 uppercase tracking-wider">Name</th>
+                        <th class="px-lg py-4 font-label-bold text-slate-500 uppercase tracking-wider">Manager</th>
+                        <th class="px-lg py-4 font-label-bold text-slate-500 uppercase tracking-wider text-center">Employee Count</th>
+                        <th class="px-lg py-4 font-label-bold text-slate-500 uppercase tracking-wider text-right">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
-                    <tr class="hover:bg-slate-50 transition-colors group">
-                        <td class="px-lg py-5">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-lg bg-sky-100 flex items-center justify-center text-sky-700">
-                                    <span class="material-symbols-outlined">groups</span>
+                    @foreach (var dept in Model.Departments)
+                    {
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="px-lg py-5 font-body-lg font-semibold text-slate-900">@dept.Name</td>
+                            <td class="px-lg py-5">
+                                @if (dept.HasManager)
+                                {
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-sm">@dept.ManagerInitials</div>
+                                        <span class="text-body-md font-medium text-slate-700">@dept.ManagerName</span>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span class="text-body-sm italic text-slate-400">(Unassigned)</span>
+                                }
+                            </td>
+                            <td class="px-lg py-5 text-center">
+                                <span class="inline-flex items-center justify-center px-3 py-1 bg-sky-50 text-sky-700 rounded-full font-badge">@dept.EmployeeCount</span>
+                            </td>
+                            <td class="px-lg py-5 text-right">
+                                <div class="flex items-center justify-end gap-2">
+                                    @if (isDeletedView)
+                                    {
+                                        <form asp-action="Restore" method="post" class="inline">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@dept.Id" />
+                                            <button type="submit" class="p-2 text-primary hover:text-primary transition-colors" title="Restore"><span class="material-symbols-outlined text-lg">restore</span></button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <a asp-action="Index" asp-route-editId="@dept.Id" class="p-2 text-slate-500 hover:text-primary transition-colors" title="Edit"><span class="material-symbols-outlined text-lg">edit</span></a>
+                                        <a asp-action="Index" asp-route-replaceId="@dept.Id" class="p-2 text-slate-500 hover:text-amber-600 transition-colors" title="Replace Manager"><span class="material-symbols-outlined text-lg">swap_horiz</span></a>
+                                        <form asp-action="Delete" method="post" class="inline" onsubmit="return confirm('Delete this department?');">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@dept.Id" />
+                                            <button type="submit" class="p-2 text-error hover:bg-error-container rounded-lg transition-colors" title="Delete"><span class="material-symbols-outlined text-lg">delete</span></button>
+                                        </form>
+                                    }
                                 </div>
-                                <p class="font-body-lg text-body-lg text-slate-900 font-semibold">Human Resources</p>
-                            </div>
-                        </td>
-                        <td class="px-lg py-5">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-bold text-sm">JS</div>
-                                <span class="text-body-md font-medium text-slate-700">Jane Smith</span>
-                            </div>
-                        </td>
-                        <td class="px-lg py-5 text-center">
-                            <span class="inline-flex items-center justify-center px-3 py-1 bg-sky-50 text-sky-700 rounded-full font-badge text-badge">24</span>
-                        </td>
-                        <td class="px-lg py-5 text-right">
-                            <div class="flex items-center justify-end gap-2">
-                                <button onclick="openModal('editDeptModal')" class="p-2 text-slate-500 hover:text-primary transition-colors" title="Edit"><span class="material-symbols-outlined text-lg">edit</span></button>
-                                <button onclick="openModal('replaceMgrModal')" class="p-2 text-slate-500 hover:text-amber-600 transition-colors" title="Replace Manager"><span class="material-symbols-outlined text-lg">swap_horiz</span></button>
-                                <button onclick="showToast('deptDeleteGuard', 4000)" class="p-2 text-error hover:bg-error-container rounded-lg transition-colors" title="Delete"><span class="material-symbols-outlined text-lg">delete</span></button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="bg-slate-50/30 hover:bg-slate-50 transition-colors group">
-                        <td class="px-lg py-5">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-700">
-                                    <span class="material-symbols-outlined">code</span>
-                                </div>
-                                <p class="font-body-lg text-body-lg text-slate-900 font-semibold">Engineering</p>
-                            </div>
-                        </td>
-                        <td class="px-lg py-5">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-sm">RC</div>
-                                <span class="text-body-md font-medium text-slate-700">Robert Chen</span>
-                            </div>
-                        </td>
-                        <td class="px-lg py-5 text-center">
-                            <span class="inline-flex items-center justify-center px-3 py-1 bg-sky-50 text-sky-700 rounded-full font-badge text-badge">58</span>
-                        </td>
-                        <td class="px-lg py-5 text-right">
-                            <div class="flex items-center justify-end gap-2">
-                                <button class="p-2 text-slate-500 hover:text-primary transition-colors" title="Edit"><span class="material-symbols-outlined text-lg">edit</span></button>
-                                <button class="p-2 text-slate-500 hover:text-amber-600 transition-colors" title="Replace Manager"><span class="material-symbols-outlined text-lg">swap_horiz</span></button>
-                                <button class="p-2 text-error hover:bg-error-container rounded-lg transition-colors" title="Delete"><span class="material-symbols-outlined text-lg">delete</span></button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="hover:bg-slate-50 transition-colors group">
-                        <td class="px-lg py-5">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-lg bg-pink-100 flex items-center justify-center text-pink-700">
-                                    <span class="material-symbols-outlined">palette</span>
-                                </div>
-                                <p class="font-body-lg text-body-lg text-slate-900 font-semibold">Design</p>
-                            </div>
-                        </td>
-                        <td class="px-lg py-5">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center">
-                                    <span class="material-symbols-outlined text-slate-400 text-sm">person</span>
-                                </div>
-                                <span class="text-body-sm italic text-slate-400">(Unassigned)</span>
-                            </div>
-                        </td>
-                        <td class="px-lg py-5 text-center">
-                            <span class="inline-flex items-center justify-center px-3 py-1 bg-sky-50 text-sky-700 rounded-full font-badge text-badge">12</span>
-                        </td>
-                        <td class="px-lg py-5 text-right">
-                            <div class="flex items-center justify-end gap-2">
-                                <button class="p-2 text-slate-500 hover:text-primary transition-colors" title="Edit"><span class="material-symbols-outlined text-lg">edit</span></button>
-                                <button class="p-2 text-slate-500 hover:text-amber-600 transition-colors" title="Replace Manager"><span class="material-symbols-outlined text-lg">swap_horiz</span></button>
-                                <button class="p-2 text-error hover:bg-error-container rounded-lg transition-colors" title="Delete"><span class="material-symbols-outlined text-lg">delete</span></button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="bg-slate-50/30 hover:bg-slate-50 transition-colors group">
-                        <td class="px-lg py-5">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-700">
-                                    <span class="material-symbols-outlined">trending_up</span>
-                                </div>
-                                <p class="font-body-lg text-body-lg text-slate-900 font-semibold">Sales</p>
-                            </div>
-                        </td>
-                        <td class="px-lg py-5">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-sm">DC</div>
-                                <span class="text-body-md font-medium text-slate-700">David Chen</span>
-                            </div>
-                        </td>
-                        <td class="px-lg py-5 text-center">
-                            <span class="inline-flex items-center justify-center px-3 py-1 bg-sky-50 text-sky-700 rounded-full font-badge text-badge">31</span>
-                        </td>
-                        <td class="px-lg py-5 text-right">
-                            <div class="flex items-center justify-end gap-2">
-                                <button class="p-2 text-slate-500 hover:text-primary transition-colors" title="Edit"><span class="material-symbols-outlined text-lg">edit</span></button>
-                                <button class="p-2 text-slate-500 hover:text-amber-600 transition-colors" title="Replace Manager"><span class="material-symbols-outlined text-lg">swap_horiz</span></button>
-                                <button class="p-2 text-error hover:bg-error-container rounded-lg transition-colors" title="Delete"><span class="material-symbols-outlined text-lg">delete</span></button>
-                            </div>
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
+                    }
+                    @if (!Model.Departments.Any())
+                    {
+                        <tr><td colspan="4" class="py-8 text-center text-secondary">No departments found.</td></tr>
+                    }
                 </tbody>
             </table>
         </div>
-        <!-- Pagination -->
-        <div class="px-lg py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
-            <p class="text-body-sm text-secondary">Showing 1 to 4 of 8 entries</p>
-            <div class="flex items-center gap-1">
-                <button class="p-2 text-slate-400 hover:text-primary-container transition-colors disabled:opacity-30" disabled><span class="material-symbols-outlined text-lg">chevron_left</span></button>
-                <button class="w-8 h-8 rounded flex items-center justify-center bg-primary-container text-white font-label-bold text-xs">1</button>
-                <button class="w-8 h-8 rounded flex items-center justify-center hover:bg-slate-200 text-secondary font-label-bold text-xs">2</button>
-                <button class="p-2 text-slate-400 hover:text-primary-container transition-colors"><span class="material-symbols-outlined text-lg">chevron_right</span></button>
-            </div>
-        </div>
+        @await Html.PartialAsync("_Pagination", Model)
     </div>
 </div>
 
-@section Modals {
-    <!-- Create Department Modal -->
-    <div id="createDeptModal" class="modal-overlay">
-        <div class="modal-content w-full max-w-md mx-4 p-xl">
-            <div class="flex justify-between items-center mb-lg">
-                <h3 class="font-h2 text-h2 text-on-surface">Create Department</h3>
-                <button onclick="closeModal('createDeptModal')" class="p-1 text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">close</span></button>
+@if (!isDeletedView)
+{
+    @section Modals {
+        <div id="createDeptModal" class="modal-overlay @(Model.ShowCreateModal ? "active" : "")">
+            <div class="modal-content w-full max-w-md mx-4 p-xl">
+                <div class="flex justify-between items-center mb-lg">
+                    <h3 class="font-h2 text-h2 text-on-surface">Create Department</h3>
+                    <a asp-action="Index" class="p-1 text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">close</span></a>
+                </div>
+                <form asp-action="Create" method="post" class="space-y-md">
+                    @Html.AntiForgeryToken()
+                    <partial name="_ModalFormErrors" model="@("CreateForm")" />
+                    <div>
+                        <label asp-for="CreateForm.Name" class="block font-label-bold text-on-surface-variant mb-xs"></label>
+                        <input asp-for="CreateForm.Name" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md" placeholder="e.g. Marketing" />
+                        <span asp-validation-for="CreateForm.Name" class="text-error font-body-sm"></span>
+                    </div>
+                    <div>
+                        <label asp-for="CreateForm.ManagerId" class="block font-label-bold text-on-surface-variant mb-xs"></label>
+                        <select asp-for="CreateForm.ManagerId" asp-items="@(new SelectList(Model.ManagerOptions, "Id", "Name"))" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md">
+                            <option value="">Select a manager</option>
+                        </select>
+                        <span asp-validation-for="CreateForm.ManagerId" class="text-error font-body-sm"></span>
+                    </div>
+                    <div class="flex justify-end gap-md pt-md border-t border-outline-variant/30">
+                        <a asp-action="Index" class="px-6 py-2 border border-outline-variant rounded-lg font-label-bold">Cancel</a>
+                        <button type="submit" class="px-6 py-2 bg-primary-container text-on-primary rounded-lg font-label-bold shadow-sm">Create</button>
+                    </div>
+                </form>
             </div>
-            <form class="space-y-md">
-                <div>
-                    <label class="block font-label-bold text-label-bold text-on-surface-variant mb-xs">Department Name</label>
-                    <input type="text" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none" placeholder="e.g. Marketing" />
-                </div>
-                <div>
-                    <label class="block font-label-bold text-label-bold text-on-surface-variant mb-xs">Manager (Optional)</label>
-                    <select class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md text-on-surface appearance-none">
-                        <option>Select a manager</option>
-                        <option>Jane Smith</option>
-                        <option>Robert Chen</option>
-                        <option>David Chen</option>
-                    </select>
-                </div>
-                <div class="flex justify-end gap-md pt-md border-t border-outline-variant/30">
-                    <button type="button" onclick="closeModal('createDeptModal')" class="px-6 py-2 border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors font-label-bold">Cancel</button>
-                    <button type="button" class="px-6 py-2 bg-primary-container text-on-primary rounded-lg hover:bg-primary transition-colors font-label-bold shadow-sm">Create</button>
-                </div>
-            </form>
         </div>
-    </div>
 
-    <!-- Edit Department Modal -->
-    <div id="editDeptModal" class="modal-overlay">
-        <div class="modal-content w-full max-w-md mx-4 p-xl">
-            <div class="flex justify-between items-center mb-lg">
-                <h3 class="font-h2 text-h2 text-on-surface">Edit Department</h3>
-                <button onclick="closeModal('editDeptModal')" class="p-1 text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">close</span></button>
-            </div>
-            <form class="space-y-md">
-                <div>
-                    <label class="block font-label-bold text-label-bold text-on-surface-variant mb-xs">Department Name</label>
-                    <input type="text" value="Human Resources" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none" />
+        @if (Model.EditForm != null)
+        {
+            <div id="editDeptModal" class="modal-overlay active">
+                <div class="modal-content w-full max-w-md mx-4 p-xl">
+                    <div class="flex justify-between items-center mb-lg">
+                        <h3 class="font-h2 text-h2 text-on-surface">Edit Department</h3>
+                        <a asp-action="Index" class="p-1 text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">close</span></a>
+                    </div>
+                    <form asp-action="Edit" method="post" class="space-y-md">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="EditForm!.Id" />
+                        <partial name="_ModalFormErrors" model="@("EditForm")" />
+                        <div>
+                            <label asp-for="EditForm.Name" class="block font-label-bold text-on-surface-variant mb-xs"></label>
+                            <input asp-for="EditForm.Name" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md" />
+                            <span asp-validation-for="EditForm.Name" class="text-error font-body-sm"></span>
+                        </div>
+                        <div class="flex justify-end gap-md pt-md border-t border-outline-variant/30">
+                            <a asp-action="Index" class="px-6 py-2 border border-outline-variant rounded-lg font-label-bold">Cancel</a>
+                            <button type="submit" class="px-6 py-2 bg-primary-container text-on-primary rounded-lg font-label-bold shadow-sm">Save</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="flex justify-end gap-md pt-md border-t border-outline-variant/30">
-                    <button type="button" onclick="closeModal('editDeptModal')" class="px-6 py-2 border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors font-label-bold">Cancel</button>
-                    <button type="button" class="px-6 py-2 bg-primary-container text-on-primary rounded-lg hover:bg-primary transition-colors font-label-bold shadow-sm">Save</button>
+            </div>
+        }
+
+        @if (Model.ReplaceForm != null)
+        {
+            <div id="replaceMgrModal" class="modal-overlay active">
+                <div class="modal-content w-full max-w-md mx-4 p-xl">
+                    <div class="flex justify-between items-center mb-lg">
+                        <h3 class="font-h2 text-h2 text-on-surface">Replace Manager</h3>
+                        <a asp-action="Index" class="p-1 text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">close</span></a>
+                    </div>
+                    <p class="font-body-md text-on-surface-variant mb-md">Select a new manager for <strong>@Model.ReplaceForm.DepartmentName</strong>.</p>
+                    <form asp-action="ReplaceManager" method="post" class="space-y-md">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="ReplaceForm!.DepartmentId" />
+                        <div>
+                            <label asp-for="ReplaceForm.NewManagerId" class="block font-label-bold text-on-surface-variant mb-xs"></label>
+                            <select asp-for="ReplaceForm.NewManagerId" asp-items="@(new SelectList(Model.ManagerOptions, "Id", "Name"))" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md">
+                                <option value="">Select employee</option>
+                            </select>
+                            <span asp-validation-for="ReplaceForm.NewManagerId" class="text-error font-body-sm"></span>
+                        </div>
+                        <div class="flex justify-end gap-md pt-md border-t border-outline-variant/30">
+                            <a asp-action="Index" class="px-6 py-2 border border-outline-variant rounded-lg font-label-bold">Cancel</a>
+                            <button type="submit" class="px-6 py-2 bg-primary-container text-on-primary rounded-lg font-label-bold shadow-sm">Confirm</button>
+                        </div>
+                    </form>
                 </div>
-            </form>
-        </div>
-    </div>
+            </div>
+        }
 
-    <!-- Replace Manager Modal -->
-    <div id="replaceMgrModal" class="modal-overlay">
-        <div class="modal-content w-full max-w-md mx-4 p-xl">
-            <div class="flex justify-between items-center mb-lg">
-                <h3 class="font-h2 text-h2 text-on-surface">Replace Manager</h3>
-                <button onclick="closeModal('replaceMgrModal')" class="p-1 text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">close</span></button>
+        @if (Model.DeletedNameConflict != null)
+        {
+            var conflict = Model.DeletedNameConflict;
+            <div id="deletedNameConflictModal" class="modal-overlay active">
+                <div class="modal-content w-full max-w-md mx-4 p-xl">
+                    <div class="flex justify-between items-center mb-lg">
+                        <h3 class="font-h2 text-h2 text-on-surface">Name already used</h3>
+                        <a asp-action="Index" class="p-1 text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">close</span></a>
+                    </div>
+                    <div class="flex gap-sm items-start mb-lg">
+                        <span class="material-symbols-outlined text-[#b45309] mt-0.5" style="font-variation-settings: 'FILL' 1;">info</span>
+                        <p class="font-body-md text-on-surface-variant">
+                            A department named <strong>@conflict.Name</strong> was previously deleted.
+                            You can restore it or pick a different name.
+                        </p>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-md pt-md border-t border-outline-variant/30">
+                        <form asp-action="RestoreDeleted" method="post" class="flex-1">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@conflict.DeletedDepartmentId" />
+                            @if (conflict.SelectedManagerId is > 0)
+                            {
+                                <input type="hidden" name="managerId" value="@conflict.SelectedManagerId" />
+                            }
+                            <button type="submit" class="w-full px-6 py-2 bg-primary-container text-on-primary rounded-lg font-label-bold shadow-sm hover:bg-primary transition-colors">
+                                Restore "@conflict.Name"
+                            </button>
+                        </form>
+                        <a asp-action="Index" asp-route-showCreate="@(conflict.FromEdit ? null : true)" class="flex-1 px-6 py-2 border border-outline-variant rounded-lg font-label-bold text-center text-on-surface-variant hover:bg-surface-container transition-colors">
+                            Use a different name
+                        </a>
+                    </div>
+                </div>
             </div>
-            <p class="font-body-md text-body-md text-on-surface-variant mb-md">Select a new manager for the <strong>Human Resources</strong> department.</p>
-            <div class="mb-lg">
-                <label class="block font-label-bold text-label-bold text-on-surface-variant mb-xs">New Manager</label>
-                <select class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md text-on-surface appearance-none">
-                    <option>Select employee</option>
-                    <option>John Doe</option>
-                    <option>Michael Johnson</option>
-                    <option>Emily Wong</option>
-                </select>
-            </div>
-            <div class="flex justify-end gap-md pt-md border-t border-outline-variant/30">
-                <button type="button" onclick="closeModal('replaceMgrModal')" class="px-6 py-2 border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors font-label-bold">Cancel</button>
-                <button type="button" class="px-6 py-2 bg-primary-container text-on-primary rounded-lg hover:bg-primary transition-colors font-label-bold shadow-sm">Confirm</button>
-            </div>
-        </div>
-    </div>
+        }
+    }
 
-    <!-- Delete Guard Toast -->
-    <div class="toast-container">
-        <div id="deptDeleteGuard" class="toast toast-warning">
-            <span class="material-symbols-outlined text-[#b45309]" style="font-variation-settings: 'FILL' 1;">warning</span>
-            <div class="flex-1">
-                <p class="font-label-bold text-on-surface text-sm">Cannot delete department</p>
-                <p class="font-body-sm text-body-sm text-on-surface-variant">This department has active employees. Reassign or remove them first.</p>
-            </div>
-            <button onclick="hideToast('deptDeleteGuard')" class="text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined text-sm">close</span></button>
-        </div>
-    </div>
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+        @if (Model.ShowCreateModal || Model.EditForm != null || Model.ReplaceForm != null || Model.DeletedNameConflict != null)
+        {
+            <script>document.addEventListener('DOMContentLoaded', () => { document.body.style.overflow = 'hidden'; });</script>
+        }
+    }
 }

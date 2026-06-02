@@ -1,0 +1,55 @@
+@model PayslipViewModel
+
+<div class="border border-outline-variant/30 rounded-lg overflow-hidden">
+    <div class="grid grid-cols-2 gap-0">
+        <div class="p-md border-b border-r border-outline-variant/30">
+            <p class="text-body-sm text-on-surface-variant">Employee</p>
+            <p class="font-label-bold text-on-surface">@Model.EmployeeName</p>
+        </div>
+        <div class="p-md border-b border-outline-variant/30">
+            <p class="text-body-sm text-on-surface-variant">Department</p>
+            <p class="font-label-bold text-on-surface">@Model.DepartmentName</p>
+        </div>
+        <div class="p-md border-b border-r border-outline-variant/30">
+            <p class="text-body-sm text-on-surface-variant">Period</p>
+            <p class="font-label-bold text-on-surface">@PayrollDisplayHelper.GetPeriodLabel(Model.Month, Model.Year)</p>
+        </div>
+        <div class="p-md border-b border-outline-variant/30">
+            <p class="text-body-sm text-on-surface-variant">Status</p>
+            <p class="font-label-bold text-on-surface">@PayrollDisplayHelper.GetStatusLabel(Model.Status)</p>
+        </div>
+        <div class="p-md border-b border-r border-outline-variant/30">
+            <p class="text-body-sm text-on-surface-variant">Base Salary</p>
+            <p class="font-label-bold text-on-surface">@PayrollDisplayHelper.FormatCurrency(Model.BaseSalary)</p>
+        </div>
+        <div class="p-md border-b border-outline-variant/30">
+            <p class="text-body-sm text-on-surface-variant">Bonuses</p>
+            <p class="font-label-bold text-green-600">+@PayrollDisplayHelper.FormatCurrency(Model.TotalBonus)</p>
+        </div>
+        <div class="p-md border-b border-r border-outline-variant/30">
+            <p class="text-body-sm text-on-surface-variant">Deductions</p>
+            <p class="font-label-bold text-error">-@PayrollDisplayHelper.FormatCurrency(Model.TotalDeduction)</p>
+        </div>
+        <div class="p-md border-b border-outline-variant/30">
+            <p class="text-body-sm text-on-surface-variant">Net Salary</p>
+            <p class="font-label-bold text-primary-container">@PayrollDisplayHelper.FormatCurrency(Model.NetSalary)</p>
+        </div>
+    </div>
+    @if (Model.Items.Count > 0 && Model.ShowLineItems)
+    {
+        <div class="p-md border-t border-outline-variant/30">
+            <p class="font-label-bold text-on-surface-variant mb-sm">Line Items</p>
+            <ul class="space-y-1 text-body-sm">
+                @foreach (var item in Model.Items)
+                {
+                    <li class="flex justify-between gap-4">
+                        <span>@PayrollDisplayHelper.GetItemTypeLabel(item.ItemType): @item.Description</span>
+                        <span class="@(item.ItemType == HRSystem.Common.Enums.ItemType.Bonus ? "text-green-600" : "text-error")">
+                            @(item.ItemType == HRSystem.Common.Enums.ItemType.Bonus ? "+" : "-")@PayrollDisplayHelper.FormatCurrency(item.Amount)
+                        </span>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+</div>

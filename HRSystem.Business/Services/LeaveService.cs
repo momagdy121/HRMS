@@ -117,6 +117,40 @@ public class LeaveService : ILeaveService
         return PagedResultMapper.Map(result);
     }
 
+    public async Task<PagedResult<LeaveRequest>> GetFilteredAsync(
+        LeaveRequestStatus? status,
+        int page = 1,
+        int pageSize = 20,
+        CancellationToken cancellationToken = default)
+    {
+        var result = await _unitOfWork.LeaveRequests.GetFilteredPagedAsync(status, page, pageSize, cancellationToken);
+        return PagedResultMapper.Map(result);
+    }
+
+    public async Task<PagedResult<LeaveRequest>> GetByEmployeeAsync(int employeeId, int page = 1, int pageSize = 20, CancellationToken cancellationToken = default)
+    {
+        var result = await _unitOfWork.LeaveRequests.GetByEmployeePagedAsync(employeeId, page, pageSize, cancellationToken);
+        return PagedResultMapper.Map(result);
+    }
+
+    public async Task<PagedResult<LeaveRequest>> GetByDepartmentAsync(
+        int departmentId,
+        LeaveRequestStatus? status = null,
+        int page = 1,
+        int pageSize = 20,
+        CancellationToken cancellationToken = default)
+    {
+        var result = await _unitOfWork.LeaveRequests.GetByDepartmentPagedAsync(
+            departmentId, status, page, pageSize, cancellationToken);
+        return PagedResultMapper.Map(result);
+    }
+
+    public async Task<IReadOnlyList<LeaveBalance>> GetEmployeeBalancesAsync(
+        int employeeId,
+        int year,
+        CancellationToken cancellationToken = default) =>
+        await _unitOfWork.LeaveBalances.GetByEmployeeAndYearAsync(employeeId, year, cancellationToken);
+
     private async Task<LeaveRequest> GetLeaveRequestAsync(int id, CancellationToken cancellationToken) =>
         await _unitOfWork.LeaveRequests.GetByIdAsync(id, cancellationToken)
         ?? throw new NotFoundException("Leave request not found.", "Leave", "Index", "HR");

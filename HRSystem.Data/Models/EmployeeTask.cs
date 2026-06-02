@@ -21,6 +21,9 @@ public class EmployeeTask
 
     public DateOnly? DueDate { get; set; }
 
+    [MaxLength(2000)]
+    public string? CompletionNotes { get; set; }
+
     public bool IsDeleted { get; set; }
 
     public DateTime CreatedAt { get; set; }

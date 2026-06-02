@@ -16,7 +16,16 @@
                    class="w-full pl-10 pr-4 py-2 bg-slate-100 border-transparent rounded-lg focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all font-body-sm text-on-surface" />
         </div>
     </div>
-    <div class="flex items-center gap-2 lg:gap-4">
+        <div class="flex items-center gap-2 lg:gap-4">
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="inline">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="p-2 text-slate-500 hover:bg-slate-50 rounded-lg hover:scale-105 transition-transform duration-150" title="Sign out">
+                    <span class="material-symbols-outlined">logout</span>
+                </button>
+            </form>
+        }
         <button class="p-2 text-slate-500 hover:bg-slate-50 rounded-lg hover:scale-105 transition-transform duration-150 relative">
             <span class="material-symbols-outlined">notifications</span>
             <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>

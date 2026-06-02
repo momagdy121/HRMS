@@ -48,6 +48,10 @@ public class EmployeeService : IEmployeeService
         return PagedResultMapper.Map(result);
     }
 
+    public async Task<Employee> GetByIdAsync(int employeeId, CancellationToken cancellationToken = default) =>
+        await _unitOfWork.Employees.GetByIdAsync(employeeId, cancellationToken)
+        ?? throw new NotFoundException("Employee not found.", "Employee", "Index", "HR");
+
     public async Task<Employee> CreateAsync(CreateEmployeeDto dto, CancellationToken cancellationToken = default)
     {
         ValidateRole(dto.Role);

@@ -1,0 +1,16 @@
+@{
+    ViewBag.Title = "Access Denied - HRMS Portal";
+}
+
+<div class="w-full max-w-[440px] bg-surface-container-lowest rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] border border-surface-variant p-xl flex flex-col gap-lg backdrop-blur-[4px] text-center">
+    <div class="w-16 h-16 rounded-full bg-error-container flex items-center justify-center mx-auto">
+        <span class="material-symbols-outlined text-on-error-container text-[32px]" style="font-variation-settings: 'FILL' 1;">block</span>
+    </div>
+    <div class="flex flex-col gap-sm">
+        <h1 class="font-h1 text-h1 text-on-surface">Access Denied</h1>
+        <p class="font-body-md text-body-md text-on-surface-variant">You do not have permission to view this page.</p>
+    </div>
+    <a asp-action="Login" class="w-full bg-primary-container text-on-primary font-label-bold text-label-bold py-md rounded-lg hover:bg-primary transition-colors inline-flex justify-center items-center gap-sm shadow-sm">
+        Back to Sign In
+    </a>
+</div>

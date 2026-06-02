@@ -2,6 +2,7 @@ using HRSystem.Data.Common;
 using HRSystem.Data.Context;
 using HRSystem.Data.Interfaces;
 using HRSystem.Data.Models;
+using HRSystem.Common.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace HRSystem.Data.Repositories;
@@ -45,6 +46,39 @@ public class PayrollRepository : IPayrollRepository
             .OrderByDescending(p => p.Year)
             .ThenByDescending(p => p.Month)
             .ToPagedListAsync(page, pageSize, cancellationToken);
+
+    public Task<PagedList<Payroll>> GetFilteredPagedAsync(
+        int? departmentId,
+        int? month,
+        int? year,
+        PayrollStatus? status,
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken = default)
+    {
+        var query = _context.Payrolls.AsNoTracking().AsQueryable();
+
+        if (departmentId.HasValue)
+        {
+            query = query.Where(p =>
+                _context.Employees.Any(e =>
+                    e.Id == p.EmployeeId && e.DepartmentId == departmentId.Value && !e.IsDeleted));
+        }
+
+        if (month.HasValue)
+            query = query.Where(p => p.Month == month.Value);
+
+        if (year.HasValue)
+            query = query.Where(p => p.Year == year.Value);
+
+        if (status.HasValue)
+            query = query.Where(p => p.Status == status.Value);
+
+        return query
+            .OrderByDescending(p => p.Year)
+            .ThenByDescending(p => p.Month)
+            .ToPagedListAsync(page, pageSize, cancellationToken);
+    }
 
     public async Task AddAsync(Payroll payroll, CancellationToken cancellationToken = default) =>
         await _context.Payrolls.AddAsync(payroll, cancellationToken);

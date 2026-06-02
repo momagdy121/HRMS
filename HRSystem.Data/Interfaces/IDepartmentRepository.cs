@@ -7,6 +7,8 @@ public interface IDepartmentRepository
 {
     Task<Department?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
 
+    Task<Department?> GetByNameAsync(string name, CancellationToken cancellationToken = default);
+
     Task<Department?> GetByManagerIdAsync(int managerId, CancellationToken cancellationToken = default);
 
     Task<PagedList<Department>> GetActivePagedAsync(int page, int pageSize, CancellationToken cancellationToken = default);

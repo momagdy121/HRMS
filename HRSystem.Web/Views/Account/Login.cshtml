@@ -1,9 +1,9 @@
+@model LoginViewModel
 @{
     ViewBag.Title = "HRMS Portal - Login";
 }
 
 <div class="w-full max-w-[440px] bg-surface-container-lowest rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] border border-surface-variant p-xl flex flex-col gap-lg backdrop-blur-[4px]">
-    <!-- Header -->
     <div class="flex flex-col items-center gap-sm text-center">
         <div class="w-16 h-16 rounded-full bg-primary-container flex items-center justify-center mb-sm">
             <span class="material-symbols-outlined text-on-primary text-[32px]" style="font-variation-settings: 'FILL' 1;">domain</span>
@@ -11,47 +11,50 @@
         <h1 class="font-h1 text-h1 text-primary-container">HRMS Portal</h1>
         <p class="font-body-md text-body-md text-on-surface-variant">Sign in to access your employee dashboard</p>
     </div>
-    <!-- Form -->
+
     <form asp-action="Login" method="post" class="flex flex-col gap-md">
-        <!-- Error Placeholder (commented out by default) -->
-        @* <div class="bg-error-container text-on-error-container font-body-sm text-body-sm p-sm rounded-lg flex items-center gap-sm border border-error">
-            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">error</span>
-            Invalid email or password. Please try again.
-        </div> *@
-        <!-- Email Field -->
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+
+        <div asp-validation-summary="ModelOnly" class="bg-error-container text-on-error-container font-body-sm text-body-sm p-sm rounded-lg flex flex-col gap-xs border border-error"></div>
+
         <div class="flex flex-col gap-xs">
-            <label class="font-label-bold text-label-bold text-on-surface-variant" for="email">Email Address</label>
+            <label asp-for="Email" class="font-label-bold text-label-bold text-on-surface-variant"></label>
             <div class="relative">
                 <span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-outline">mail</span>
-                <input class="w-full bg-surface-container-low border border-outline-variant rounded-lg py-sm pl-xl pr-sm font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors"
-                       id="email" name="email" placeholder="name@company.com" required type="email" />
+                <input asp-for="Email" class="w-full bg-surface-container-low border border-outline-variant rounded-lg py-sm pl-xl pr-sm font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors" placeholder="name@company.com" />
             </div>
+            <span asp-validation-for="Email" class="text-error font-body-sm"></span>
         </div>
-        <!-- Password Field -->
+
         <div class="flex flex-col gap-xs">
             <div class="flex justify-between items-center">
-                <label class="font-label-bold text-label-bold text-on-surface-variant" for="password">Password</label>
+                <label asp-for="Password" class="font-label-bold text-label-bold text-on-surface-variant"></label>
                 <a class="font-body-sm text-body-sm text-surface-tint hover:underline" asp-action="ForgotPassword">Forgot password?</a>
             </div>
             <div class="relative">
                 <span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-outline">lock</span>
-                <input class="w-full bg-surface-container-low border border-outline-variant rounded-lg py-sm pl-xl pr-sm font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors"
-                       id="password" name="password" placeholder="••••••••" required type="password" />
+                <input asp-for="Password" class="w-full bg-surface-container-low border border-outline-variant rounded-lg py-sm pl-xl pr-sm font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors" placeholder="••••••••" />
             </div>
+            <span asp-validation-for="Password" class="text-error font-body-sm"></span>
         </div>
-        <!-- Remember Me -->
+
         <div class="flex items-center gap-sm mt-xs">
-            <input class="w-4 h-4 rounded border-outline-variant text-primary-container focus:ring-primary-container" id="remember" name="remember" type="checkbox" />
-            <label class="font-body-sm text-body-sm text-on-surface-variant" for="remember">Remember me on this device</label>
+            <input asp-for="RememberMe" class="w-4 h-4 rounded border-outline-variant text-primary-container focus:ring-primary-container" />
+            <label asp-for="RememberMe" class="font-body-sm text-body-sm text-on-surface-variant"></label>
         </div>
-        <!-- Submit Button -->
+
         <button class="mt-sm w-full bg-primary-container text-on-primary font-label-bold text-label-bold py-md rounded-lg hover:bg-primary transition-colors flex justify-center items-center gap-sm shadow-sm" type="submit">
             Sign In
             <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
         </button>
     </form>
-    <!-- Footer -->
+
     <div class="text-center mt-sm">
-        <p class="font-body-sm text-body-sm text-on-surface-variant">Need access? <a class="text-surface-tint hover:underline font-medium" href="#">Contact IT Support</a></p>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">Need access? <span class="text-surface-tint font-medium">Contact IT Support</span></p>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
