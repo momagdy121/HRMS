@@ -1,3 +1,4 @@
+@model HrAttendanceIndexViewModel
 @{
     ViewBag.Title = "Attendance - HRMS Portal";
 }
@@ -9,22 +10,29 @@
     </div>
 
     <!-- Filters -->
-    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex flex-wrap gap-4 items-end">
+    <form asp-action="Index" method="get" class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex flex-wrap gap-4 items-end">
         <div class="flex flex-col gap-1.5">
             <label class="font-label-bold text-slate-500 text-[11px] uppercase tracking-wider">Date</label>
-            <input type="date" value="2025-10-24" class="border-slate-200 rounded-lg text-sm font-body-md focus:border-primary focus:ring-0 px-3 py-2" />
+            <input name="date" type="date" value="@Model.Date.ToString("yyyy-MM-dd")" class="border-slate-200 rounded-lg text-sm font-body-md focus:border-primary focus:ring-0 px-3 py-2" />
         </div>
         <div class="flex flex-col gap-1.5">
             <label class="font-label-bold text-slate-500 text-[11px] uppercase tracking-wider">Department</label>
-            <select class="border-slate-200 rounded-lg text-sm font-body-md focus:border-primary focus:ring-0 px-3 py-2">
-                <option>All Departments</option><option>Engineering</option><option>Design</option><option>Marketing</option><option>Sales</option>
+            <select name="departmentId" class="border-slate-200 rounded-lg text-sm font-body-md focus:border-primary focus:ring-0 px-3 py-2">
+                <option value="">All Departments</option>
+                @foreach (var dept in Model.Departments)
+                {
+                    <option value="@dept.Id" selected="@(Model.DepartmentId == dept.Id)">@dept.Name</option>
+                }
             </select>
         </div>
-    </div>
+        <div class="flex-1"></div>
+        <button type="submit" class="px-6 py-2 bg-primary-container text-on-primary rounded-lg font-label-bold">Apply</button>
+    </form>
 
     <!-- Table -->
     <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-        <table class="w-full text-left border-collapse">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
             <thead class="bg-slate-50 border-b border-slate-100">
                 <tr>
                     <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Employee</th>
@@ -36,50 +44,56 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-100 font-body-md text-on-surface">
-                <tr class="striped-row hover:bg-slate-50/80 transition-colors">
-                    <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-xs">JD</div><span class="font-medium">John Doe</span></div></td>
-                    <td class="px-6 py-4 text-slate-600">Engineering</td>
-                    <td class="px-6 py-4">08:55 AM</td><td class="px-6 py-4">05:30 PM</td>
-                    <td class="px-6 py-4"><span class="bg-green-50 text-green-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Present</span></td>
-                    <td class="px-6 py-4 text-slate-400">—</td>
-                </tr>
-                <tr class="striped-row hover:bg-slate-50/80 transition-colors">
-                    <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-bold text-xs">JS</div><span class="font-medium">Jane Smith</span></div></td>
-                    <td class="px-6 py-4 text-slate-600">Design</td>
-                    <td class="px-6 py-4">09:10 AM</td><td class="px-6 py-4">06:00 PM</td>
-                    <td class="px-6 py-4"><span class="bg-yellow-50 text-amber-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Late</span></td>
-                    <td class="px-6 py-4 text-slate-500 text-sm">Traffic delay</td>
-                </tr>
-                <tr class="striped-row hover:bg-slate-50/80 transition-colors">
-                    <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-xs">MJ</div><span class="font-medium">Michael Johnson</span></div></td>
-                    <td class="px-6 py-4 text-slate-600">Marketing</td>
-                    <td class="px-6 py-4 text-slate-400">—</td><td class="px-6 py-4 text-slate-400">—</td>
-                    <td class="px-6 py-4"><span class="bg-red-50 text-red-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Absent</span></td>
-                    <td class="px-6 py-4 text-slate-500 text-sm">Sick leave</td>
-                </tr>
-                <tr class="striped-row hover:bg-slate-50/80 transition-colors">
-                    <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-bold text-xs">EW</div><span class="font-medium">Emily Wong</span></div></td>
-                    <td class="px-6 py-4 text-slate-600">Engineering</td>
-                    <td class="px-6 py-4">08:45 AM</td><td class="px-6 py-4">—</td>
-                    <td class="px-6 py-4"><span class="bg-green-50 text-green-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Present</span></td>
-                    <td class="px-6 py-4 text-slate-400">—</td>
-                </tr>
-                <tr class="striped-row hover:bg-slate-50/80 transition-colors">
-                    <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-xs">DC</div><span class="font-medium">David Chen</span></div></td>
-                    <td class="px-6 py-4 text-slate-600">Sales</td>
-                    <td class="px-6 py-4">08:30 AM</td><td class="px-6 py-4">05:15 PM</td>
-                    <td class="px-6 py-4"><span class="bg-green-50 text-green-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Present</span></td>
-                    <td class="px-6 py-4 text-slate-400">—</td>
-                </tr>
+                @if (Model.Records.Count == 0)
+                {
+                    <tr>
+                        <td colspan="6" class="px-6 py-12 text-center text-on-surface-variant">No attendance records found.</td>
+                    </tr>
+                }
+                @foreach (var row in Model.Records)
+                {
+                    <tr class="striped-row hover:bg-slate-50/80 transition-colors">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-xs">@row.EmployeeInitials</div>
+                                <span class="font-medium">@row.EmployeeName</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-slate-600">@row.DepartmentName</td>
+                        <td class="px-6 py-4">@AttendanceDisplayHelper.FormatTime(row.CheckInTime)</td>
+                        <td class="px-6 py-4">@AttendanceDisplayHelper.FormatTime(row.CheckOutTime)</td>
+                        <td class="px-6 py-4">
+                            <span class="@AttendanceDisplayHelper.GetStatusBadgeClass(row.StatusLabel) px-2.5 py-0.5 rounded-full text-xs font-medium">@row.StatusLabel</span>
+                        </td>
+                        <td class="px-6 py-4 text-slate-500 text-sm">@(string.IsNullOrWhiteSpace(row.Notes) ? "—" : row.Notes)</td>
+                    </tr>
+                }
             </tbody>
-        </table>
-        <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
-            <p class="text-sm text-secondary">Showing 1 to 5 of 1,248 entries</p>
-            <div class="flex items-center gap-1">
-                <button class="px-3 py-1 rounded-lg bg-primary text-white text-sm font-semibold">1</button>
-                <button class="px-3 py-1 rounded-lg hover:bg-white text-secondary text-sm">2</button>
-                <button class="px-3 py-1 rounded-lg hover:bg-white text-secondary text-sm">3</button>
-            </div>
+            </table>
         </div>
+
+        @if (Model.TotalPages > 1)
+        {
+            <div class="bg-surface-container-low px-4 py-3 border-t border-outline-variant/30 flex items-center justify-between">
+                <div class="font-body-sm text-on-surface-variant">
+                    @{
+                        var start = Model.TotalCount == 0 ? 0 : ((Model.Page - 1) * Model.PageSize) + 1;
+                        var end = Math.Min(Model.Page * Model.PageSize, Model.TotalCount);
+                    }
+                    Showing <span class="font-medium text-on-surface">@start</span> to <span class="font-medium text-on-surface">@end</span> of <span class="font-medium text-on-surface">@Model.TotalCount</span> entries
+                </div>
+                <div class="flex gap-1">
+                    @if (Model.Page > 1)
+                    {
+                        <a asp-action="Index" asp-all-route-data="@(new Dictionary<string, string?> { ["page"] = (Model.Page - 1).ToString(), ["date"] = Model.Date.ToString("yyyy-MM-dd"), ["departmentId"] = Model.DepartmentId?.ToString() })" class="px-3 py-1 border border-outline-variant/50 rounded text-on-surface hover:bg-surface-container">Previous</a>
+                    }
+                    <span class="px-3 py-1 bg-primary text-on-primary rounded font-medium">@Model.Page</span>
+                    @if (Model.Page < Model.TotalPages)
+                    {
+                        <a asp-action="Index" asp-all-route-data="@(new Dictionary<string, string?> { ["page"] = (Model.Page + 1).ToString(), ["date"] = Model.Date.ToString("yyyy-MM-dd"), ["departmentId"] = Model.DepartmentId?.ToString() })" class="px-3 py-1 border border-outline-variant/50 rounded text-on-surface hover:bg-surface-container">Next</a>
+                    }
+                </div>
+            </div>
+        }
     </div>
 </div>

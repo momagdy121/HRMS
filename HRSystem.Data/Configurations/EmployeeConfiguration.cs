@@ -31,8 +31,8 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
         new()
         {
             Id = 1,
-            FirstName = "System",
-            LastName = "Administrator",
+            FirstName = "mohamed",
+            LastName = "magdy",
             Email = "admin@hr.com",
             IsHR = true,
             DepartmentId = 2,

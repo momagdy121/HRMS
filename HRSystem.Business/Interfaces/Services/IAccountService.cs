@@ -8,7 +8,5 @@ public interface IAccountService
 
     Task ResetPasswordAsync(string email, string token, string newPassword, CancellationToken cancellationToken = default);
 
-    Task ChangeRoleAsync(int employeeId, string newRole, CancellationToken cancellationToken = default);
-
     Task ChangePasswordAsync(int userId, string newPassword, CancellationToken cancellationToken = default);
 }

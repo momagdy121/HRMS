@@ -13,6 +13,13 @@ public interface IAttendanceRepository
 
     Task<PagedList<Attendance>> GetByDepartmentPagedAsync(int departmentId, int page, int pageSize, CancellationToken cancellationToken = default);
 
+    Task<PagedList<Attendance>> GetReportPagedAsync(
+        DateOnly date,
+        int? departmentId,
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken = default);
+
     Task<int> SoftDeleteAllForEmployeeAsync(int employeeId, CancellationToken cancellationToken = default);
 
     Task AddAsync(Attendance attendance, CancellationToken cancellationToken = default);

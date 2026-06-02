@@ -38,6 +38,35 @@ public class AttendanceRepository : IAttendanceRepository
             .OrderByDescending(a => a.Date)
             .ToPagedListAsync(page, pageSize, cancellationToken);
 
+    public Task<PagedList<Attendance>> GetReportPagedAsync(
+        DateOnly date,
+        int? departmentId,
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken = default)
+    {
+        var query =
+            from attendance in _context.Attendances.AsNoTracking()
+            join employee in _context.Employees.AsNoTracking() on attendance.EmployeeId equals employee.Id
+            where !attendance.IsDeleted
+                  && !employee.IsDeleted
+                  && attendance.Date == date
+            select attendance;
+
+        if (departmentId.HasValue)
+        {
+            query =
+                from attendance in query
+                join employee in _context.Employees.AsNoTracking() on attendance.EmployeeId equals employee.Id
+                where employee.DepartmentId == departmentId.Value
+                select attendance;
+        }
+
+        return query
+            .OrderBy(a => a.EmployeeId)
+            .ToPagedListAsync(page, pageSize, cancellationToken);
+    }
+
     public Task<int> SoftDeleteAllForEmployeeAsync(int employeeId, CancellationToken cancellationToken = default) =>
         _context.Attendances
             .Where(a => !a.IsDeleted && a.EmployeeId == employeeId)

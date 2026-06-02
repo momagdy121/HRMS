@@ -15,4 +15,11 @@ public interface IAttendanceService
     Task<PagedResult<Attendance>> GetByEmployeeAsync(int employeeId, int page = 1, int pageSize = 20, CancellationToken cancellationToken = default);
 
     Task<PagedResult<Attendance>> GetByDepartmentAsync(int departmentId, int page = 1, int pageSize = 20, CancellationToken cancellationToken = default);
+
+    Task<PagedResult<Attendance>> GetReportAsync(
+        DateOnly date,
+        int? departmentId,
+        int page = 1,
+        int pageSize = 20,
+        CancellationToken cancellationToken = default);
 }

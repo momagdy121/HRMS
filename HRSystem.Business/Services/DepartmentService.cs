@@ -8,24 +8,25 @@ using HRSystem.Business.Mapping;
 using HRSystem.Common.Constants;
 using HRSystem.Data.Interfaces;
 using HRSystem.Data.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace HRSystem.Business.Services;
 
 public class DepartmentService : IDepartmentService
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IAccountService _accountService;
+    private readonly UserManager<ApplicationUser> _userManager;
     private readonly IDepartmentDeletionPolicy _deletionPolicy;
     private readonly IDepartmentManagerPolicy _managerPolicy;
 
     public DepartmentService(
         IUnitOfWork unitOfWork,
-        IAccountService accountService,
+        UserManager<ApplicationUser> userManager,
         IDepartmentDeletionPolicy deletionPolicy,
         IDepartmentManagerPolicy managerPolicy)
     {
         _unitOfWork = unitOfWork;
-        _accountService = accountService;
+        _userManager = userManager;
         _deletionPolicy = deletionPolicy;
         _managerPolicy = managerPolicy;
     }
@@ -71,7 +72,7 @@ public class DepartmentService : IDepartmentService
             await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
 
-        await _accountService.ChangeRoleAsync(manager.Id, RoleNames.DepartmentHead, cancellationToken);
+        await SyncManagerRoleAsync(manager.Id, cancellationToken);
 
         return department;
     }
@@ -145,7 +146,7 @@ public class DepartmentService : IDepartmentService
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-        await _accountService.ChangeRoleAsync(manager.Id, RoleNames.DepartmentHead, cancellationToken);
+        await SyncManagerRoleAsync(manager.Id, cancellationToken);
 
         return department;
     }
@@ -181,10 +182,10 @@ public class DepartmentService : IDepartmentService
 
             if (oldManagerId != newManagerId && oldManager?.DepartmentId == departmentId)
             {
-                await _accountService.ChangeRoleAsync(oldManagerId, RoleNames.Employee, cancellationToken);
+                await SyncEmployeeRoleAsync(oldManagerId, RoleNames.Employee, cancellationToken);
             }
 
-            await _accountService.ChangeRoleAsync(newManagerId, RoleNames.DepartmentHead, cancellationToken);
+            await SyncManagerRoleAsync(newManagerId, cancellationToken);
 
             department.ManagerId = newManagerId;
             _unitOfWork.Departments.Update(department);
@@ -227,5 +228,35 @@ public class DepartmentService : IDepartmentService
         }
 
         throw new BusinessRuleException("A department with this name already exists.");
+    }
+
+    private Task SyncManagerRoleAsync(int employeeId, CancellationToken cancellationToken) =>
+        SyncEmployeeRoleAsync(employeeId, RoleNames.DepartmentHead, cancellationToken);
+
+    private async Task SyncEmployeeRoleAsync(int employeeId, string role, CancellationToken cancellationToken)
+    {
+        if (!RoleNames.AllRoles.Contains(role))
+            throw new BusinessRuleException($"Invalid role '{role}'.");
+
+        var user = await _unitOfWork.ApplicationUsers.GetByEmployeeIdAsync(employeeId, cancellationToken)
+                   ?? throw new NotFoundException("User account not found for this employee.");
+
+        var currentRoles = await _userManager.GetRolesAsync(user);
+        if (currentRoles.Count > 0)
+        {
+            var removeResult = await _userManager.RemoveFromRolesAsync(user, currentRoles);
+            if (!removeResult.Succeeded)
+            {
+                throw new BusinessRuleException(
+                    string.Join("; ", removeResult.Errors.Select(e => e.Description)));
+            }
+        }
+
+        var addResult = await _userManager.AddToRoleAsync(user, role);
+        if (!addResult.Succeeded)
+        {
+            throw new BusinessRuleException(
+                string.Join("; ", addResult.Errors.Select(e => e.Description)));
+        }
     }
 }

@@ -1,49 +1,114 @@
+@model DeptHeadAttendanceIndexViewModel
 @{
     ViewBag.Title = "Team Attendance - HRMS Portal";
 }
 
 <div class="max-w-7xl mx-auto space-y-6">
     <div class="flex justify-between items-end">
-        <div><h2 class="font-h1 text-h1 text-on-surface">Team Attendance</h2><p class="font-body-md text-body-md text-on-surface-variant mt-1">Engineering team daily attendance</p></div>
-        <div class="flex items-center gap-md">
-            <input type="date" value="2025-10-24" class="border-slate-200 rounded-lg text-sm font-body-md focus:border-primary focus:ring-0 px-3 py-2" />
-            <button class="bg-[#047857] text-white px-4 py-2 rounded-lg font-label-bold hover:bg-[#059669] transition-colors shadow-sm flex items-center gap-2">
-                <span class="material-symbols-outlined text-sm">check_circle</span>Mark All Present
-            </button>
+        <div>
+            <h2 class="font-h1 text-h1 text-on-surface">Team Attendance</h2>
+            <p class="font-body-md text-body-md text-on-surface-variant mt-1">@Model.DepartmentName team daily attendance</p>
         </div>
+        <form asp-action="Index" method="get" class="flex items-center gap-md">
+            <input name="date" type="date" value="@Model.Date.ToString("yyyy-MM-dd")" class="border-slate-200 rounded-lg text-sm font-body-md focus:border-primary focus:ring-0 px-3 py-2" />
+            <button type="submit" class="bg-primary-container text-on-primary px-4 py-2 rounded-lg font-label-bold hover:bg-primary transition-colors shadow-sm flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">search</span>View
+            </button>
+        </form>
     </div>
 
     <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-        <table class="w-full text-left border-collapse">
-            <thead class="bg-slate-50 border-b border-slate-100">
-                <tr>
-                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Employee</th>
-                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Check In</th>
-                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Check Out</th>
-                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Status</th>
-                    <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Notes</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-100 font-body-md text-on-surface">
-                <tr class="hover:bg-slate-50 transition-colors">
-                    <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-bold text-xs">AB</div><span class="font-medium">Alice Brown</span></div></td>
-                    <td class="px-6 py-4">08:50 AM</td><td class="px-6 py-4">—</td>
-                    <td class="px-6 py-4"><span class="bg-green-50 text-green-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Present</span></td>
-                    <td class="px-6 py-4"><input type="text" class="border-0 bg-transparent text-sm text-slate-500 w-full focus:ring-0 p-0" placeholder="Add note..." /></td>
-                </tr>
-                <tr class="bg-slate-50/30 hover:bg-slate-50 transition-colors">
-                    <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-xs">JD</div><span class="font-medium">John Doe</span></div></td>
-                    <td class="px-6 py-4">—</td><td class="px-6 py-4">—</td>
-                    <td class="px-6 py-4"><span class="bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-full text-xs font-medium">On Leave</span></td>
-                    <td class="px-6 py-4 text-sm text-slate-500">Sick leave approved</td>
-                </tr>
-                <tr class="hover:bg-slate-50 transition-colors">
-                    <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-xs">EW</div><span class="font-medium">Emily Wong</span></div></td>
-                    <td class="px-6 py-4">08:45 AM</td><td class="px-6 py-4">05:30 PM</td>
-                    <td class="px-6 py-4"><span class="bg-green-50 text-green-700 px-2.5 py-0.5 rounded-full text-xs font-medium">Present</span></td>
-                    <td class="px-6 py-4"><input type="text" class="border-0 bg-transparent text-sm text-slate-500 w-full focus:ring-0 p-0" placeholder="Add note..." /></td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-slate-50 border-b border-slate-100">
+                    <tr>
+                        <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Employee</th>
+                        <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Check In</th>
+                        <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Check Out</th>
+                        <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Notes</th>
+                        <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 font-body-md text-on-surface">
+                    @if (Model.Team.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="6" class="px-6 py-12 text-center text-on-surface-variant">No employees found in your department.</td>
+                        </tr>
+                    }
+                    @foreach (var row in Model.Team)
+                    {
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-bold text-xs">@row.EmployeeInitials</div>
+                                    <span class="font-medium">@row.EmployeeName</span>
+                                    @if (row.IsSelf)
+                                    {
+                                        <span class="text-xs text-slate-400">(You)</span>
+                                    }
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">@AttendanceDisplayHelper.FormatTime(row.CheckInTime)</td>
+                            <td class="px-6 py-4">@AttendanceDisplayHelper.FormatTime(row.CheckOutTime)</td>
+                            <td class="px-6 py-4">
+                                <span class="@AttendanceDisplayHelper.GetStatusBadgeClass(row.StatusLabel) px-2.5 py-0.5 rounded-full text-xs font-medium">@row.StatusLabel</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-slate-500">@(string.IsNullOrWhiteSpace(row.Notes) ? "—" : row.Notes)</td>
+                            <td class="px-6 py-4 text-right">
+                                <a asp-action="Index" asp-route-date="@Model.Date.ToString("yyyy-MM-dd")" asp-route-markEmployeeId="@row.EmployeeId" class="text-primary-container hover:underline text-sm font-medium">Mark/Edit</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
+
+@section Modals {
+    @if (Model.MarkForm != null)
+    {
+        <div id="markAttendanceModal" class="modal-overlay active">
+            <div class="modal-content w-full max-w-md mx-4 p-xl">
+                <div class="flex justify-between items-center mb-lg">
+                    <h3 class="font-h2 text-h2 text-on-surface">Mark Attendance</h3>
+                    <a asp-action="Index" asp-route-date="@Model.Date.ToString("yyyy-MM-dd")" class="p-1 text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">close</span></a>
+                </div>
+
+                <p class="font-body-md text-on-surface-variant mb-md">
+                    Employee: <strong>@Model.MarkForm.EmployeeName</strong>
+                </p>
+
+                <form asp-action="Mark" method="post" class="space-y-md">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="MarkForm.EmployeeId" />
+                    <input type="hidden" asp-for="MarkForm.Date" />
+                    <partial name="_ModalFormErrors" model="@("MarkForm")" />
+
+                    <div>
+                        <label asp-for="MarkForm.CheckInTime" class="block font-label-bold text-on-surface-variant mb-xs"></label>
+                        <input asp-for="MarkForm.CheckInTime" type="datetime-local" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md" />
+                        <span asp-validation-for="MarkForm.CheckInTime" class="text-error font-body-sm"></span>
+                    </div>
+                    <div>
+                        <label asp-for="MarkForm.CheckOutTime" class="block font-label-bold text-on-surface-variant mb-xs"></label>
+                        <input asp-for="MarkForm.CheckOutTime" type="datetime-local" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md" />
+                        <span asp-validation-for="MarkForm.CheckOutTime" class="text-error font-body-sm"></span>
+                    </div>
+                    <div>
+                        <label asp-for="MarkForm.Notes" class="block font-label-bold text-on-surface-variant mb-xs"></label>
+                        <input asp-for="MarkForm.Notes" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md" placeholder="Optional note..." />
+                        <span asp-validation-for="MarkForm.Notes" class="text-error font-body-sm"></span>
+                    </div>
+
+                    <div class="flex justify-end gap-md pt-md border-t border-outline-variant/30">
+                        <a asp-action="Index" asp-route-date="@Model.Date.ToString("yyyy-MM-dd")" class="px-6 py-2 border border-outline-variant rounded-lg text-on-surface-variant font-label-bold">Cancel</a>
+                        <button type="submit" class="px-6 py-2 bg-primary-container text-on-primary rounded-lg font-label-bold shadow-sm">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    }
+}

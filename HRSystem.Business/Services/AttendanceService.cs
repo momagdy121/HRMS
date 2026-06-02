@@ -111,4 +111,15 @@ public class AttendanceService : IAttendanceService
         var result = await _unitOfWork.Attendances.GetByDepartmentPagedAsync(departmentId, page, pageSize, cancellationToken);
         return PagedResultMapper.Map(result);
     }
+
+    public async Task<PagedResult<Attendance>> GetReportAsync(
+        DateOnly date,
+        int? departmentId,
+        int page = 1,
+        int pageSize = 20,
+        CancellationToken cancellationToken = default)
+    {
+        var result = await _unitOfWork.Attendances.GetReportPagedAsync(date, departmentId, page, pageSize, cancellationToken);
+        return PagedResultMapper.Map(result);
+    }
 }
