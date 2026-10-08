@@ -10,13 +10,13 @@ namespace HRSystem.Web.Controllers;
 
 public class AccountController : Controller
 {
-    private readonly SignInManager<ApplicationUser> _signInManager;
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly SignInManager<Employee> _signInManager;
+    private readonly UserManager<Employee> _userManager;
     private readonly IAccountService _accountService;
 
     public AccountController(
-        SignInManager<ApplicationUser> signInManager,
-        UserManager<ApplicationUser> userManager,
+        SignInManager<Employee> signInManager,
+        UserManager<Employee> userManager,
         IAccountService accountService)
     {
         _signInManager = signInManager;

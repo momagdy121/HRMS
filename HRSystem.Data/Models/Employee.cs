@@ -1,20 +1,16 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 
 namespace HRSystem.Data.Models;
 
-public class Employee
+public class Employee : IdentityUser<int>
 {
-    public int Id { get; set; }
-
     [MaxLength(100)]
     public string FirstName { get; set; } = string.Empty;
 
     [MaxLength(100)]
     public string LastName { get; set; } = string.Empty;
-
-    [MaxLength(150)]
-    public string Email { get; set; } = string.Empty;
 
     public bool IsHR { get; set; }
 
@@ -30,4 +26,6 @@ public class Employee
     public bool IsDeleted { get; set; }
 
     public DateTime CreatedAt { get; set; }
+
+    public bool IsPasswordChangeRequired { get; set; } = true;
 }

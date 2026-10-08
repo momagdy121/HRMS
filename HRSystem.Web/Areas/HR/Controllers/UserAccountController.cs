@@ -2,7 +2,6 @@ using HRSystem.Business.Exceptions;
 using HRSystem.Business.Interfaces.Services;
 using HRSystem.Data.Interfaces;
 using EmployeeEntity = HRSystem.Data.Models.Employee;
-using HRSystem.Data.Models;
 using HRSystem.Web.Helpers;
 using HRSystem.Web.ViewModels.UserAccounts;
 using Microsoft.AspNetCore.Identity;
@@ -16,14 +15,14 @@ public class UserAccountController : HRBaseController
 
     private readonly IUserAccountService _userAccountService;
     private readonly IAccountService _accountService;
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly UserManager<EmployeeEntity> _userManager;
 
     public UserAccountController(
         ICurrentUserService currentUser,
         IUnitOfWork unitOfWork,
         IUserAccountService userAccountService,
         IAccountService accountService,
-        UserManager<ApplicationUser> userManager)
+        UserManager<EmployeeEntity> userManager)
         : base(currentUser, unitOfWork)
     {
         _userAccountService = userAccountService;
@@ -123,30 +122,26 @@ public class UserAccountController : HRBaseController
         if (fromPage != null)
             return fromPage;
 
-        var user = await UnitOfWork.ApplicationUsers.GetByIdAsync(userId);
-        if (user == null)
-            return null;
-
-        var employee = await UnitOfWork.Employees.GetByIdAsync(user.EmployeeId);
+        var employee = await UnitOfWork.Employees.GetByIdAsync(userId);
         if (employee == null)
             return null;
 
-        var roles = await _userManager.GetRolesAsync(user);
+        var roles = await _userManager.GetRolesAsync(employee);
         var role = roles.FirstOrDefault() ?? string.Empty;
 
-        return MapToListItem(user, employee, role);
+        return MapToListItem(employee, role);
     }
 
-    private static UserAccountListItemViewModel MapToListItem(ApplicationUser user, EmployeeEntity employee, string role) =>
+    private static UserAccountListItemViewModel MapToListItem(EmployeeEntity employee, string role) =>
         new()
         {
-            UserId = user.Id,
+            UserId = employee.Id,
             EmployeeId = employee.Id,
             FullName = $"{employee.FirstName} {employee.LastName}",
             Initials = HrDisplayHelper.GetInitials(employee.FirstName, employee.LastName),
-            Email = user.Email ?? employee.Email,
+            Email = employee.Email ?? string.Empty,
             Role = role,
-            IsPasswordChangeRequired = user.IsPasswordChangeRequired,
+            IsPasswordChangeRequired = employee.IsPasswordChangeRequired,
             IsActive = employee.IsActive,
             IsEmployeeDeleted = employee.IsDeleted
         };

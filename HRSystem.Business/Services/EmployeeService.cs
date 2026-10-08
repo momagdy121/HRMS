@@ -75,10 +75,7 @@ public class EmployeeService : IEmployeeService
         {
             var employee = EmployeeMapper.FromDto(dto);
 
-            await _unitOfWork.Employees.AddAsync(employee, cancellationToken);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-            await _accountService.CreateAccountAsync(employee.Id, employee.Email, dto.InitialPassword, dto.Role, cancellationToken);
+            await _accountService.CreateAccountAsync(employee, dto.InitialPassword, dto.Role, cancellationToken);
 
             if (dto.Role == RoleNames.DepartmentHead)
             {

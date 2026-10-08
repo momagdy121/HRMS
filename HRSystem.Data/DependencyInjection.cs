@@ -16,7 +16,6 @@ public static class DependencyInjection
         services.AddScoped<ILeaveRequestRepository, LeaveRequestRepository>();
         services.AddScoped<ILeaveBalanceRepository, LeaveBalanceRepository>();
         services.AddScoped<IAttendanceRepository, AttendanceRepository>();
-        services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;

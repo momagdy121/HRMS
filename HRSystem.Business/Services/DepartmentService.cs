@@ -15,13 +15,13 @@ namespace HRSystem.Business.Services;
 public class DepartmentService : IDepartmentService
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly UserManager<Employee> _userManager;
     private readonly IDepartmentDeletionPolicy _deletionPolicy;
     private readonly IDepartmentManagerPolicy _managerPolicy;
 
     public DepartmentService(
         IUnitOfWork unitOfWork,
-        UserManager<ApplicationUser> userManager,
+        UserManager<Employee> userManager,
         IDepartmentDeletionPolicy deletionPolicy,
         IDepartmentManagerPolicy managerPolicy)
     {
@@ -238,8 +238,8 @@ public class DepartmentService : IDepartmentService
         if (!RoleNames.AllRoles.Contains(role))
             throw new BusinessRuleException($"Invalid role '{role}'.");
 
-        var user = await _unitOfWork.ApplicationUsers.GetByEmployeeIdAsync(employeeId, cancellationToken)
-                   ?? throw new NotFoundException("User account not found for this employee.");
+        var user = await _userManager.FindByIdAsync(employeeId.ToString())
+                   ?? throw new NotFoundException("Employee account not found.");
 
         var currentRoles = await _userManager.GetRolesAsync(user);
         if (currentRoles.Count > 0)

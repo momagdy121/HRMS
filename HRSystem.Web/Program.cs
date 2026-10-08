@@ -19,7 +19,7 @@ builder.Services.AddHrmsDataServices();
 builder.Services.AddHrmsBusinessServices();
 
 builder.Services
-    .AddIdentity<ApplicationUser, IdentityRole<int>>(options =>
+    .AddIdentity<Employee, IdentityRole<int>>(options =>
     {
         options.SignIn.RequireConfirmedAccount = false;
         options.Password.RequireDigit = true;
@@ -97,11 +97,9 @@ static async Task SeedRolesAsync(IServiceProvider services)
 static async Task SeedUsersAsync(IServiceProvider services)
 {
     using var scope = services.CreateScope();
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Employee>>();
 
-    if (await userManager.Users.AnyAsync())
-        return;
-
+    // Force-reseed all accounts: reset password + assign role
     (int EmpId, string Email, string Pass, string Role)[] accounts =
     [
         (1, "admin@hr.com", "Admin@1234", RoleNames.HR),
@@ -123,22 +121,34 @@ static async Task SeedUsersAsync(IServiceProvider services)
 
     foreach (var a in accounts)
     {
-        var user = new ApplicationUser
-        {
-            UserName = a.Email,
-            Email = a.Email,
-            EmployeeId = a.EmpId,
-            EmailConfirmed = true,
-            IsPasswordChangeRequired = false
-        };
+        var user = await userManager.FindByIdAsync(a.EmpId.ToString());
+        if (user is null) continue;
 
-        var result = await userManager.CreateAsync(user, a.Pass);
-        if (!result.Succeeded)
+        // Remove all existing roles
+        var currentRoles = await userManager.GetRolesAsync(user);
+        if (currentRoles.Count > 0)
+            await userManager.RemoveFromRolesAsync(user, currentRoles);
+
+        // Reset password: remove then add to get a proper hash
+        var token = await userManager.GeneratePasswordResetTokenAsync(user);
+        var resetResult = await userManager.ResetPasswordAsync(user, token, a.Pass);
+        if (!resetResult.Succeeded)
         {
-            throw new InvalidOperationException(
-                $"Failed to create user {a.Email}: {string.Join("; ", result.Errors.Select(e => e.Description))}");
+            Console.WriteLine($"[SEED] Password reset FAILED for {a.Email}: {string.Join(", ", resetResult.Errors.Select(e => e.Description))}");
         }
 
-        await userManager.AddToRoleAsync(user, a.Role);
+        // Assign role
+        if (!await userManager.IsInRoleAsync(user, a.Role))
+            await userManager.AddToRoleAsync(user, a.Role);
+
+        // Ensure the account is confirmed and not locked out
+        user.EmailConfirmed = true;
+        user.LockoutEnabled = false;
+        user.LockoutEnd = null;
+        user.AccessFailedCount = 0;
+        user.IsPasswordChangeRequired = false;
+        await userManager.UpdateAsync(user);
+
+        Console.WriteLine($"[SEED] Reseeded {a.Email} with role {a.Role}");
     }
 }

@@ -1,8 +1,10 @@
+using HRSystem.Data.Models;
+
 namespace HRSystem.Business.Interfaces.Services;
 
 public interface IAccountService
 {
-    Task CreateAccountAsync(int employeeId, string email, string password, string role, CancellationToken cancellationToken = default);
+    Task CreateAccountAsync(Employee employee, string password, string role, CancellationToken cancellationToken = default);
 
     Task<string> ForgotPasswordAsync(string email, CancellationToken cancellationToken = default);
 

@@ -183,7 +183,7 @@ public class EmployeeController : HRBaseController
                 Id = employee.Id,
                 FirstName = employee.FirstName,
                 LastName = employee.LastName,
-                Email = employee.Email,
+                Email = employee.Email ?? string.Empty,
                 DepartmentId = employee.DepartmentId,
                 Salary = employee.Salary,
                 HireDate = employee.HireDate,
@@ -209,7 +209,7 @@ public class EmployeeController : HRBaseController
         {
             Id = employee.Id,
             FullName = $"{employee.FirstName} {employee.LastName}",
-            Email = employee.Email,
+            Email = employee.Email ?? string.Empty,
             DepartmentName = department?.Name ?? "—",
             IsManager = isManager,
             HireDate = employee.HireDate,

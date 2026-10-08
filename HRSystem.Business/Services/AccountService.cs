@@ -1,10 +1,7 @@
 using HRSystem.Business.Exceptions;
 using HRSystem.Business.Helpers;
 using HRSystem.Business.Interfaces.Services;
-using HRSystem.Business.Mapping;
 using HRSystem.Common.Constants;
-using HRSystem.Business.DTOs.UserAccounts;
-using HRSystem.Data.Interfaces;
 using HRSystem.Data.Models;
 using Microsoft.AspNetCore.Identity;
 
@@ -12,38 +9,28 @@ namespace HRSystem.Business.Services;
 
 public class AccountService : IAccountService
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly IApplicationUserRepository _applicationUsers;
+    private readonly UserManager<Employee> _userManager;
 
-    public AccountService(
-        UserManager<ApplicationUser> userManager,
-        IApplicationUserRepository applicationUsers)
+    public AccountService(UserManager<Employee> userManager)
     {
         _userManager = userManager;
-        _applicationUsers = applicationUsers;
     }
 
-    public async Task CreateAccountAsync(int employeeId, string email, string password, string role, CancellationToken cancellationToken = default)
+    public async Task CreateAccountAsync(Employee employee, string password, string role, CancellationToken cancellationToken = default)
     {
         ValidateRole(role);
 
-        var user = ApplicationUserMapper.FromDto(new CreateApplicationUserDto
-        {
-            EmployeeId = employeeId,
-            Email = email
-        });
-
-        var createResult = await _userManager.CreateAsync(user, password);
+        var createResult = await _userManager.CreateAsync(employee, password);
         if (!createResult.Succeeded)
         {
             throw new BusinessRuleException(
                 string.Join("; ", createResult.Errors.Select(e => e.Description)));
         }
 
-        var roleResult = await _userManager.AddToRoleAsync(user, role);
+        var roleResult = await _userManager.AddToRoleAsync(employee, role);
         if (!roleResult.Succeeded)
         {
-            await _userManager.DeleteAsync(user);
+            await _userManager.DeleteAsync(employee);
             throw new BusinessRuleException(
                 string.Join("; ", roleResult.Errors.Select(e => e.Description)));
         }
@@ -57,19 +44,19 @@ public class AccountService : IAccountService
 
     public async Task ChangePasswordAsync(int userId, string newPassword, CancellationToken cancellationToken = default)
     {
-        var user = await _applicationUsers.GetByIdAsync(userId, cancellationToken)
-                   ?? throw new NotFoundException("User account not found.");
+        var employee = await _userManager.FindByIdAsync(userId.ToString())
+                       ?? throw new NotFoundException("User account not found.");
 
-        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-        var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+        var token = await _userManager.GeneratePasswordResetTokenAsync(employee);
+        var result = await _userManager.ResetPasswordAsync(employee, token, newPassword);
         if (!result.Succeeded)
         {
             throw new BusinessRuleException(
                 string.Join("; ", result.Errors.Select(e => e.Description)));
         }
 
-        AccountLifecycle.MarkPasswordChanged(user);
-        var updateResult = await _userManager.UpdateAsync(user);
+        AccountLifecycle.MarkPasswordChanged(employee);
+        var updateResult = await _userManager.UpdateAsync(employee);
         if (!updateResult.Succeeded)
         {
             throw new BusinessRuleException(

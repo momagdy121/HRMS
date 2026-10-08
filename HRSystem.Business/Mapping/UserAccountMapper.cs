@@ -1,22 +1,21 @@
 using HRSystem.Business.DTOs.UserAccounts;
-using HRSystem.Data.Interfaces;
 using HRSystem.Data.Models;
 
 namespace HRSystem.Business.Mapping;
 
 public static class UserAccountMapper
 {
-    public static UserAccountListItemDto ToDto(UserAccountRow row, string role) =>
+    public static UserAccountListItemDto ToDto(Employee employee, string role) =>
         new()
         {
-            UserId = row.User.Id,
-            EmployeeId = row.Employee.Id,
-            FullName = ToFullName(row.Employee),
-            Email = row.User.Email ?? row.Employee.Email,
+            UserId = employee.Id,
+            EmployeeId = employee.Id,
+            FullName = ToFullName(employee),
+            Email = employee.Email ?? string.Empty,
             Role = role,
-            IsPasswordChangeRequired = row.User.IsPasswordChangeRequired,
-            IsActive = row.Employee.IsActive,
-            IsEmployeeDeleted = row.Employee.IsDeleted
+            IsPasswordChangeRequired = employee.IsPasswordChangeRequired,
+            IsActive = employee.IsActive,
+            IsEmployeeDeleted = employee.IsDeleted
         };
 
     public static string ToFullName(Employee employee) =>

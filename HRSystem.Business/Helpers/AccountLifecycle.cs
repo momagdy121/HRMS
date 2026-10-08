@@ -4,6 +4,6 @@ namespace HRSystem.Business.Helpers;
 
 public static class AccountLifecycle
 {
-    public static void MarkPasswordChanged(ApplicationUser user) =>
-        user.IsPasswordChangeRequired = false;
+    public static void MarkPasswordChanged(Employee employee) =>
+        employee.IsPasswordChangeRequired = false;
 }

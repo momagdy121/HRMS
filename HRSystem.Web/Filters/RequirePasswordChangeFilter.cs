@@ -53,8 +53,8 @@ public class RequirePasswordChangeFilter : IAsyncActionFilter
 
     private static async Task<bool> IsPasswordChangeSatisfiedAsync(HttpContext httpContext)
     {
-        var userManager = httpContext.RequestServices.GetRequiredService<UserManager<ApplicationUser>>();
-        var applicationUser = await userManager.GetUserAsync(httpContext.User);
-        return applicationUser is not { IsPasswordChangeRequired: true };
+        var userManager = httpContext.RequestServices.GetRequiredService<UserManager<Employee>>();
+        var employee = await userManager.GetUserAsync(httpContext.User);
+        return employee is not { IsPasswordChangeRequired: true };
     }
 }

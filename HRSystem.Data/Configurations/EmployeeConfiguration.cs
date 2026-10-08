@@ -8,6 +8,8 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
 {
     public void Configure(EntityTypeBuilder<Employee> entity)
     {
+        entity.ToTable("Employees");
+
         entity.Property(x => x.FirstName).IsRequired().HasMaxLength(100);
         entity.Property(x => x.LastName).IsRequired().HasMaxLength(100);
         entity.Property(x => x.Email).IsRequired().HasMaxLength(150);
@@ -17,6 +19,7 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
         entity.Property(x => x.IsActive).HasDefaultValue(true);
         entity.Property(x => x.IsDeleted).HasDefaultValue(false);
         entity.Property(x => x.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
+        entity.Property(x => x.IsPasswordChangeRequired).HasDefaultValue(false);
 
         entity.HasOne<Department>()
             .WithMany()
@@ -26,217 +29,47 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
         entity.HasData(GetSeedEmployees());
     }
 
-    private static Employee[] GetSeedEmployees() =>
-    [
-        new()
+    private static Employee[] GetSeedEmployees()
+    {
+        (int Id, string First, string Last, string Email, bool IsHr, int DeptId, decimal Salary)[] defs =
+        [
+            (1, "mohamed", "magdy", "admin@hr.com", true, 2, 95_000m),
+            (2, "Jane", "Smith", "jane@hr.com", false, 1, 82_000m),
+            (3, "Bob", "Jones", "bob@hr.com", false, 2, 83_000m),
+            (4, "Alice", "Brown", "alice@it.com", false, 1, 62_000m),
+            (5, "Charlie", "Wilson", "charlie@hr.com", false, 2, 61_000m),
+            (6, "Diana", "Lee", "diana@it.com", false, 1, 63_000m),
+            (7, "Evan", "Clark", "evan@hr.com", false, 2, 64_000m),
+            (8, "Fiona", "Hall", "fiona@it.com", false, 1, 65_000m),
+            (9, "George", "Young", "george@hr.com", false, 2, 66_000m),
+            (10, "Hannah", "King", "hannah@it.com", false, 1, 67_000m),
+            (11, "Ian", "Wright", "ian@hr.com", false, 2, 68_000m),
+            (12, "Julia", "Scott", "julia@it.com", false, 1, 69_000m),
+            (13, "Kevin", "Green", "kevin@hr.com", false, 2, 70_000m),
+            (14, "Laura", "Adams", "laura@it.com", false, 1, 71_000m),
+            (15, "Michael", "Baker", "michael@hr.com", false, 2, 72_000m)
+        ];
+
+        return defs.Select(d => new Employee
         {
-            Id = 1,
-            FirstName = "mohamed",
-            LastName = "magdy",
-            Email = "admin@hr.com",
-            IsHR = true,
-            DepartmentId = 2,
-            Salary = 95_000m,
+            Id = d.Id,
+            FirstName = d.First,
+            LastName = d.Last,
+            Email = d.Email,
+            NormalizedEmail = d.Email.ToUpperInvariant(),
+            UserName = d.Email,
+            NormalizedUserName = d.Email.ToUpperInvariant(),
+            EmailConfirmed = true,
+            SecurityStamp = $"00000000-0000-0000-0000-{d.Id:D12}",
+            ConcurrencyStamp = $"00000000-0000-0000-0000-{d.Id:D12}",
+            IsHR = d.IsHr,
+            DepartmentId = d.DeptId,
+            Salary = d.Salary,
             HireDate = SeedValues.EmployeeHireDate,
             IsActive = true,
             IsDeleted = false,
-            CreatedAt = SeedValues.EmployeeAndDepartmentCreatedAt
-        },
-        new()
-        {
-            Id = 2,
-            FirstName = "Jane",
-            LastName = "Smith",
-            Email = "jane@hr.com",
-            IsHR = false,
-            DepartmentId = 1,
-            Salary = 82_000m,
-            HireDate = SeedValues.EmployeeHireDate,
-            IsActive = true,
-            IsDeleted = false,
-            CreatedAt = SeedValues.EmployeeAndDepartmentCreatedAt
-        },
-        new()
-        {
-            Id = 3,
-            FirstName = "Bob",
-            LastName = "Jones",
-            Email = "bob@hr.com",
-            IsHR = false,
-            DepartmentId = 2,
-            Salary = 83_000m,
-            HireDate = SeedValues.EmployeeHireDate,
-            IsActive = true,
-            IsDeleted = false,
-            CreatedAt = SeedValues.EmployeeAndDepartmentCreatedAt
-        },
-        new()
-        {
-            Id = 4,
-            FirstName = "Alice",
-            LastName = "Brown",
-            Email = "alice@it.com",
-            IsHR = false,
-            DepartmentId = 1,
-            Salary = 62_000m,
-            HireDate = SeedValues.EmployeeHireDate,
-            IsActive = true,
-            IsDeleted = false,
-            CreatedAt = SeedValues.EmployeeAndDepartmentCreatedAt
-        },
-        new()
-        {
-            Id = 5,
-            FirstName = "Charlie",
-            LastName = "Wilson",
-            Email = "charlie@hr.com",
-            IsHR = false,
-            DepartmentId = 2,
-            Salary = 61_000m,
-            HireDate = SeedValues.EmployeeHireDate,
-            IsActive = true,
-            IsDeleted = false,
-            CreatedAt = SeedValues.EmployeeAndDepartmentCreatedAt
-        },
-        new()
-        {
-            Id = 6,
-            FirstName = "Diana",
-            LastName = "Lee",
-            Email = "diana@it.com",
-            IsHR = false,
-            DepartmentId = 1,
-            Salary = 63_000m,
-            HireDate = SeedValues.EmployeeHireDate,
-            IsActive = true,
-            IsDeleted = false,
-            CreatedAt = SeedValues.EmployeeAndDepartmentCreatedAt
-        },
-        new()
-        {
-            Id = 7,
-            FirstName = "Evan",
-            LastName = "Clark",
-            Email = "evan@hr.com",
-            IsHR = false,
-            DepartmentId = 2,
-            Salary = 64_000m,
-            HireDate = SeedValues.EmployeeHireDate,
-            IsActive = true,
-            IsDeleted = false,
-            CreatedAt = SeedValues.EmployeeAndDepartmentCreatedAt
-        },
-        new()
-        {
-            Id = 8,
-            FirstName = "Fiona",
-            LastName = "Hall",
-            Email = "fiona@it.com",
-            IsHR = false,
-            DepartmentId = 1,
-            Salary = 65_000m,
-            HireDate = SeedValues.EmployeeHireDate,
-            IsActive = true,
-            IsDeleted = false,
-            CreatedAt = SeedValues.EmployeeAndDepartmentCreatedAt
-        },
-        new()
-        {
-            Id = 9,
-            FirstName = "George",
-            LastName = "Young",
-            Email = "george@hr.com",
-            IsHR = false,
-            DepartmentId = 2,
-            Salary = 66_000m,
-            HireDate = SeedValues.EmployeeHireDate,
-            IsActive = true,
-            IsDeleted = false,
-            CreatedAt = SeedValues.EmployeeAndDepartmentCreatedAt
-        },
-        new()
-        {
-            Id = 10,
-            FirstName = "Hannah",
-            LastName = "King",
-            Email = "hannah@it.com",
-            IsHR = false,
-            DepartmentId = 1,
-            Salary = 67_000m,
-            HireDate = SeedValues.EmployeeHireDate,
-            IsActive = true,
-            IsDeleted = false,
-            CreatedAt = SeedValues.EmployeeAndDepartmentCreatedAt
-        },
-        new()
-        {
-            Id = 11,
-            FirstName = "Ian",
-            LastName = "Wright",
-            Email = "ian@hr.com",
-            IsHR = false,
-            DepartmentId = 2,
-            Salary = 68_000m,
-            HireDate = SeedValues.EmployeeHireDate,
-            IsActive = true,
-            IsDeleted = false,
-            CreatedAt = SeedValues.EmployeeAndDepartmentCreatedAt
-        },
-        new()
-        {
-            Id = 12,
-            FirstName = "Julia",
-            LastName = "Scott",
-            Email = "julia@it.com",
-            IsHR = false,
-            DepartmentId = 1,
-            Salary = 69_000m,
-            HireDate = SeedValues.EmployeeHireDate,
-            IsActive = true,
-            IsDeleted = false,
-            CreatedAt = SeedValues.EmployeeAndDepartmentCreatedAt
-        },
-        new()
-        {
-            Id = 13,
-            FirstName = "Kevin",
-            LastName = "Green",
-            Email = "kevin@hr.com",
-            IsHR = false,
-            DepartmentId = 2,
-            Salary = 70_000m,
-            HireDate = SeedValues.EmployeeHireDate,
-            IsActive = true,
-            IsDeleted = false,
-            CreatedAt = SeedValues.EmployeeAndDepartmentCreatedAt
-        },
-        new()
-        {
-            Id = 14,
-            FirstName = "Laura",
-            LastName = "Adams",
-            Email = "laura@it.com",
-            IsHR = false,
-            DepartmentId = 1,
-            Salary = 71_000m,
-            HireDate = SeedValues.EmployeeHireDate,
-            IsActive = true,
-            IsDeleted = false,
-            CreatedAt = SeedValues.EmployeeAndDepartmentCreatedAt
-        },
-        new()
-        {
-            Id = 15,
-            FirstName = "Michael",
-            LastName = "Baker",
-            Email = "michael@hr.com",
-            IsHR = false,
-            DepartmentId = 2,
-            Salary = 72_000m,
-            HireDate = SeedValues.EmployeeHireDate,
-            IsActive = true,
-            IsDeleted = false,
-            CreatedAt = SeedValues.EmployeeAndDepartmentCreatedAt
-        }
-    ];
+            CreatedAt = SeedValues.EmployeeAndDepartmentCreatedAt,
+            IsPasswordChangeRequired = false
+        }).ToArray();
+    }
 }

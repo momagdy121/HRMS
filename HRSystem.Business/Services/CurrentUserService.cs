@@ -11,17 +11,14 @@ namespace HRSystem.Business.Services;
 public class CurrentUserService : ICurrentUserService
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IApplicationUserRepository _applicationUsers;
     private readonly IEmployeeRepository _employees;
     private Employee? _cachedEmployee;
 
     public CurrentUserService(
         IHttpContextAccessor httpContextAccessor,
-        IApplicationUserRepository applicationUsers,
         IEmployeeRepository employees)
     {
         _httpContextAccessor = httpContextAccessor;
-        _applicationUsers = applicationUsers;
         _employees = employees;
     }
 
@@ -46,10 +43,7 @@ public class CurrentUserService : ICurrentUserService
             return _cachedEmployee;
 
         var userId = GetCurrentUserId();
-        var user = await _applicationUsers.GetByIdAsync(userId, cancellationToken)
-                   ?? throw new UnauthorizedException();
-
-        var employee = await _employees.GetByIdAsync(user.EmployeeId, cancellationToken)
+        var employee = await _employees.GetByIdAsync(userId, cancellationToken)
                        ?? throw new NotFoundException("Employee record not found.");
 
         _cachedEmployee = employee;

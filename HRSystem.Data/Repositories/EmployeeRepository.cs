@@ -20,13 +20,20 @@ public class EmployeeRepository : IEmployeeRepository
 
     public Task<Employee?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) =>
         _context.Employees.FirstOrDefaultAsync(
-            e => e.Email.ToLower() == email.ToLower(),
+            e => e.Email != null && e.Email.ToLower() == email.ToLower(),
             cancellationToken);
 
     public Task<PagedList<Employee>> GetActivePagedAsync(int page, int pageSize, CancellationToken cancellationToken = default) =>
         _context.Employees
             .AsNoTracking()
             .Where(e => !e.IsDeleted)
+            .OrderBy(e => e.LastName)
+            .ThenBy(e => e.FirstName)
+            .ToPagedListAsync(page, pageSize, cancellationToken);
+
+    public Task<PagedList<Employee>> GetAllPagedAsync(int page, int pageSize, CancellationToken cancellationToken = default) =>
+        _context.Employees
+            .AsNoTracking()
             .OrderBy(e => e.LastName)
             .ThenBy(e => e.FirstName)
             .ToPagedListAsync(page, pageSize, cancellationToken);
@@ -53,7 +60,7 @@ public class EmployeeRepository : IEmployeeRepository
     public Task<bool> EmailExistsAsync(string email, int? excludeEmployeeId = null, CancellationToken cancellationToken = default)
     {
         var normalized = email.ToLower();
-        var query = _context.Employees.Where(e => e.Email.ToLower() == normalized);
+        var query = _context.Employees.Where(e => e.Email != null && e.Email.ToLower() == normalized);
         if (excludeEmployeeId.HasValue)
             query = query.Where(e => e.Id != excludeEmployeeId.Value);
 
