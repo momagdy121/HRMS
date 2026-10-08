@@ -37,7 +37,7 @@
             <span class="material-symbols-outlined">apps</span>
         </button>
         <div class="h-6 w-px bg-slate-200 mx-2 hidden sm:block"></div>
-        <div class="flex items-center gap-3 pl-2 pr-1 py-1 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer">
+        <a asp-area="Employee" asp-controller="Profile" asp-action="Index" class="flex items-center gap-3 pl-2 pr-1 py-1 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer" title="View Profile">
             <div class="text-right hidden sm:block">
                 <p class="text-sm font-semibold text-slate-700 font-label-bold">@userName</p>
                 <p class="text-xs text-slate-500 font-body-sm">@userTitle</p>
@@ -52,6 +52,6 @@
                     @(userName.Length >= 2 ? userName.Substring(0, 2).ToUpper() : userName.ToUpper())
                 </div>
             }
-        </div>
+        </a>
     </div>
 </header>

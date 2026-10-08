@@ -17,7 +17,13 @@ public static class AreaLayoutHelper
         var employee = await currentUser.GetCurrentEmployeeAsync();
         var department = await unitOfWork.Departments.GetByIdAsync(employee.DepartmentId);
 
-        controller.ViewBag.Role = layoutRole;
+        string effectiveRole = "Employee";
+        if (currentUser.IsHR())
+            effectiveRole = "HR";
+        else if (currentUser.IsDepartmentHead())
+            effectiveRole = "DeptHead";
+
+        controller.ViewBag.Role = effectiveRole;
         controller.ViewBag.ActivePage = activePage;
         controller.ViewBag.UserName = $"{employee.FirstName} {employee.LastName}";
         controller.ViewBag.UserTitle = BuildUserTitle(currentUser, department?.Name);
