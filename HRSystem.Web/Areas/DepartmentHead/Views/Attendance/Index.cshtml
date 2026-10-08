@@ -4,17 +4,38 @@
 }
 
 <div class="max-w-7xl mx-auto space-y-6">
-    <div class="flex justify-between items-end">
+    <div class="flex flex-col md:flex-row md:justify-between md:items-end gap-4">
         <div>
             <h2 class="font-h1 text-h1 text-on-surface">Team Attendance</h2>
             <p class="font-body-md text-body-md text-on-surface-variant mt-1">@Model.DepartmentName team daily attendance</p>
         </div>
-        <form asp-action="Index" method="get" class="flex items-center gap-md">
-            <input name="date" type="date" value="@Model.Date.ToString("yyyy-MM-dd")" class="border-slate-200 rounded-lg text-sm font-body-md focus:border-primary focus:ring-0 px-3 py-2" />
-            <button type="submit" class="bg-primary-container text-on-primary px-4 py-2 rounded-lg font-label-bold hover:bg-primary transition-colors shadow-sm flex items-center gap-2">
-                <span class="material-symbols-outlined text-sm">search</span>View
-            </button>
-        </form>
+        <div class="flex flex-wrap items-center gap-3">
+            @if (Model.CanCheckIn)
+            {
+                <a asp-action="Index" asp-route-date="@Model.Date.ToString("yyyy-MM-dd")" asp-route-showCheckIn="true" class="bg-[#047857] text-white px-5 py-2 rounded-lg font-label-bold flex items-center gap-2 hover:bg-[#059669] transition-colors shadow-sm">
+                    <span class="material-symbols-outlined text-sm">login</span>Check In (Self)
+                </a>
+            }
+            else if (Model.CanCheckOut)
+            {
+                <a asp-action="Index" asp-route-date="@Model.Date.ToString("yyyy-MM-dd")" asp-route-showCheckOut="true" class="bg-[#b45309] text-white px-5 py-2 rounded-lg font-label-bold flex items-center gap-2 hover:bg-[#d97706] transition-colors shadow-sm">
+                    <span class="material-symbols-outlined text-sm">logout</span>Check Out (Self)
+                </a>
+            }
+            else if (Model.TodayCheckOutTime.HasValue)
+            {
+                <span class="inline-flex items-center gap-1 text-xs font-semibold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-lg">
+                    <span class="material-symbols-outlined text-sm text-green-600">check_circle</span>Checked out today
+                </span>
+            }
+
+            <form asp-action="Index" method="get" class="flex items-center gap-2">
+                <input name="date" type="date" value="@Model.Date.ToString("yyyy-MM-dd")" class="border-slate-200 rounded-lg text-sm font-body-md focus:border-primary focus:ring-0 px-3 py-2" />
+                <button type="submit" class="bg-primary-container text-on-primary px-4 py-2 rounded-lg font-label-bold hover:bg-primary transition-colors shadow-sm flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">search</span>View
+                </button>
+            </form>
+        </div>
     </div>
 
     <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
@@ -68,6 +89,42 @@
 </div>
 
 @section Modals {
+    @if (Model.ShowCheckInModal)
+    {
+        <div id="checkInModal" class="modal-overlay active">
+            <div class="modal-content w-full max-w-sm mx-4 p-xl text-center">
+                <div class="w-16 h-16 rounded-full bg-[#d1fae5] text-[#047857] flex items-center justify-center mx-auto mb-lg">
+                    <span class="material-symbols-outlined text-[32px]" style="font-variation-settings: 'FILL' 1;">login</span>
+                </div>
+                <h3 class="font-h3 text-h3 text-on-surface mb-sm">Check In?</h3>
+                <p class="font-body-md text-on-surface-variant mb-lg">Record your check-in time as <strong>now</strong>?</p>
+                <form asp-action="CheckIn" method="post" class="flex justify-center gap-md">
+                    @Html.AntiForgeryToken()
+                    <a asp-action="Index" asp-route-date="@Model.Date.ToString("yyyy-MM-dd")" class="px-6 py-2 border border-outline-variant rounded-lg text-on-surface-variant font-label-bold">Cancel</a>
+                    <button type="submit" class="px-6 py-2 bg-[#047857] text-white rounded-lg font-label-bold shadow-sm">Check In</button>
+                </form>
+            </div>
+        </div>
+    }
+
+    @if (Model.ShowCheckOutModal)
+    {
+        <div id="checkOutModal" class="modal-overlay active">
+            <div class="modal-content w-full max-w-sm mx-4 p-xl text-center">
+                <div class="w-16 h-16 rounded-full bg-[#fef3c7] text-[#b45309] flex items-center justify-center mx-auto mb-lg">
+                    <span class="material-symbols-outlined text-[32px]" style="font-variation-settings: 'FILL' 1;">logout</span>
+                </div>
+                <h3 class="font-h3 text-h3 text-on-surface mb-sm">Check Out?</h3>
+                <p class="font-body-md text-on-surface-variant mb-lg">Record your check-out time as <strong>now</strong>?</p>
+                <form asp-action="CheckOut" method="post" class="flex justify-center gap-md">
+                    @Html.AntiForgeryToken()
+                    <a asp-action="Index" asp-route-date="@Model.Date.ToString("yyyy-MM-dd")" class="px-6 py-2 border border-outline-variant rounded-lg text-on-surface-variant font-label-bold">Cancel</a>
+                    <button type="submit" class="px-6 py-2 bg-[#b45309] text-white rounded-lg font-label-bold shadow-sm">Check Out</button>
+                </form>
+            </div>
+        </div>
+    }
+
     @if (Model.MarkForm != null)
     {
         <div id="markAttendanceModal" class="modal-overlay active">

@@ -64,6 +64,13 @@ public class DeptHeadAttendanceIndexViewModel
     public string DepartmentName { get; set; } = string.Empty;
     public DateOnly Date { get; set; }
 
+    public bool CanCheckIn { get; set; }
+    public bool CanCheckOut { get; set; }
+    public bool ShowCheckInModal { get; set; }
+    public bool ShowCheckOutModal { get; set; }
+    public DateTime? TodayCheckInTime { get; set; }
+    public DateTime? TodayCheckOutTime { get; set; }
+
     public IReadOnlyList<TeamAttendanceRowViewModel> Team { get; set; } = [];
 
     public MarkTeamAttendanceViewModel? MarkForm { get; set; }

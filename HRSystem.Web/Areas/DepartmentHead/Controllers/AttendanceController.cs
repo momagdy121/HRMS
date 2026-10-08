@@ -25,7 +25,11 @@ public class AttendanceController : DepartmentHeadBaseController
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index(DateOnly? date = null, int? markEmployeeId = null)
+    public async Task<IActionResult> Index(
+        DateOnly? date = null,
+        int? markEmployeeId = null,
+        bool showCheckIn = false,
+        bool showCheckOut = false)
     {
         await SetLayoutAsync("Attendance", "Search team attendance...");
         var manager = await CurrentUser.GetCurrentEmployeeAsync();
@@ -39,7 +43,47 @@ public class AttendanceController : DepartmentHeadBaseController
             });
         }
 
-        return View(await BuildIndexModelAsync(department, manager, date ?? DateOnly.FromDateTime(DateTime.UtcNow), markEmployeeId));
+        return View(await BuildIndexModelAsync(
+            department,
+            manager,
+            date ?? DateOnly.FromDateTime(DateTime.UtcNow),
+            markEmployeeId,
+            showCheckIn: showCheckIn,
+            showCheckOut: showCheckOut));
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CheckIn()
+    {
+        try
+        {
+            await _attendanceService.CheckInAsync();
+            TempData["Success"] = "Checked in successfully.";
+        }
+        catch (BusinessRuleException ex)
+        {
+            TempData["Error"] = ex.Message;
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CheckOut()
+    {
+        try
+        {
+            await _attendanceService.CheckOutAsync();
+            TempData["Success"] = "Checked out successfully.";
+        }
+        catch (BusinessRuleException ex)
+        {
+            TempData["Error"] = ex.Message;
+        }
+
+        return RedirectToAction(nameof(Index));
     }
 
     [HttpPost]
@@ -89,7 +133,9 @@ public class AttendanceController : DepartmentHeadBaseController
         EmployeeEntity manager,
         DateOnly date,
         int? markEmployeeId = null,
-        MarkTeamAttendanceViewModel? markForm = null)
+        MarkTeamAttendanceViewModel? markForm = null,
+        bool showCheckIn = false,
+        bool showCheckOut = false)
     {
         var employeesPage = await UnitOfWork.Employees.GetByDepartmentPagedAsync(department.Id, 1, TeamPageSize);
         var employees = employeesPage.Items
@@ -117,6 +163,11 @@ public class AttendanceController : DepartmentHeadBaseController
             });
         }
 
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var todayAttendance = await UnitOfWork.Attendances.GetByEmployeeAndDateAsync(manager.Id, today);
+        var canCheckIn = todayAttendance?.CheckInTime == null;
+        var canCheckOut = todayAttendance?.CheckInTime != null && todayAttendance.CheckOutTime == null;
+
         MarkTeamAttendanceViewModel? resolvedMarkForm = null;
         if (markEmployeeId.HasValue || markForm != null)
         {
@@ -141,6 +192,12 @@ public class AttendanceController : DepartmentHeadBaseController
         {
             DepartmentName = department.Name,
             Date = date,
+            CanCheckIn = canCheckIn,
+            CanCheckOut = canCheckOut,
+            ShowCheckInModal = showCheckIn && canCheckIn,
+            ShowCheckOutModal = showCheckOut && canCheckOut,
+            TodayCheckInTime = todayAttendance?.CheckInTime,
+            TodayCheckOutTime = todayAttendance?.CheckOutTime,
             Team = team,
             MarkForm = resolvedMarkForm
         };

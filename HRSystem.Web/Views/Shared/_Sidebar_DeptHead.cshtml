@@ -37,6 +37,20 @@
             <span class="material-symbols-outlined mr-3">payments</span>
             Department Payroll
         </a>
+
+        <div class="px-6 pt-4 pb-1">
+            <p class="text-[10px] font-bold uppercase tracking-wider text-sky-300/70">Self-Service</p>
+        </div>
+        <a asp-area="Employee" asp-controller="Attendance" asp-action="Index"
+           class="text-slate-300 hover:bg-white/5 hover:text-white flex items-center px-6 py-2.5 transition-all duration-200 text-sm">
+            <span class="material-symbols-outlined mr-3 text-lg">how_to_reg</span>
+            My Attendance
+        </a>
+        <a asp-area="Employee" asp-controller="Leave" asp-action="Index"
+           class="text-slate-300 hover:bg-white/5 hover:text-white flex items-center px-6 py-2.5 transition-all duration-200 text-sm">
+            <span class="material-symbols-outlined mr-3 text-lg">calendar_month</span>
+            My Leave Requests
+        </a>
     </div>
     <div class="p-4 flex flex-col gap-1">
         <a href="#" class="flex items-center px-6 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-all">
