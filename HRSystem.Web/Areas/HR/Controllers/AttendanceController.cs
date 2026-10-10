@@ -10,7 +10,7 @@ namespace HRSystem.Web.Areas.HR.Controllers;
 
 public class AttendanceController : HRBaseController
 {
-    private const int PageSize = 10;
+    private const int PageSize = PaginationDefaults.DefaultPageSize;
     private readonly IAttendanceService _attendanceService;
 
     public AttendanceController(
@@ -44,23 +44,11 @@ public class AttendanceController : HRBaseController
 
         var paged = await _attendanceService.GetReportAsync(date, departmentId, page, PageSize);
 
-        var employees = new Dictionary<int, EmployeeEntity>();
-        var departmentNames = departments.ToDictionary(x => x.Id, x => x.Name);
-
-        foreach (var row in paged.Items)
-        {
-            var employee = await UnitOfWork.Employees.GetByIdAsync(row.EmployeeId);
-            if (employee != null)
-                employees[row.EmployeeId] = employee;
-        }
-
         var records = paged.Items.Select(a =>
         {
-            employees.TryGetValue(a.EmployeeId, out var employee);
+            var employee = a.Employee;
             var label = AttendanceDisplayHelper.GetStatusLabel(a);
-            var deptName = employee != null && departmentNames.TryGetValue(employee.DepartmentId, out var name)
-                ? name
-                : "—";
+            var deptName = employee?.Department?.Name ?? "—";
 
             return new HrAttendanceRowViewModel
             {

@@ -21,6 +21,10 @@ public interface IEmployeeRepository
 
     Task<bool> EmailExistsAsync(string email, int? excludeEmployeeId = null, CancellationToken cancellationToken = default);
 
+    Task<Dictionary<int, Employee>> GetByIdsAsync(IEnumerable<int> ids, CancellationToken cancellationToken = default);
+
+    Task<Dictionary<int, string>> GetRolesByUserIdsAsync(IEnumerable<int> userIds, CancellationToken cancellationToken = default);
+
     Task AddAsync(Employee employee, CancellationToken cancellationToken = default);
 
     void Update(Employee employee);

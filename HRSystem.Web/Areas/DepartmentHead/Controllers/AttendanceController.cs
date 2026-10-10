@@ -144,13 +144,16 @@ public class AttendanceController : DepartmentHeadBaseController
             .ThenBy(e => e.FirstName)
             .ToList();
 
-        var team = new List<TeamAttendanceRowViewModel>();
-        foreach (var employee in employees)
+        var employeeIds = employees.Select(e => e.Id).ToList();
+        var attendances = await UnitOfWork.Attendances.GetByEmployeeIdsAndDateAsync(employeeIds, date);
+        var attendanceMap = attendances.ToDictionary(a => a.EmployeeId);
+
+        var team = employees.Select(employee =>
         {
-            var attendance = await UnitOfWork.Attendances.GetByEmployeeAndDateAsync(employee.Id, date);
+            attendanceMap.TryGetValue(employee.Id, out var attendance);
             var label = attendance != null ? AttendanceDisplayHelper.GetStatusLabel(attendance) : "Absent";
 
-            team.Add(new TeamAttendanceRowViewModel
+            return new TeamAttendanceRowViewModel
             {
                 EmployeeId = employee.Id,
                 EmployeeName = TaskDisplayHelper.GetFullName(employee),
@@ -160,8 +163,8 @@ public class AttendanceController : DepartmentHeadBaseController
                 Notes = attendance?.Notes,
                 StatusLabel = label,
                 IsSelf = employee.Id == manager.Id
-            });
-        }
+            };
+        }).ToList();
 
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
         var todayAttendance = await UnitOfWork.Attendances.GetByEmployeeAndDateAsync(manager.Id, today);
@@ -175,7 +178,7 @@ public class AttendanceController : DepartmentHeadBaseController
             var targetEmployee = employees.FirstOrDefault(e => e.Id == empId);
             if (targetEmployee != null)
             {
-                var existing = await UnitOfWork.Attendances.GetByEmployeeAndDateAsync(empId, date);
+                attendanceMap.TryGetValue(empId, out var existing);
                 resolvedMarkForm = markForm ?? new MarkTeamAttendanceViewModel
                 {
                     EmployeeId = empId,

@@ -18,4 +18,7 @@ public class Attendance
     public string? Notes { get; set; }
 
     public bool IsDeleted { get; set; }
+
+    // ── Navigation Property ───────────────────────────────────────
+    public Employee Employee { get; set; } = null!;
 }

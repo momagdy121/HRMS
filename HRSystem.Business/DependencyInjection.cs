@@ -1,16 +1,21 @@
+using HRSystem.Business.DTOs;
 using HRSystem.Business.Interfaces.Policies;
 using HRSystem.Business.Interfaces.Services;
 using HRSystem.Business.Policies;
 using HRSystem.Business.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HRSystem.Business;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddHrmsBusinessServices(this IServiceCollection services)
+    public static IServiceCollection AddHrmsBusinessServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddHttpContextAccessor();
+
+        services.Configure<BravoApiSettings>(configuration.GetSection(BravoApiSettings.SectionName));
+        services.AddScoped<IEmailService, BrevoEmailService>();
 
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();

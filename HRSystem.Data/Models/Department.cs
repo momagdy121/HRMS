@@ -14,4 +14,9 @@ public class Department
     public DateTime CreatedAt { get; set; }
 
     public bool IsDeleted { get; set; }
+
+    // ── Navigation Properties ──────────────────────────────────────
+    public Employee Manager { get; set; } = null!;
+
+    public ICollection<Employee> Employees { get; set; } = new List<Employee>();
 }

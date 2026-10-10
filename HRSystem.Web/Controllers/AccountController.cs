@@ -1,3 +1,4 @@
+using HRSystem.Business.Exceptions;
 using HRSystem.Business.Interfaces.Services;
 using HRSystem.Data.Models;
 using HRSystem.Web.Helpers;
@@ -88,14 +89,79 @@ public class AccountController : Controller
     [AllowAnonymous]
     public IActionResult ForgotPassword()
     {
-        return RedirectToAction(nameof(ComingSoon));
+        ViewBag.HideShell = true;
+        ViewBag.Title = "Forgot Password - HRMS Portal";
+        return View(new ForgotPasswordViewModel());
+    }
+
+    [HttpPost]
+    [AllowAnonymous]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+    {
+        ViewBag.HideShell = true;
+        ViewBag.Title = "Forgot Password - HRMS Portal";
+
+        if (!ModelState.IsValid)
+            return View(model);
+
+        // Build a callback URL template with placeholders for email and token.
+        // The service will replace __EMAIL__ and __TOKEN__ with actual values.
+        var resetCallbackUrl = Url.Action(
+            nameof(ResetPassword),
+            "Account",
+            new { email = "__EMAIL__", token = "__TOKEN__" },
+            Request.Scheme)!;
+
+        await _accountService.ForgotPasswordAsync(model.Email, resetCallbackUrl);
+
+        // Always show success to prevent email enumeration attacks
+        ViewBag.EmailSent = true;
+        return View(model);
     }
 
     [HttpGet]
     [AllowAnonymous]
     public IActionResult ResetPassword(string? email, string? token)
     {
-        return RedirectToAction(nameof(ComingSoon));
+        ViewBag.HideShell = true;
+        ViewBag.Title = "Reset Password - HRMS Portal";
+
+        if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(token))
+        {
+            ViewBag.InvalidToken = true;
+            return View(new ResetPasswordViewModel());
+        }
+
+        return View(new ResetPasswordViewModel
+        {
+            Email = email,
+            Token = token
+        });
+    }
+
+    [HttpPost]
+    [AllowAnonymous]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+    {
+        ViewBag.HideShell = true;
+        ViewBag.Title = "Reset Password - HRMS Portal";
+
+        if (!ModelState.IsValid)
+            return View(model);
+
+        try
+        {
+            await _accountService.ResetPasswordAsync(model.Email, model.Token, model.NewPassword);
+            TempData["Success"] = "Password reset successfully. You can now sign in with your new password.";
+            return RedirectToAction(nameof(Login));
+        }
+        catch (BusinessRuleException ex)
+        {
+            ModelState.AddModelError(string.Empty, ex.Message);
+            return View(model);
+        }
     }
 
     [HttpGet]

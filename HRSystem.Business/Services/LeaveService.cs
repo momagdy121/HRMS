@@ -37,8 +37,7 @@ public class LeaveService : ILeaveService
         if (dto.LeaveType is LeaveType.Annual or LeaveType.Sick)
         {
             var year = dto.StartDate.Year;
-            var balance = await _unitOfWork.LeaveBalances.GetAsync(employee.Id, year, dto.LeaveType, cancellationToken)
-                          ?? throw new BusinessRuleException($"No {dto.LeaveType} leave balance found for {year}.");
+            var balance = await GetOrCreateBalanceAsync(employee.Id, year, dto.LeaveType, cancellationToken);
 
             var requestedDays = LeaveHelper.CalendarDays(dto.StartDate, dto.EndDate);
             var remaining = balance.TotalDays - balance.UsedDays;
@@ -96,8 +95,13 @@ public class LeaveService : ILeaveService
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<LeaveBalance?> GetBalanceAsync(int employeeId, int year, LeaveType leaveType, CancellationToken cancellationToken = default) =>
-        await _unitOfWork.LeaveBalances.GetAsync(employeeId, year, leaveType, cancellationToken);
+    public async Task<LeaveBalance?> GetBalanceAsync(int employeeId, int year, LeaveType leaveType, CancellationToken cancellationToken = default)
+    {
+        if (leaveType is LeaveType.Unpaid)
+            return null;
+
+        return await GetOrCreateBalanceAsync(employeeId, year, leaveType, cancellationToken);
+    }
 
     public async Task<PagedResult<LeaveRequest>> GetPendingByDepartmentAsync(int departmentId, int page = 1, int pageSize = 20, CancellationToken cancellationToken = default)
     {
@@ -148,8 +152,12 @@ public class LeaveService : ILeaveService
     public async Task<IReadOnlyList<LeaveBalance>> GetEmployeeBalancesAsync(
         int employeeId,
         int year,
-        CancellationToken cancellationToken = default) =>
-        await _unitOfWork.LeaveBalances.GetByEmployeeAndYearAsync(employeeId, year, cancellationToken);
+        CancellationToken cancellationToken = default)
+    {
+        await GetOrCreateBalanceAsync(employeeId, year, LeaveType.Annual, cancellationToken);
+        await GetOrCreateBalanceAsync(employeeId, year, LeaveType.Sick, cancellationToken);
+        return await _unitOfWork.LeaveBalances.GetByEmployeeAndYearAsync(employeeId, year, cancellationToken);
+    }
 
     private async Task<LeaveRequest> GetLeaveRequestAsync(int id, CancellationToken cancellationToken) =>
         await _unitOfWork.LeaveRequests.GetByIdAsync(id, cancellationToken)
@@ -182,15 +190,29 @@ public class LeaveService : ILeaveService
             throw new BusinessRuleException("You are not authorized to action leave requests.");
     }
 
+    private async Task<LeaveBalance> GetOrCreateBalanceAsync(
+        int employeeId,
+        int year,
+        LeaveType leaveType,
+        CancellationToken cancellationToken)
+    {
+        var existing = await _unitOfWork.LeaveBalances.GetAsync(employeeId, year, leaveType, cancellationToken);
+        if (existing is not null)
+            return existing;
+
+        var balance = LeaveBalanceDefaults.Create(employeeId, year, leaveType);
+        await _unitOfWork.LeaveBalances.AddAsync(balance, cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        return balance;
+    }
+
     private async Task ApplyBalanceChangeAsync(LeaveRequest request, int dayDelta, CancellationToken cancellationToken)
     {
         if (request.LeaveType is LeaveType.Unpaid)
             return;
 
-        var balance = await _unitOfWork.LeaveBalances.GetAsync(
-                          request.EmployeeId, request.StartDate.Year, request.LeaveType, cancellationToken)
-                      ?? throw new BusinessRuleException(
-                          $"No {request.LeaveType} leave balance found for {request.StartDate.Year}.");
+        var balance = await GetOrCreateBalanceAsync(
+            request.EmployeeId, request.StartDate.Year, request.LeaveType, cancellationToken);
 
         balance.UsedDays += dayDelta;
         if (balance.UsedDays < 0)

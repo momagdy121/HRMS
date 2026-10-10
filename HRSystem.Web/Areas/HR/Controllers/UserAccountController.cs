@@ -11,7 +11,7 @@ namespace HRSystem.Web.Areas.HR.Controllers;
 
 public class UserAccountController : HRBaseController
 {
-    private const int PageSize = 10;
+    private const int PageSize = PaginationDefaults.DefaultPageSize;
 
     private readonly IUserAccountService _userAccountService;
     private readonly IAccountService _accountService;

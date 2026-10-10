@@ -14,4 +14,12 @@ public class HomeController : Controller
 
         return RedirectToAction("Login", "Account");
     }
+
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    public IActionResult Error()
+    {
+        ViewBag.HideShell = true;
+        ViewBag.Title = "Something went wrong - HRMS Portal";
+        return View();
+    }
 }

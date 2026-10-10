@@ -11,7 +11,7 @@ namespace HRSystem.Web.Areas.HR.Controllers;
 
 public class EmployeeController : HRBaseController
 {
-    private const int PageSize = 10;
+    private const int PageSize = PaginationDefaults.DefaultPageSize;
     private readonly IEmployeeService _employeeService;
 
     public EmployeeController(
@@ -158,9 +158,8 @@ public class EmployeeController : HRBaseController
             ? await _employeeService.GetByDepartmentAsync(departmentId.Value, page, PageSize)
             : await _employeeService.GetAllAsync(page, PageSize);
 
-        var canDeleteMap = new Dictionary<int, bool>();
-        foreach (var employee in paged.Items)
-            canDeleteMap[employee.Id] = await _employeeService.CanDeleteAsync(employee.Id);
+        var activeManagerIds = departments.Values.Select(d => d.ManagerId).ToHashSet();
+        var canDeleteMap = paged.Items.ToDictionary(e => e.Id, e => !activeManagerIds.Contains(e.Id));
 
         var model = new EmployeeIndexViewModel
         {

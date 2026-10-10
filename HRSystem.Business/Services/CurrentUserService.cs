@@ -37,6 +37,18 @@ public class CurrentUserService : ICurrentUserService
     public bool IsDepartmentHead() =>
         _httpContextAccessor.HttpContext?.User.IsInRole(RoleNames.DepartmentHead) ?? false;
 
+    public string? GetFullName() =>
+        _httpContextAccessor.HttpContext?.User.FindFirstValue("FullName");
+
+    public string? GetDepartmentName() =>
+        _httpContextAccessor.HttpContext?.User.FindFirstValue("DepartmentName");
+
+    public int? GetDepartmentId()
+    {
+        var val = _httpContextAccessor.HttpContext?.User.FindFirstValue("DepartmentId");
+        return int.TryParse(val, out var id) ? id : null;
+    }
+
     public async Task<Employee> GetCurrentEmployeeAsync(CancellationToken cancellationToken = default)
     {
         if (_cachedEmployee != null)

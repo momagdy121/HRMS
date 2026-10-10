@@ -12,8 +12,8 @@ public class AttendanceConfiguration : IEntityTypeConfiguration<Attendance>
         entity.Property(x => x.IsDeleted).HasDefaultValue(false);
         entity.HasIndex(x => new { x.EmployeeId, x.Date }).IsUnique();
 
-        entity.HasOne<Employee>()
-            .WithMany()
+        entity.HasOne(a => a.Employee)
+            .WithMany(e => e.Attendances)
             .HasForeignKey(x => x.EmployeeId)
             .OnDelete(DeleteBehavior.Restrict);
 

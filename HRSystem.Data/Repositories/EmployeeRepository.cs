@@ -16,7 +16,9 @@ public class EmployeeRepository : IEmployeeRepository
     }
 
     public Task<Employee?> GetByIdAsync(int id, CancellationToken cancellationToken = default) =>
-        _context.Employees.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
+        _context.Employees
+            .Include(e => e.Department)
+            .FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
 
     public Task<Employee?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) =>
         _context.Employees.FirstOrDefaultAsync(
@@ -65,6 +67,39 @@ public class EmployeeRepository : IEmployeeRepository
             query = query.Where(e => e.Id != excludeEmployeeId.Value);
 
         return query.AnyAsync(cancellationToken);
+    }
+
+    public async Task<Dictionary<int, Employee>> GetByIdsAsync(IEnumerable<int> ids, CancellationToken cancellationToken = default)
+    {
+        var idList = ids.Distinct().ToList();
+        if (idList.Count == 0)
+            return new Dictionary<int, Employee>();
+
+        var list = await _context.Employees
+            .Include(e => e.Department)
+            .AsNoTracking()
+            .Where(e => idList.Contains(e.Id))
+            .ToListAsync(cancellationToken);
+
+        return list.ToDictionary(e => e.Id);
+    }
+
+    public async Task<Dictionary<int, string>> GetRolesByUserIdsAsync(IEnumerable<int> userIds, CancellationToken cancellationToken = default)
+    {
+        var idList = userIds.Distinct().ToList();
+        if (idList.Count == 0)
+            return new Dictionary<int, string>();
+
+        var userRoles = await (
+            from ur in _context.UserRoles
+            join r in _context.Roles on ur.RoleId equals r.Id
+            where idList.Contains(ur.UserId)
+            select new { ur.UserId, RoleName = r.Name }
+        ).ToListAsync(cancellationToken);
+
+        return userRoles
+            .GroupBy(x => x.UserId)
+            .ToDictionary(g => g.Key, g => g.First().RoleName ?? string.Empty);
     }
 
     public async Task AddAsync(Employee employee, CancellationToken cancellationToken = default) =>

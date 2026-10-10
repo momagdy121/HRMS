@@ -22,14 +22,14 @@ public class UserAccountService : IUserAccountService
     public async Task<PagedResult<UserAccountListItemDto>> GetAllAsync(int page = 1, int pageSize = 20, CancellationToken cancellationToken = default)
     {
         var pageResult = await _unitOfWork.Employees.GetAllPagedAsync(page, pageSize, cancellationToken);
-        var items = new List<UserAccountListItemDto>();
+        var userIds = pageResult.Items.Select(e => e.Id).ToList();
+        var roleMap = await _unitOfWork.Employees.GetRolesByUserIdsAsync(userIds, cancellationToken);
 
-        foreach (var employee in pageResult.Items)
+        var items = pageResult.Items.Select(employee =>
         {
-            var roles = await _userManager.GetRolesAsync(employee);
-            var role = roles.FirstOrDefault() ?? string.Empty;
-            items.Add(UserAccountMapper.ToDto(employee, role));
-        }
+            roleMap.TryGetValue(employee.Id, out var role);
+            return UserAccountMapper.ToDto(employee, role ?? string.Empty);
+        }).ToList();
 
         return new PagedResult<UserAccountListItemDto>
         {

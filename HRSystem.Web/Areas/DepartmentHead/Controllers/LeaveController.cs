@@ -12,7 +12,7 @@ namespace HRSystem.Web.Areas.DepartmentHead.Controllers;
 
 public class LeaveController : DepartmentHeadBaseController
 {
-    private const int PageSize = 10;
+    private const int PageSize = PaginationDefaults.DefaultPageSize;
     private readonly ILeaveService _leaveService;
 
     public LeaveController(
@@ -201,16 +201,6 @@ public class LeaveController : DepartmentHeadBaseController
         };
     }
 
-    private async Task<Dictionary<int, EmployeeEntity>> LoadEmployeesAsync(IReadOnlyList<LeaveRequest> requests)
-    {
-        var employees = new Dictionary<int, EmployeeEntity>();
-        foreach (var id in requests.Select(r => r.EmployeeId).Distinct())
-        {
-            var employee = await UnitOfWork.Employees.GetByIdAsync(id);
-            if (employee != null)
-                employees[id] = employee;
-        }
-
-        return employees;
-    }
+    private Task<Dictionary<int, EmployeeEntity>> LoadEmployeesAsync(IReadOnlyList<LeaveRequest> requests) =>
+        UnitOfWork.Employees.GetByIdsAsync(requests.Select(r => r.EmployeeId));
 }

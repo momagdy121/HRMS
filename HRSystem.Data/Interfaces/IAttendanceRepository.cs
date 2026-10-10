@@ -9,6 +9,8 @@ public interface IAttendanceRepository
 
     Task<Attendance?> GetByEmployeeAndDateAsync(int employeeId, DateOnly date, CancellationToken cancellationToken = default);
 
+    Task<List<Attendance>> GetByEmployeeIdsAndDateAsync(IEnumerable<int> employeeIds, DateOnly date, CancellationToken cancellationToken = default);
+
     Task<PagedList<Attendance>> GetByEmployeePagedAsync(int employeeId, int page, int pageSize, CancellationToken cancellationToken = default);
 
     Task<PagedList<Attendance>> GetByDepartmentPagedAsync(int departmentId, int page, int pageSize, CancellationToken cancellationToken = default);

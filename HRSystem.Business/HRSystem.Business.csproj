@@ -15,4 +15,8 @@
     <ProjectReference Include="..\HRSystem.Data\HRSystem.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="sib_api_v3_sdk" Version="4.0.2" />
+  </ItemGroup>
+
 </Project>

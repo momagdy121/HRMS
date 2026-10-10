@@ -14,7 +14,7 @@ namespace HRSystem.Web.Areas.HR.Controllers;
 
 public class PayrollController : HRBaseController
 {
-    private const int PageSize = 10;
+    private const int PageSize = PaginationDefaults.DefaultPageSize;
 
     private readonly IPayrollService _payrollService;
 

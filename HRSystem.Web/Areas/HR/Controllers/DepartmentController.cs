@@ -11,7 +11,7 @@ namespace HRSystem.Web.Areas.HR.Controllers;
 
 public class DepartmentController : HRBaseController
 {
-    private const int PageSize = 10;
+    private const int PageSize = PaginationDefaults.DefaultPageSize;
     private readonly IDepartmentService _departmentService;
 
     public DepartmentController(
@@ -40,7 +40,7 @@ public class DepartmentController : HRBaseController
 
         return View("Index", new DepartmentIndexViewModel
         {
-            Departments = await MapDepartmentsAsync(paged.Items, employees),
+            Departments = MapDepartments(paged.Items, employees),
             Page = paged.Page,
             TotalPages = paged.TotalPages,
             TotalCount = paged.TotalCount,
@@ -187,7 +187,7 @@ public class DepartmentController : HRBaseController
 
         var model = new DepartmentIndexViewModel
         {
-            Departments = await MapDepartmentsAsync(paged.Items, employees),
+            Departments = MapDepartments(paged.Items, employees),
             ManagerOptions = employees.Values
                 .Where(e => e is { IsActive: true, IsDeleted: false, IsHR: false })
                 .Select(e => new ManagerOptionViewModel { Id = e.Id, Name = $"{e.FirstName} {e.LastName}" })
@@ -220,17 +220,21 @@ public class DepartmentController : HRBaseController
         return model;
     }
 
-    private async Task<IReadOnlyList<DepartmentListItemViewModel>> MapDepartmentsAsync(
+    private static IReadOnlyList<DepartmentListItemViewModel> MapDepartments(
         IEnumerable<Data.Models.Department> departments,
         IReadOnlyDictionary<int, Data.Models.Employee> employees)
     {
+        var countsByDept = employees.Values
+            .Where(e => !e.IsDeleted)
+            .GroupBy(e => e.DepartmentId)
+            .ToDictionary(g => g.Key, g => g.Count());
+
         var items = new List<DepartmentListItemViewModel>();
         foreach (var department in departments)
         {
             employees.TryGetValue(department.ManagerId, out var manager);
             var managerInDepartment = manager is { IsActive: true, IsDeleted: false }
                                       && manager.DepartmentId == department.Id;
-            var count = await UnitOfWork.Departments.CountActiveEmployeesAsync(department.Id);
 
             items.Add(new DepartmentListItemViewModel
             {
@@ -239,7 +243,7 @@ public class DepartmentController : HRBaseController
                 HasManager = managerInDepartment,
                 ManagerName = managerInDepartment ? $"{manager!.FirstName} {manager.LastName}" : "(Unassigned)",
                 ManagerInitials = managerInDepartment ? HrDisplayHelper.GetInitials(manager!.FirstName, manager.LastName) : string.Empty,
-                EmployeeCount = count
+                EmployeeCount = countsByDept.GetValueOrDefault(department.Id, 0)
             });
         }
 

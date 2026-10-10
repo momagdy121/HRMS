@@ -28,4 +28,9 @@ public class Employee : IdentityUser<int>
     public DateTime CreatedAt { get; set; }
 
     public bool IsPasswordChangeRequired { get; set; } = true;
+
+    // ── Navigation Properties ──────────────────────────────────────
+    public Department Department { get; set; } = null!;
+
+    public ICollection<Attendance> Attendances { get; set; } = new List<Attendance>();
 }

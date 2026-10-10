@@ -14,19 +14,27 @@ public static class AreaLayoutHelper
         string activePage,
         string? searchPlaceholder = null)
     {
-        var employee = await currentUser.GetCurrentEmployeeAsync();
-        var department = await unitOfWork.Departments.GetByIdAsync(employee.DepartmentId);
-
         string effectiveRole = "Employee";
         if (currentUser.IsHR())
             effectiveRole = "HR";
         else if (currentUser.IsDepartmentHead())
             effectiveRole = "DeptHead";
 
+        var fullName = currentUser.GetFullName();
+        var departmentName = currentUser.GetDepartmentName();
+
+        if (string.IsNullOrWhiteSpace(fullName))
+        {
+            var employee = await currentUser.GetCurrentEmployeeAsync();
+            fullName = $"{employee.FirstName} {employee.LastName}".Trim();
+            var department = await unitOfWork.Departments.GetByIdAsync(employee.DepartmentId);
+            departmentName = department?.Name;
+        }
+
         controller.ViewBag.Role = effectiveRole;
         controller.ViewBag.ActivePage = activePage;
-        controller.ViewBag.UserName = $"{employee.FirstName} {employee.LastName}";
-        controller.ViewBag.UserTitle = BuildUserTitle(currentUser, department?.Name);
+        controller.ViewBag.UserName = fullName;
+        controller.ViewBag.UserTitle = BuildUserTitle(currentUser, departmentName);
         controller.ViewBag.SearchPlaceholder = searchPlaceholder ?? "Search...";
     }
 

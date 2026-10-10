@@ -10,10 +10,12 @@ namespace HRSystem.Business.Services;
 public class AccountService : IAccountService
 {
     private readonly UserManager<Employee> _userManager;
+    private readonly IEmailService _emailService;
 
-    public AccountService(UserManager<Employee> userManager)
+    public AccountService(UserManager<Employee> userManager, IEmailService emailService)
     {
         _userManager = userManager;
+        _emailService = emailService;
     }
 
     public async Task CreateAccountAsync(Employee employee, string password, string role, CancellationToken cancellationToken = default)
@@ -36,11 +38,55 @@ public class AccountService : IAccountService
         }
     }
 
-    public Task<string> ForgotPasswordAsync(string email, CancellationToken cancellationToken = default) =>
-        throw new BusinessRuleException("Forgot password is not available yet. Coming soon.");
+    public async Task<bool> ForgotPasswordAsync(string email, string resetCallbackUrl, CancellationToken cancellationToken = default)
+    {
+        var normalized = email.Trim();
+        var employee = await _userManager.FindByEmailAsync(normalized);
+        if (employee is null)
+            return false;
 
-    public Task ResetPasswordAsync(string email, string token, string newPassword, CancellationToken cancellationToken = default) =>
-        throw new BusinessRuleException("Password reset is not available yet. Coming soon.");
+        var token = await _userManager.GeneratePasswordResetTokenAsync(employee);
+
+        var resetUrl = resetCallbackUrl
+            .Replace("__EMAIL__", Uri.EscapeDataString(normalized))
+            .Replace("__TOKEN__", Uri.EscapeDataString(token));
+
+        var employeeName = $"{employee.FirstName} {employee.LastName}".Trim();
+        if (string.IsNullOrEmpty(employeeName))
+            employeeName = normalized;
+
+        var htmlContent = EmailTemplates.PasswordResetEmail(employeeName, resetUrl);
+
+        await _emailService.SendEmailAsync(
+            normalized,
+            employeeName,
+            "Password Reset - HRMS Portal",
+            htmlContent,
+            cancellationToken);
+
+        return true;
+    }
+
+    public async Task ResetPasswordAsync(string email, string token, string newPassword, CancellationToken cancellationToken = default)
+    {
+        var employee = await _userManager.FindByEmailAsync(email.Trim())
+                       ?? throw new BusinessRuleException("Invalid reset request.");
+
+        var result = await _userManager.ResetPasswordAsync(employee, token, newPassword);
+        if (!result.Succeeded)
+        {
+            throw new BusinessRuleException(
+                string.Join("; ", result.Errors.Select(e => e.Description)));
+        }
+
+        AccountLifecycle.MarkPasswordChanged(employee);
+        var updateResult = await _userManager.UpdateAsync(employee);
+        if (!updateResult.Succeeded)
+        {
+            throw new BusinessRuleException(
+                string.Join("; ", updateResult.Errors.Select(e => e.Description)));
+        }
+    }
 
     public async Task ChangePasswordAsync(int userId, string newPassword, CancellationToken cancellationToken = default)
     {

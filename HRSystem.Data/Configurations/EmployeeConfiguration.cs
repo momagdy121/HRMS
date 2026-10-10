@@ -21,8 +21,8 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
         entity.Property(x => x.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
         entity.Property(x => x.IsPasswordChangeRequired).HasDefaultValue(false);
 
-        entity.HasOne<Department>()
-            .WithMany()
+        entity.HasOne(e => e.Department)
+            .WithMany(d => d.Employees)
             .HasForeignKey(x => x.DepartmentId)
             .OnDelete(DeleteBehavior.Restrict);
 

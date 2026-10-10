@@ -9,7 +9,7 @@ namespace HRSystem.Web.Areas.Employee.Controllers;
 
 public class AttendanceController : EmployeeBaseController
 {
-    private const int PageSize = 10;
+    private const int PageSize = PaginationDefaults.DefaultPageSize;
     private readonly IAttendanceService _attendanceService;
 
     public AttendanceController(

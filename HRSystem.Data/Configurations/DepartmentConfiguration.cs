@@ -15,7 +15,7 @@ public class DepartmentConfiguration : IEntityTypeConfiguration<Department>
 
         entity.Property(x => x.ManagerId).IsRequired();
 
-        entity.HasOne<Employee>()
+        entity.HasOne(d => d.Manager)
             .WithMany()
             .HasForeignKey(x => x.ManagerId)
             .OnDelete(DeleteBehavior.Restrict);

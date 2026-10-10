@@ -119,6 +119,12 @@
 
 @if (hideShell)
 {
+    @if (TempData["Success"] is string shellSuccess)
+    {
+        <div class="fixed top-4 left-1/2 z-50 w-full max-w-md -translate-x-1/2 rounded-lg border border-primary-container/30 bg-secondary-container px-4 py-3 text-on-surface shadow-lg" role="status">
+            @shellSuccess
+        </div>
+    }
     @if (TempData["Error"] is string shellError)
     {
         <div class="fixed top-4 left-1/2 z-50 w-full max-w-md -translate-x-1/2 rounded-lg border border-error/30 bg-error-container px-4 py-3 text-on-error-container shadow-lg" role="alert">

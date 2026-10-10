@@ -23,6 +23,18 @@ public class AttendanceRepository : IAttendanceRepository
             a => a.EmployeeId == employeeId && a.Date == date && !a.IsDeleted,
             cancellationToken);
 
+    public Task<List<Attendance>> GetByEmployeeIdsAndDateAsync(IEnumerable<int> employeeIds, DateOnly date, CancellationToken cancellationToken = default)
+    {
+        var idList = employeeIds.Distinct().ToList();
+        if (idList.Count == 0)
+            return Task.FromResult(new List<Attendance>());
+
+        return _context.Attendances
+            .AsNoTracking()
+            .Where(a => !a.IsDeleted && a.Date == date && idList.Contains(a.EmployeeId))
+            .ToListAsync(cancellationToken);
+    }
+
     public Task<PagedList<Attendance>> GetByEmployeePagedAsync(int employeeId, int page, int pageSize, CancellationToken cancellationToken = default) =>
         _context.Attendances
             .AsNoTracking()
@@ -45,21 +57,15 @@ public class AttendanceRepository : IAttendanceRepository
         int pageSize,
         CancellationToken cancellationToken = default)
     {
-        var query =
-            from attendance in _context.Attendances.AsNoTracking()
-            join employee in _context.Employees.AsNoTracking() on attendance.EmployeeId equals employee.Id
-            where !attendance.IsDeleted
-                  && !employee.IsDeleted
-                  && attendance.Date == date
-            select attendance;
+        var query = _context.Attendances
+            .Include(a => a.Employee)
+                .ThenInclude(e => e.Department)
+            .AsNoTracking()
+            .Where(a => !a.IsDeleted && !a.Employee.IsDeleted && a.Date == date);
 
         if (departmentId.HasValue)
         {
-            query =
-                from attendance in query
-                join employee in _context.Employees.AsNoTracking() on attendance.EmployeeId equals employee.Id
-                where employee.DepartmentId == departmentId.Value
-                select attendance;
+            query = query.Where(a => a.Employee.DepartmentId == departmentId.Value);
         }
 
         return query

@@ -13,7 +13,7 @@ namespace HRSystem.Web.Areas.DepartmentHead.Controllers;
 
 public class TaskController : DepartmentHeadBaseController
 {
-    private const int PageSize = 10;
+    private const int PageSize = PaginationDefaults.DefaultPageSize;
     private const int AssigneePageSize = 100;
     private readonly ITaskService _taskService;
 
@@ -238,20 +238,12 @@ public class TaskController : DepartmentHeadBaseController
             .ToList();
     }
 
-    private async Task<Dictionary<int, EmployeeEntity>> LoadEmployeesForTasksAsync(IReadOnlyList<EmployeeTask> tasks)
+    private Task<Dictionary<int, EmployeeEntity>> LoadEmployeesForTasksAsync(IReadOnlyList<EmployeeTask> tasks)
     {
         var ids = tasks
             .SelectMany(t => new[] { t.AssignedById, t.AssignedToId })
             .Distinct();
 
-        var employees = new Dictionary<int, EmployeeEntity>();
-        foreach (var id in ids)
-        {
-            var employee = await UnitOfWork.Employees.GetByIdAsync(id);
-            if (employee != null)
-                employees[id] = employee;
-        }
-
-        return employees;
+        return UnitOfWork.Employees.GetByIdsAsync(ids);
     }
 }

@@ -12,7 +12,7 @@ namespace HRSystem.Web.Areas.Employee.Controllers;
 
 public class LeaveController : EmployeeBaseController
 {
-    private const int PageSize = 10;
+    private const int PageSize = PaginationDefaults.DefaultPageSize;
     private readonly ILeaveService _leaveService;
 
     public LeaveController(

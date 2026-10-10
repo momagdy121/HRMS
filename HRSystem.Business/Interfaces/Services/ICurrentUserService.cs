@@ -10,5 +10,11 @@ public interface ICurrentUserService
 
     bool IsDepartmentHead();
 
+    string? GetFullName();
+
+    string? GetDepartmentName();
+
+    int? GetDepartmentId();
+
     Task<Employee> GetCurrentEmployeeAsync(CancellationToken cancellationToken = default);
 }
