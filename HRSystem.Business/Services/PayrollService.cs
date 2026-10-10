@@ -131,10 +131,11 @@ public class PayrollService : IPayrollService
         PayrollStatus? status,
         int page = 1,
         int pageSize = 20,
+        string? search = null,
         CancellationToken cancellationToken = default)
     {
         var result = await _unitOfWork.Payrolls.GetFilteredPagedAsync(
-            departmentId, month, year, status, page, pageSize, cancellationToken);
+            departmentId, month, year, status, page, pageSize, search, cancellationToken);
         return PagedResultMapper.Map(result);
     }
 

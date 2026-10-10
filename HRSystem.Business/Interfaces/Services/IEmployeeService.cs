@@ -6,11 +6,11 @@ namespace HRSystem.Business.Interfaces.Services;
 
 public interface IEmployeeService
 {
-    Task<PagedResult<Employee>> GetAllAsync(int page = 1, int pageSize = 20, CancellationToken cancellationToken = default);
+    Task<PagedResult<Employee>> GetAllAsync(int page = 1, int pageSize = 20, string? search = null, CancellationToken cancellationToken = default);
 
-    Task<PagedResult<Employee>> GetByDepartmentAsync(int departmentId, int page = 1, int pageSize = 20, CancellationToken cancellationToken = default);
+    Task<PagedResult<Employee>> GetByDepartmentAsync(int departmentId, int page = 1, int pageSize = 20, string? search = null, CancellationToken cancellationToken = default);
 
-    Task<PagedResult<Employee>> GetDeletedAsync(int page = 1, int pageSize = 20, CancellationToken cancellationToken = default);
+    Task<PagedResult<Employee>> GetDeletedAsync(int page = 1, int pageSize = 20, string? search = null, CancellationToken cancellationToken = default);
 
     Task<Employee> GetByIdAsync(int employeeId, CancellationToken cancellationToken = default);
 

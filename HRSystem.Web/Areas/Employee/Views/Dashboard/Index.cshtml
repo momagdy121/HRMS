@@ -76,19 +76,31 @@
 
             <!-- Recent Payslips -->
             <div class="bg-surface-container-lowest rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] border border-surface-container overflow-hidden">
-                <div class="p-md border-b border-surface-container">
+                <div class="p-md border-b border-surface-container flex justify-between items-center">
                     <h3 class="font-h3 text-h3 text-on-surface">Recent Payslips</h3>
+                    <a asp-area="Employee" asp-controller="Payroll" asp-action="Index" class="text-primary-container font-label-bold text-xs hover:underline">View All</a>
                 </div>
-                <ul class="divide-y divide-surface-container">
-                    <li class="p-md flex justify-between items-center hover:bg-surface-bright transition-colors">
-                        <div><p class="font-label-bold text-on-surface">October 2025</p><p class="text-body-sm text-on-surface-variant">Paid Oct 31</p></div>
-                        <span class="font-h3 text-h3 text-[#047857]">$5,850</span>
-                    </li>
-                    <li class="p-md flex justify-between items-center hover:bg-surface-bright transition-colors">
-                        <div><p class="font-label-bold text-on-surface">September 2025</p><p class="text-body-sm text-on-surface-variant">Paid Sep 30</p></div>
-                        <span class="font-h3 text-h3 text-[#047857]">$5,850</span>
-                    </li>
-                </ul>
+                @if (Model.RecentPayslips.Any())
+                {
+                    <ul class="divide-y divide-surface-container">
+                        @foreach (var payslip in Model.RecentPayslips)
+                        {
+                            <li class="p-md flex justify-between items-center hover:bg-surface-bright transition-colors">
+                                <div>
+                                    <p class="font-label-bold text-on-surface">@payslip.Period</p>
+                                    <p class="text-body-sm text-on-surface-variant">@payslip.PaymentDate</p>
+                                </div>
+                                <span class="font-h3 text-h3 text-[#047857]">@payslip.NetSalary.ToString("C0")</span>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <div class="p-6 text-center text-on-surface-variant">
+                        <p class="font-body-sm">No payslips generated yet.</p>
+                    </div>
+                }
             </div>
         </div>
 
@@ -96,31 +108,45 @@
         <div class="xl:w-2/3">
             <div class="bg-surface-container-lowest rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] border border-surface-container overflow-hidden">
                 <div class="p-md border-b border-surface-container">
-                    <h3 class="font-h3 text-h3 text-on-surface">Team Members — Engineering</h3>
+                    <h3 class="font-h3 text-h3 text-on-surface">Team Members — @Model.DepartmentName</h3>
                 </div>
-                <ul class="divide-y divide-surface-container">
-                    <li class="p-md flex items-center justify-between hover:bg-surface-bright transition-colors">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold">BJ</div>
-                            <div><p class="font-label-bold text-on-surface">Bob Johnson</p><p class="text-body-sm text-on-surface-variant">Department Head</p></div>
-                        </div>
-                        <span class="bg-green-50 text-green-700 px-2.5 py-0.5 rounded-full text-xs font-medium flex items-center gap-1"><span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>Online</span>
-                    </li>
-                    <li class="p-md flex items-center justify-between hover:bg-surface-bright transition-colors">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-bold">JD</div>
-                            <div><p class="font-label-bold text-on-surface">John Doe</p><p class="text-body-sm text-on-surface-variant">Software Engineer</p></div>
-                        </div>
-                        <span class="bg-green-50 text-green-700 px-2.5 py-0.5 rounded-full text-xs font-medium flex items-center gap-1"><span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>Online</span>
-                    </li>
-                    <li class="p-md flex items-center justify-between hover:bg-surface-bright transition-colors">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold">EW</div>
-                            <div><p class="font-label-bold text-on-surface">Emily Wong</p><p class="text-body-sm text-on-surface-variant">QA Engineer</p></div>
-                        </div>
-                        <span class="bg-yellow-50 text-amber-700 px-2.5 py-0.5 rounded-full text-xs font-medium flex items-center gap-1"><span class="w-1.5 h-1.5 bg-amber-400 rounded-full"></span>Away</span>
-                    </li>
-                </ul>
+                @if (Model.TeamMembers.Any())
+                {
+                    <ul class="divide-y divide-surface-container">
+                        @foreach (var member in Model.TeamMembers)
+                        {
+                            <li class="p-md flex items-center justify-between hover:bg-surface-bright transition-colors">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold">
+                                        @member.Initials
+                                    </div>
+                                    <div>
+                                        <p class="font-label-bold text-on-surface">@member.Name</p>
+                                        <p class="text-body-sm text-on-surface-variant">@member.Role</p>
+                                    </div>
+                                </div>
+                                @if (member.IsPresentToday)
+                                {
+                                    <span class="bg-green-50 text-green-700 px-2.5 py-0.5 rounded-full text-xs font-medium flex items-center gap-1">
+                                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>Present
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="bg-slate-100 text-slate-500 px-2.5 py-0.5 rounded-full text-xs font-medium flex items-center gap-1">
+                                        <span class="w-1.5 h-1.5 bg-slate-400 rounded-full"></span>Offline
+                                    </span>
+                                }
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <div class="p-8 text-center text-on-surface-variant">
+                        <p class="font-body-sm">No other team members found.</p>
+                    </div>
+                }
             </div>
         </div>
     </div>

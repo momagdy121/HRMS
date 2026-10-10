@@ -8,7 +8,7 @@ public static class LeaveBalanceDefaults
     public static int TotalDaysFor(LeaveType leaveType) =>
         leaveType switch
         {
-            LeaveType.Annual => 20,
+            LeaveType.Annual => 21,
             LeaveType.Sick => 10,
             _ => throw new ArgumentOutOfRangeException(nameof(leaveType), leaveType, "Unpaid leave has no balance row.")
         };

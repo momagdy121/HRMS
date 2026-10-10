@@ -25,13 +25,19 @@ public class EmployeeRepository : IEmployeeRepository
             e => e.Email != null && e.Email.ToLower() == email.ToLower(),
             cancellationToken);
 
-    public Task<PagedList<Employee>> GetActivePagedAsync(int page, int pageSize, CancellationToken cancellationToken = default) =>
-        _context.Employees
+    public Task<PagedList<Employee>> GetActivePagedAsync(int page, int pageSize, string? search = null, CancellationToken cancellationToken = default)
+    {
+        var query = _context.Employees
             .AsNoTracking()
-            .Where(e => !e.IsDeleted)
+            .Where(e => !e.IsDeleted);
+
+        query = ApplySearch(query, search);
+
+        return query
             .OrderBy(e => e.LastName)
             .ThenBy(e => e.FirstName)
             .ToPagedListAsync(page, pageSize, cancellationToken);
+    }
 
     public Task<PagedList<Employee>> GetAllPagedAsync(int page, int pageSize, CancellationToken cancellationToken = default) =>
         _context.Employees
@@ -40,21 +46,33 @@ public class EmployeeRepository : IEmployeeRepository
             .ThenBy(e => e.FirstName)
             .ToPagedListAsync(page, pageSize, cancellationToken);
 
-    public Task<PagedList<Employee>> GetByDepartmentPagedAsync(int departmentId, int page, int pageSize, CancellationToken cancellationToken = default) =>
-        _context.Employees
+    public Task<PagedList<Employee>> GetByDepartmentPagedAsync(int departmentId, int page, int pageSize, string? search = null, CancellationToken cancellationToken = default)
+    {
+        var query = _context.Employees
             .AsNoTracking()
-            .Where(e => !e.IsDeleted && e.DepartmentId == departmentId)
-            .OrderBy(e => e.LastName)
-            .ThenBy(e => e.FirstName)
-            .ToPagedListAsync(page, pageSize, cancellationToken);
+            .Where(e => !e.IsDeleted && e.DepartmentId == departmentId);
 
-    public Task<PagedList<Employee>> GetDeletedPagedAsync(int page, int pageSize, CancellationToken cancellationToken = default) =>
-        _context.Employees
-            .AsNoTracking()
-            .Where(e => e.IsDeleted)
+        query = ApplySearch(query, search);
+
+        return query
             .OrderBy(e => e.LastName)
             .ThenBy(e => e.FirstName)
             .ToPagedListAsync(page, pageSize, cancellationToken);
+    }
+
+    public Task<PagedList<Employee>> GetDeletedPagedAsync(int page, int pageSize, string? search = null, CancellationToken cancellationToken = default)
+    {
+        var query = _context.Employees
+            .AsNoTracking()
+            .Where(e => e.IsDeleted);
+
+        query = ApplySearch(query, search);
+
+        return query
+            .OrderBy(e => e.LastName)
+            .ThenBy(e => e.FirstName)
+            .ToPagedListAsync(page, pageSize, cancellationToken);
+    }
 
     public Task<bool> IsManagerOfAnyDepartmentAsync(int employeeId, CancellationToken cancellationToken = default) =>
         _context.Departments.AnyAsync(d => d.ManagerId == employeeId && !d.IsDeleted, cancellationToken);
@@ -106,4 +124,16 @@ public class EmployeeRepository : IEmployeeRepository
         await _context.Employees.AddAsync(employee, cancellationToken);
 
     public void Update(Employee employee) => _context.Employees.Update(employee);
+
+    private static IQueryable<Employee> ApplySearch(IQueryable<Employee> query, string? search)
+    {
+        if (string.IsNullOrWhiteSpace(search))
+            return query;
+
+        var term = search.Trim().ToLower();
+        return query.Where(e =>
+            e.FirstName.ToLower().Contains(term) ||
+            e.LastName.ToLower().Contains(term) ||
+            (e.Email != null && e.Email.ToLower().Contains(term)));
+    }
 }

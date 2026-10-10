@@ -24,19 +24,19 @@ public class DepartmentController : HRBaseController
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index(int page = 1, int? editId = null, int? replaceId = null, bool showCreate = false)
+    public async Task<IActionResult> Index(int page = 1, string? search = null, int? editId = null, int? replaceId = null, bool showCreate = false)
     {
         await SetLayoutAsync("Departments", "Search departments...");
-        return View(await BuildIndexModelAsync(page, editId, replaceId, showCreate));
+        return View(await BuildIndexModelAsync(page, editId, replaceId, showCreate, search: search));
     }
 
     [HttpGet]
-    public async Task<IActionResult> Deleted(int page = 1)
+    public async Task<IActionResult> Deleted(int page = 1, string? search = null)
     {
         await SetLayoutAsync("Departments", "Search deleted departments...");
 
         var employees = await HrDisplayHelper.LoadEmployeesAsync(UnitOfWork);
-        var paged = await _departmentService.GetDeletedAsync(page, PageSize);
+        var paged = await _departmentService.GetDeletedAsync(page, PageSize, search);
 
         return View("Index", new DepartmentIndexViewModel
         {
@@ -180,10 +180,11 @@ public class DepartmentController : HRBaseController
         int? editId = null,
         int? replaceId = null,
         bool showCreate = false,
-        CreateDepartmentViewModel? createForm = null)
+        CreateDepartmentViewModel? createForm = null,
+        string? search = null)
     {
         var employees = await HrDisplayHelper.LoadEmployeesAsync(UnitOfWork);
-        var paged = await _departmentService.GetAllAsync(page, PageSize);
+        var paged = await _departmentService.GetAllAsync(page, PageSize, search);
 
         var model = new DepartmentIndexViewModel
         {

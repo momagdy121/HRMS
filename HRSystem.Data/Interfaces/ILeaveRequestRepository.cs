@@ -18,6 +18,7 @@ public interface ILeaveRequestRepository
         LeaveRequestStatus? status,
         int page,
         int pageSize,
+        string? search = null,
         CancellationToken cancellationToken = default);
 
     Task<PagedList<LeaveRequest>> GetByEmployeePagedAsync(

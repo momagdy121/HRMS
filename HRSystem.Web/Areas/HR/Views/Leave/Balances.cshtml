@@ -1,0 +1,212 @@
+@model HRSystem.Web.ViewModels.Leave.HrLeaveBalancesViewModel
+@{
+    ViewBag.Title = "Leave Balances - HRMS Portal";
+    var currentYear = DateTime.UtcNow.Year;
+}
+
+<div class="max-w-7xl mx-auto space-y-6">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+            <h2 class="font-h1 text-h1 text-slate-900 mb-1">Leave Management</h2>
+            <p class="font-body-md text-body-md text-slate-500">View, adjust, and rollover employee leave entitlements</p>
+        </div>
+        <div class="flex gap-2">
+            <button onclick="document.getElementById('rolloverModal').classList.add('active')" class="bg-surface border border-outline-variant text-primary-container px-4 py-2 rounded-lg font-label-bold flex items-center gap-2 hover:bg-surface-variant transition-colors shadow-sm">
+                <span class="material-symbols-outlined text-sm">autorenew</span>Annual Rollover
+            </button>
+        </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="flex border-b border-slate-200">
+        <a asp-action="Index" class="px-4 py-3 font-label-bold text-label-bold text-slate-500 hover:text-slate-900">Leave Requests</a>
+        <a asp-action="Balances" class="px-4 py-3 font-label-bold text-label-bold text-primary border-b-2 border-primary">Leave Balances</a>
+    </div>
+
+    <!-- Filter Bar -->
+    <form method="get" asp-action="Balances" class="p-4 bg-white rounded-xl shadow-sm border border-slate-100 flex flex-wrap gap-4 items-end justify-between">
+        <div class="flex flex-wrap gap-4 items-end">
+            <div class="flex flex-col gap-1.5 w-48">
+                <label class="font-label-bold text-slate-500 text-[11px] uppercase tracking-wider">Year</label>
+                <select name="year" class="border-slate-200 rounded-lg text-sm font-body-md px-3 py-2 bg-slate-50">
+                    @for (var y = currentYear + 1; y >= currentYear - 2; y--)
+                    {
+                        <option value="@y" selected="@(Model.SelectedYear == y)">@y</option>
+                    }
+                </select>
+            </div>
+            <div class="flex flex-col gap-1.5 w-52">
+                <label class="font-label-bold text-slate-500 text-[11px] uppercase tracking-wider">Department</label>
+                <select name="departmentId" class="border-slate-200 rounded-lg text-sm font-body-md px-3 py-2 bg-slate-50">
+                    <option value="">All Departments</option>
+                    @foreach (var dept in Model.Departments)
+                    {
+                        <option value="@dept.Id" selected="@(Model.DepartmentFilter == dept.Id)">@dept.Name</option>
+                    }
+                </select>
+            </div>
+            @if (!string.IsNullOrEmpty(Context.Request.Query["search"]))
+            {
+                <input type="hidden" name="search" value="@Context.Request.Query["search"]" />
+            }
+            <button type="submit" class="px-5 py-2 bg-primary-container text-on-primary rounded-lg font-label-bold">Apply</button>
+        </div>
+        <div class="text-sm font-body-sm text-slate-500">
+            Year <strong>@Model.SelectedYear</strong> entitlements (Default: 21 Annual, 10 Sick)
+        </div>
+    </form>
+
+    <!-- Balances Table -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50 border-b border-slate-200 text-xs">
+                        <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Employee</th>
+                        <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Department</th>
+                        <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Annual Leave</th>
+                        <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider">Sick Leave</th>
+                        <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 font-body-md text-on-surface">
+                    @if (Model.Balances.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="5" class="px-6 py-12 text-center text-slate-500">No employees found.</td>
+                        </tr>
+                    }
+                    @foreach (var item in Model.Balances)
+                    {
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-xs">
+                                        @item.EmployeeInitials
+                                    </div>
+                                    <span class="font-medium text-slate-900">@item.EmployeeName</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-slate-600">@item.DepartmentName</td>
+                            <td class="px-6 py-4 text-sm">
+                                <div class="flex items-center gap-2">
+                                    <span class="font-bold text-primary">@item.AnnualRemaining</span>
+                                    <span class="text-xs text-slate-400">/ @item.AnnualTotal total (@item.AnnualUsed used)</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm">
+                                <div class="flex items-center gap-2">
+                                    <span class="font-bold text-[#b45309]">@item.SickRemaining</span>
+                                    <span class="text-xs text-slate-400">/ @item.SickTotal total (@item.SickUsed used)</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="flex justify-end gap-2">
+                                    <a asp-action="Balances"
+                                       asp-route-year="@Model.SelectedYear"
+                                       asp-route-departmentId="@Model.DepartmentFilter"
+                                       asp-route-adjustEmployeeId="@item.EmployeeId"
+                                       asp-route-adjustLeaveType="@((int)HRSystem.Common.Enums.LeaveType.Annual)"
+                                       class="px-3 py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded text-xs font-semibold flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-xs">tune</span> Adjust Annual
+                                    </a>
+                                    <a asp-action="Balances"
+                                       asp-route-year="@Model.SelectedYear"
+                                       asp-route-departmentId="@Model.DepartmentFilter"
+                                       asp-route-adjustEmployeeId="@item.EmployeeId"
+                                       asp-route-adjustLeaveType="@((int)HRSystem.Common.Enums.LeaveType.Sick)"
+                                       class="px-3 py-1 bg-amber-50 text-amber-700 hover:bg-amber-100 rounded text-xs font-semibold flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-xs">tune</span> Adjust Sick
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @await Html.PartialAsync("_Pagination", Model)
+    </div>
+</div>
+
+@section Modals {
+    <!-- Adjust Balance Modal -->
+    <div id="adjustModal" class="modal-overlay @(Model.AdjustForm != null ? "active" : "")">
+        <div class="modal-content w-full max-w-md mx-4 p-6 bg-white rounded-xl shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-h2 text-h2 text-on-surface">Adjust Leave Balance</h3>
+                <a asp-action="Balances" asp-route-year="@Model.SelectedYear" asp-route-departmentId="@Model.DepartmentFilter" class="p-1 text-on-surface-variant hover:text-on-surface">
+                    <span class="material-symbols-outlined">close</span>
+                </a>
+            </div>
+
+            @if (Model.AdjustForm != null)
+            {
+                <form asp-action="AdjustBalance" method="post" class="space-y-4">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="AdjustForm!.EmployeeId" />
+                    <input type="hidden" asp-for="AdjustForm!.Year" />
+                    <input type="hidden" asp-for="AdjustForm!.EmployeeName" />
+                    <input type="hidden" asp-for="AdjustForm!.LeaveType" />
+
+                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                        <p class="text-sm font-semibold text-slate-800">@Model.AdjustForm.EmployeeName</p>
+                        <p class="text-xs text-slate-500">Year: @Model.AdjustForm.Year | Entitlement: <strong>@Model.AdjustForm.LeaveType</strong></p>
+                    </div>
+
+                    <div>
+                        <label asp-for="AdjustForm!.TotalDays" class="block font-label-bold text-xs text-slate-700 mb-1">Total Entitled Days</label>
+                        <input asp-for="AdjustForm!.TotalDays" type="number" min="0" max="365" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-body-md" />
+                        <span asp-validation-for="AdjustForm!.TotalDays" class="text-error text-xs"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="AdjustForm!.UsedDays" class="block font-label-bold text-xs text-slate-700 mb-1">Used Days</label>
+                        <input asp-for="AdjustForm!.UsedDays" type="number" min="0" max="365" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-body-md" />
+                        <span asp-validation-for="AdjustForm!.UsedDays" class="text-error text-xs"></span>
+                    </div>
+
+                    <div class="flex justify-end gap-2 pt-2 border-t border-slate-100">
+                        <a asp-action="Balances" asp-route-year="@Model.SelectedYear" asp-route-departmentId="@Model.DepartmentFilter" class="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50">Cancel</a>
+                        <button type="submit" class="px-4 py-2 bg-primary text-on-primary rounded-lg text-sm font-semibold hover:bg-primary/90">Save Changes</button>
+                    </div>
+                </form>
+            }
+        </div>
+    </div>
+
+    <!-- Annual Rollover Modal -->
+    <div id="rolloverModal" class="modal-overlay">
+        <div class="modal-content w-full max-w-md mx-4 p-6 bg-white rounded-xl shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-h2 text-h2 text-on-surface">Annual Leave Rollover</h3>
+                <button onclick="document.getElementById('rolloverModal').classList.remove('active')" class="p-1 text-on-surface-variant hover:text-on-surface">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+
+            <div class="bg-blue-50 border border-blue-200 text-blue-900 rounded-lg p-3 text-sm mb-4">
+                <p>Roll forward all unused Annual leave days from <strong>@(currentYear - 1)</strong> into <strong>@currentYear</strong> for all active employees.</p>
+            </div>
+
+            <form asp-action="Rollover" method="post" class="space-y-4">
+                @Html.AntiForgeryToken()
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-label-bold text-xs text-slate-700 mb-1">From Year</label>
+                        <input type="number" name="fromYear" value="@(currentYear - 1)" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm" />
+                    </div>
+                    <div>
+                        <label class="block font-label-bold text-xs text-slate-700 mb-1">To Year</label>
+                        <input type="number" name="toYear" value="@currentYear" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm" />
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-2 pt-2 border-t border-slate-100">
+                    <button type="button" onclick="document.getElementById('rolloverModal').classList.remove('active')" class="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-primary text-on-primary rounded-lg text-sm font-semibold hover:bg-primary/90">Execute Rollover</button>
+                </div>
+            </form>
+        </div>
+    </div>
+}

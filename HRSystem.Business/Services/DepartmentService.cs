@@ -31,15 +31,15 @@ public class DepartmentService : IDepartmentService
         _managerPolicy = managerPolicy;
     }
 
-    public async Task<PagedResult<Department>> GetAllAsync(int page = 1, int pageSize = 20, CancellationToken cancellationToken = default)
+    public async Task<PagedResult<Department>> GetAllAsync(int page = 1, int pageSize = 20, string? search = null, CancellationToken cancellationToken = default)
     {
-        var result = await _unitOfWork.Departments.GetActivePagedAsync(page, pageSize, cancellationToken);
+        var result = await _unitOfWork.Departments.GetActivePagedAsync(page, pageSize, search, cancellationToken);
         return PagedResultMapper.Map(result);
     }
 
-    public async Task<PagedResult<Department>> GetDeletedAsync(int page = 1, int pageSize = 20, CancellationToken cancellationToken = default)
+    public async Task<PagedResult<Department>> GetDeletedAsync(int page = 1, int pageSize = 20, string? search = null, CancellationToken cancellationToken = default)
     {
-        var result = await _unitOfWork.Departments.GetDeletedPagedAsync(page, pageSize, cancellationToken);
+        var result = await _unitOfWork.Departments.GetDeletedPagedAsync(page, pageSize, search, cancellationToken);
         return PagedResultMapper.Map(result);
     }
 

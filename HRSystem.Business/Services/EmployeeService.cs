@@ -6,6 +6,7 @@ using HRSystem.Business.Interfaces.Services;
 using HRSystem.Business.Helpers;
 using HRSystem.Business.Mapping;
 using HRSystem.Common.Constants;
+using HRSystem.Common.Enums;
 using HRSystem.Data.Interfaces;
 using HRSystem.Data.Models;
 
@@ -30,21 +31,21 @@ public class EmployeeService : IEmployeeService
         _managerPolicy = managerPolicy;
     }
 
-    public async Task<PagedResult<Employee>> GetAllAsync(int page = 1, int pageSize = 20, CancellationToken cancellationToken = default)
+    public async Task<PagedResult<Employee>> GetAllAsync(int page = 1, int pageSize = 20, string? search = null, CancellationToken cancellationToken = default)
     {
-        var result = await _unitOfWork.Employees.GetActivePagedAsync(page, pageSize, cancellationToken);
+        var result = await _unitOfWork.Employees.GetActivePagedAsync(page, pageSize, search, cancellationToken);
         return PagedResultMapper.Map(result);
     }
 
-    public async Task<PagedResult<Employee>> GetByDepartmentAsync(int departmentId, int page = 1, int pageSize = 20, CancellationToken cancellationToken = default)
+    public async Task<PagedResult<Employee>> GetByDepartmentAsync(int departmentId, int page = 1, int pageSize = 20, string? search = null, CancellationToken cancellationToken = default)
     {
-        var result = await _unitOfWork.Employees.GetByDepartmentPagedAsync(departmentId, page, pageSize, cancellationToken);
+        var result = await _unitOfWork.Employees.GetByDepartmentPagedAsync(departmentId, page, pageSize, search, cancellationToken);
         return PagedResultMapper.Map(result);
     }
 
-    public async Task<PagedResult<Employee>> GetDeletedAsync(int page = 1, int pageSize = 20, CancellationToken cancellationToken = default)
+    public async Task<PagedResult<Employee>> GetDeletedAsync(int page = 1, int pageSize = 20, string? search = null, CancellationToken cancellationToken = default)
     {
-        var result = await _unitOfWork.Employees.GetDeletedPagedAsync(page, pageSize, cancellationToken);
+        var result = await _unitOfWork.Employees.GetDeletedPagedAsync(page, pageSize, search, cancellationToken);
         return PagedResultMapper.Map(result);
     }
 
@@ -76,6 +77,13 @@ public class EmployeeService : IEmployeeService
             var employee = EmployeeMapper.FromDto(dto);
 
             await _accountService.CreateAccountAsync(employee, dto.InitialPassword, dto.Role, cancellationToken);
+
+            var currentYear = DateTime.UtcNow.Year;
+            var annualBalance = LeaveBalanceDefaults.Create(employee.Id, currentYear, LeaveType.Annual);
+            var sickBalance = LeaveBalanceDefaults.Create(employee.Id, currentYear, LeaveType.Sick);
+            await _unitOfWork.LeaveBalances.AddAsync(annualBalance, cancellationToken);
+            await _unitOfWork.LeaveBalances.AddAsync(sickBalance, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             if (dto.Role == RoleNames.DepartmentHead)
             {

@@ -31,19 +31,31 @@ public class DepartmentRepository : IDepartmentRepository
             d => d.ManagerId == managerId && !d.IsDeleted,
             cancellationToken);
 
-    public Task<PagedList<Department>> GetActivePagedAsync(int page, int pageSize, CancellationToken cancellationToken = default) =>
-        _context.Departments
+    public Task<PagedList<Department>> GetActivePagedAsync(int page, int pageSize, string? search = null, CancellationToken cancellationToken = default)
+    {
+        var query = _context.Departments
             .AsNoTracking()
-            .Where(d => !d.IsDeleted)
-            .OrderBy(d => d.Name)
-            .ToPagedListAsync(page, pageSize, cancellationToken);
+            .Where(d => !d.IsDeleted);
 
-    public Task<PagedList<Department>> GetDeletedPagedAsync(int page, int pageSize, CancellationToken cancellationToken = default) =>
-        _context.Departments
-            .AsNoTracking()
-            .Where(d => d.IsDeleted)
+        query = ApplySearch(query, search);
+
+        return query
             .OrderBy(d => d.Name)
             .ToPagedListAsync(page, pageSize, cancellationToken);
+    }
+
+    public Task<PagedList<Department>> GetDeletedPagedAsync(int page, int pageSize, string? search = null, CancellationToken cancellationToken = default)
+    {
+        var query = _context.Departments
+            .AsNoTracking()
+            .Where(d => d.IsDeleted);
+
+        query = ApplySearch(query, search);
+
+        return query
+            .OrderBy(d => d.Name)
+            .ToPagedListAsync(page, pageSize, cancellationToken);
+    }
 
     public Task<int> CountActiveEmployeesAsync(int departmentId, CancellationToken cancellationToken = default) =>
         _context.Employees.CountAsync(
@@ -54,4 +66,13 @@ public class DepartmentRepository : IDepartmentRepository
         await _context.Departments.AddAsync(department, cancellationToken);
 
     public void Update(Department department) => _context.Departments.Update(department);
+
+    private static IQueryable<Department> ApplySearch(IQueryable<Department> query, string? search)
+    {
+        if (string.IsNullOrWhiteSpace(search))
+            return query;
+
+        var term = search.Trim().ToLower();
+        return query.Where(d => d.Name.ToLower().Contains(term));
+    }
 }

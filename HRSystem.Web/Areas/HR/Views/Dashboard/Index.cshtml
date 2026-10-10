@@ -106,56 +106,33 @@
                     <button class="text-primary-container font-label-bold text-label-bold hover:underline">View All</button>
                 </div>
                 <div class="p-0 flex-1">
-                    <ul class="divide-y divide-surface-container">
-                        <li class="p-md hover:bg-surface-bright transition-colors flex items-start gap-4">
-                            <div class="mt-1 w-10 h-10 rounded-full bg-[#d1fae5] text-[#047857] flex items-center justify-center shrink-0">
-                                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person_add</span>
-                            </div>
-                            <div class="flex-1">
-                                <div class="flex justify-between items-start mb-1">
-                                    <p class="font-body-md text-body-md text-on-surface font-medium">New employee Emily Wong added</p>
-                                    <span class="font-body-sm text-body-sm text-on-surface-variant whitespace-nowrap">1 hr ago</span>
-                                </div>
-                                <p class="font-body-sm text-body-sm text-on-surface-variant">Engineering department. Onboarding process started.</p>
-                            </div>
-                        </li>
-                        <li class="p-md hover:bg-surface-bright transition-colors flex items-start gap-4">
-                            <div class="mt-1 w-10 h-10 rounded-full bg-error-container text-error flex items-center justify-center shrink-0">
-                                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">event_busy</span>
-                            </div>
-                            <div class="flex-1">
-                                <div class="flex justify-between items-start mb-1">
-                                    <p class="font-body-md text-body-md text-on-surface font-medium">Alice Brown requested annual leave</p>
-                                    <span class="font-body-sm text-body-sm text-on-surface-variant whitespace-nowrap">2 hrs ago</span>
-                                </div>
-                                <p class="font-body-sm text-body-sm text-on-surface-variant">Oct 28 - Nov 1. Awaiting approval.</p>
-                            </div>
-                        </li>
-                        <li class="p-md hover:bg-surface-bright transition-colors flex items-start gap-4">
-                            <div class="mt-1 w-10 h-10 rounded-full bg-primary-fixed/30 text-primary-container flex items-center justify-center shrink-0">
-                                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">payments</span>
-                            </div>
-                            <div class="flex-1">
-                                <div class="flex justify-between items-start mb-1">
-                                    <p class="font-body-md text-body-md text-on-surface font-medium">October payroll processed</p>
-                                    <span class="font-body-sm text-body-sm text-on-surface-variant whitespace-nowrap">4 hrs ago</span>
-                                </div>
-                                <p class="font-body-sm text-body-sm text-on-surface-variant">48 records processed. 12 pending approval.</p>
-                            </div>
-                        </li>
-                        <li class="p-md hover:bg-surface-bright transition-colors flex items-start gap-4">
-                            <div class="mt-1 w-10 h-10 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
-                                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">domain</span>
-                            </div>
-                            <div class="flex-1">
-                                <div class="flex justify-between items-start mb-1">
-                                    <p class="font-body-md text-body-md text-on-surface font-medium">Design department manager updated</p>
-                                    <span class="font-body-sm text-body-sm text-on-surface-variant whitespace-nowrap">Yesterday</span>
-                                </div>
-                                <p class="font-body-sm text-body-sm text-on-surface-variant">Jane Smith assigned as new Design manager.</p>
-                            </div>
-                        </li>
-                    </ul>
+                    @if (Model.RecentActivities.Any())
+                    {
+                        <ul class="divide-y divide-surface-container">
+                            @foreach (var activity in Model.RecentActivities)
+                            {
+                                <li class="p-md hover:bg-surface-bright transition-colors flex items-start gap-4">
+                                    <div class="mt-1 w-10 h-10 rounded-full @activity.IconColorClass flex items-center justify-center shrink-0">
+                                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">@activity.Icon</span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="flex justify-between items-start mb-1">
+                                            <p class="font-body-md text-body-md text-on-surface font-medium">@activity.Title</p>
+                                            <span class="font-body-sm text-body-sm text-on-surface-variant whitespace-nowrap">@activity.TimeAgo</span>
+                                        </div>
+                                        <p class="font-body-sm text-body-sm text-on-surface-variant">@activity.Description</p>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <div class="p-8 text-center text-on-surface-variant">
+                            <span class="material-symbols-outlined text-4xl text-slate-300 mb-2">notifications_off</span>
+                            <p class="font-body-md">No recent activity recorded yet.</p>
+                        </div>
+                    }
                 </div>
             </div>
         </div>

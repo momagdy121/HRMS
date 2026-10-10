@@ -16,7 +16,7 @@ public static class HrDisplayHelper
         IUnitOfWork unitOfWork,
         CancellationToken cancellationToken = default)
     {
-        var page = await unitOfWork.Departments.GetActivePagedAsync(1, 500, cancellationToken);
+        var page = await unitOfWork.Departments.GetActivePagedAsync(1, 500, cancellationToken: cancellationToken);
         return page.Items.ToDictionary(d => d.Id);
     }
 
@@ -24,7 +24,7 @@ public static class HrDisplayHelper
         IUnitOfWork unitOfWork,
         CancellationToken cancellationToken = default)
     {
-        var page = await unitOfWork.Employees.GetActivePagedAsync(1, 500, cancellationToken);
+        var page = await unitOfWork.Employees.GetActivePagedAsync(1, 500, cancellationToken: cancellationToken);
         return page.Items.ToDictionary(e => e.Id);
     }
 }

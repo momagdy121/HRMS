@@ -27,6 +27,7 @@ public class AttendanceController : DepartmentHeadBaseController
     [HttpGet]
     public async Task<IActionResult> Index(
         DateOnly? date = null,
+        string? search = null,
         int? markEmployeeId = null,
         bool showCheckIn = false,
         bool showCheckOut = false)
@@ -49,7 +50,8 @@ public class AttendanceController : DepartmentHeadBaseController
             date ?? DateOnly.FromDateTime(DateTime.UtcNow),
             markEmployeeId,
             showCheckIn: showCheckIn,
-            showCheckOut: showCheckOut));
+            showCheckOut: showCheckOut,
+            search: search));
     }
 
     [HttpPost]
@@ -135,9 +137,10 @@ public class AttendanceController : DepartmentHeadBaseController
         int? markEmployeeId = null,
         MarkTeamAttendanceViewModel? markForm = null,
         bool showCheckIn = false,
-        bool showCheckOut = false)
+        bool showCheckOut = false,
+        string? search = null)
     {
-        var employeesPage = await UnitOfWork.Employees.GetByDepartmentPagedAsync(department.Id, 1, TeamPageSize);
+        var employeesPage = await UnitOfWork.Employees.GetByDepartmentPagedAsync(department.Id, 1, TeamPageSize, search);
         var employees = employeesPage.Items
             .Where(e => e.IsActive && !e.IsDeleted && !e.IsHR)
             .OrderBy(e => e.LastName)

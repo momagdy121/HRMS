@@ -45,12 +45,24 @@ public class LeaveRequestRepository : ILeaveRequestRepository
         LeaveRequestStatus? status,
         int page,
         int pageSize,
+        string? search = null,
         CancellationToken cancellationToken = default)
     {
         var query = _context.LeaveRequests.AsNoTracking().AsQueryable();
 
         if (status.HasValue)
             query = query.Where(l => l.Status == status.Value);
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var term = search.Trim().ToLower();
+            query = query.Where(l =>
+                (l.Reason != null && l.Reason.ToLower().Contains(term)) ||
+                _context.Employees.Any(e => e.Id == l.EmployeeId && !e.IsDeleted &&
+                    (e.FirstName.ToLower().Contains(term) ||
+                     e.LastName.ToLower().Contains(term) ||
+                     (e.Email != null && e.Email.ToLower().Contains(term)))));
+        }
 
         return query
             .OrderByDescending(l => l.RequestDate)

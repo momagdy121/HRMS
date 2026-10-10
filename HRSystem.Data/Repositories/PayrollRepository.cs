@@ -54,6 +54,7 @@ public class PayrollRepository : IPayrollRepository
         PayrollStatus? status,
         int page,
         int pageSize,
+        string? search = null,
         CancellationToken cancellationToken = default)
     {
         var query = _context.Payrolls.AsNoTracking().AsQueryable();
@@ -73,6 +74,17 @@ public class PayrollRepository : IPayrollRepository
 
         if (status.HasValue)
             query = query.Where(p => p.Status == status.Value);
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var term = search.Trim().ToLower();
+            query = query.Where(p =>
+                _context.Employees.Any(e =>
+                    e.Id == p.EmployeeId &&
+                    (e.FirstName.ToLower().Contains(term) ||
+                     e.LastName.ToLower().Contains(term) ||
+                     (e.Email != null && e.Email.ToLower().Contains(term)))));
+        }
 
         return query
             .OrderByDescending(p => p.Year)

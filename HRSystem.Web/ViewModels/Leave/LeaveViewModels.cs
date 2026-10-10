@@ -109,3 +109,54 @@ public class DeptHeadLeaveIndexViewModel
     public int TotalCount { get; set; }
     public int PageSize { get; set; }
 }
+
+public class HrEmployeeLeaveBalanceItemViewModel
+{
+    public int EmployeeId { get; set; }
+    public string EmployeeName { get; set; } = string.Empty;
+    public string EmployeeInitials { get; set; } = string.Empty;
+    public string DepartmentName { get; set; } = string.Empty;
+    public int AnnualTotal { get; set; }
+    public int AnnualUsed { get; set; }
+    public int AnnualRemaining => Math.Max(0, AnnualTotal - AnnualUsed);
+    public int SickTotal { get; set; }
+    public int SickUsed { get; set; }
+    public int SickRemaining => Math.Max(0, SickTotal - SickUsed);
+}
+
+public class AdjustLeaveBalanceViewModel
+{
+    [Required]
+    public int EmployeeId { get; set; }
+
+    public string EmployeeName { get; set; } = string.Empty;
+
+    [Required]
+    public int Year { get; set; }
+
+    [Required]
+    public LeaveType LeaveType { get; set; } = LeaveType.Annual;
+
+    [Required]
+    [Range(0, 365, ErrorMessage = "Total days must be between 0 and 365.")]
+    [Display(Name = "Total Days")]
+    public int TotalDays { get; set; }
+
+    [Required]
+    [Range(0, 365, ErrorMessage = "Used days must be between 0 and 365.")]
+    [Display(Name = "Used Days")]
+    public int UsedDays { get; set; }
+}
+
+public class HrLeaveBalancesViewModel
+{
+    public IReadOnlyList<HrEmployeeLeaveBalanceItemViewModel> Balances { get; set; } = [];
+    public IReadOnlyList<HRSystem.Web.ViewModels.HR.DepartmentOptionViewModel> Departments { get; set; } = [];
+    public int SelectedYear { get; set; }
+    public int? DepartmentFilter { get; set; }
+    public AdjustLeaveBalanceViewModel? AdjustForm { get; set; }
+    public int Page { get; set; }
+    public int TotalPages { get; set; }
+    public int TotalCount { get; set; }
+    public int PageSize { get; set; }
+}

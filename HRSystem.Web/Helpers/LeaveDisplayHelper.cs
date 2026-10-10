@@ -11,6 +11,7 @@ public static class LeaveDisplayHelper
             LeaveRequestStatus.Pending => "Pending",
             LeaveRequestStatus.Approved => "Approved",
             LeaveRequestStatus.Rejected => "Rejected",
+            LeaveRequestStatus.Cancelled => "Cancelled",
             _ => status.ToString()
         };
 
@@ -20,6 +21,7 @@ public static class LeaveDisplayHelper
             LeaveRequestStatus.Pending => "bg-yellow-50 text-amber-700",
             LeaveRequestStatus.Approved => "bg-green-50 text-green-700",
             LeaveRequestStatus.Rejected => "bg-red-50 text-red-700",
+            LeaveRequestStatus.Cancelled => "bg-slate-100 text-slate-500",
             _ => "bg-slate-100 text-slate-600"
         };
 

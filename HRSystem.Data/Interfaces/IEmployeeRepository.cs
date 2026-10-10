@@ -9,13 +9,13 @@ public interface IEmployeeRepository
 
     Task<Employee?> GetByEmailAsync(string email, CancellationToken cancellationToken = default);
 
-    Task<PagedList<Employee>> GetActivePagedAsync(int page, int pageSize, CancellationToken cancellationToken = default);
+    Task<PagedList<Employee>> GetActivePagedAsync(int page, int pageSize, string? search = null, CancellationToken cancellationToken = default);
 
     Task<PagedList<Employee>> GetAllPagedAsync(int page, int pageSize, CancellationToken cancellationToken = default);
 
-    Task<PagedList<Employee>> GetByDepartmentPagedAsync(int departmentId, int page, int pageSize, CancellationToken cancellationToken = default);
+    Task<PagedList<Employee>> GetByDepartmentPagedAsync(int departmentId, int page, int pageSize, string? search = null, CancellationToken cancellationToken = default);
 
-    Task<PagedList<Employee>> GetDeletedPagedAsync(int page, int pageSize, CancellationToken cancellationToken = default);
+    Task<PagedList<Employee>> GetDeletedPagedAsync(int page, int pageSize, string? search = null, CancellationToken cancellationToken = default);
 
     Task<bool> IsManagerOfAnyDepartmentAsync(int employeeId, CancellationToken cancellationToken = default);
 

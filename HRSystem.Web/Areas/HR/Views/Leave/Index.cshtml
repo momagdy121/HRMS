@@ -8,9 +8,14 @@
 }
 
 <div class="max-w-7xl mx-auto space-y-8">
-    <div class="mb-8">
-        <h2 class="font-h1 text-h1 text-slate-900 mb-1">Leave Requests</h2>
-        <p class="font-body-md text-body-md text-slate-500">Manage and process employee time-off requests</p>
+    <div class="mb-4">
+        <h2 class="font-h1 text-h1 text-slate-900 mb-1">Leave Management</h2>
+        <p class="font-body-md text-body-md text-slate-500">Manage employee time-off requests and annual leave balances</p>
+    </div>
+
+    <div class="flex border-b border-slate-200">
+        <a asp-action="Index" class="px-4 py-3 font-label-bold text-label-bold text-primary border-b-2 border-primary">Leave Requests</a>
+        <a asp-action="Balances" class="px-4 py-3 font-label-bold text-label-bold text-slate-500 hover:text-slate-900">Leave Balances</a>
     </div>
 
     <div class="flex flex-wrap items-center justify-between gap-4 mb-6">

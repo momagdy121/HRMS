@@ -30,5 +30,6 @@ public interface IPayrollService
         PayrollStatus? status,
         int page = 1,
         int pageSize = 20,
+        string? search = null,
         CancellationToken cancellationToken = default);
 }

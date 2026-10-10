@@ -21,5 +21,6 @@ public interface IAttendanceService
         int? departmentId,
         int page = 1,
         int pageSize = 20,
+        string? search = null,
         CancellationToken cancellationToken = default);
 }

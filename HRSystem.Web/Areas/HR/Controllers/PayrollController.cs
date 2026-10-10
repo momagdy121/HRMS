@@ -34,10 +34,11 @@ public class PayrollController : HRBaseController
         int? month = null,
         int? year = null,
         PayrollStatus? status = null,
+        string? search = null,
         bool showProcess = false)
     {
         await SetLayoutAsync("Payroll", "Search payroll records...");
-        return View(await BuildIndexModelAsync(page, departmentId, month, year, status, showProcess));
+        return View(await BuildIndexModelAsync(page, departmentId, month, year, status, showProcess, search: search));
     }
 
     [HttpPost]
@@ -219,17 +220,18 @@ public class PayrollController : HRBaseController
         int? year = null,
         PayrollStatus? status = null,
         bool showProcess = false,
-        ProcessPayrollViewModel? processForm = null)
+        ProcessPayrollViewModel? processForm = null,
+        string? search = null)
     {
         var departments = await HrDisplayHelper.LoadDepartmentsAsync(UnitOfWork);
         var employees = await HrDisplayHelper.LoadEmployeesAsync(UnitOfWork);
-        var paged = await _payrollService.GetFilteredAsync(departmentId, month, year, status, page, PageSize);
+        var paged = await _payrollService.GetFilteredAsync(departmentId, month, year, status, page, PageSize, search);
 
         var payrolls = paged.Items
             .Select(p => MapListItem(p, employees, departments))
             .ToList();
 
-        var statsPage = await _payrollService.GetFilteredAsync(departmentId, month, year, null, 1, 500);
+        var statsPage = await _payrollService.GetFilteredAsync(departmentId, month, year, null, 1, 500, search);
 
         return new HrPayrollIndexViewModel
         {

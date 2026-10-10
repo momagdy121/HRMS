@@ -62,6 +62,23 @@ public class LeaveController : EmployeeBaseController
         }
     }
 
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Cancel(int id)
+    {
+        try
+        {
+            await _leaveService.CancelAsync(id);
+            TempData["Success"] = "Leave request withdrawn successfully.";
+        }
+        catch (BusinessRuleException ex)
+        {
+            TempData["Error"] = ex.Message;
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
+
     private async Task<EmployeeLeaveIndexViewModel> BuildIndexModelAsync(
         int page,
         bool showRequest = false,

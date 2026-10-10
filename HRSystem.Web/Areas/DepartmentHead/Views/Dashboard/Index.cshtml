@@ -97,44 +97,33 @@
                     <h3 class="font-h3 text-h3 text-on-surface">Recent Activity</h3>
                     <button class="text-primary-container font-label-bold text-label-bold hover:underline">View All</button>
                 </div>
-                <ul class="divide-y divide-surface-container">
-                    <li class="p-md hover:bg-surface-bright transition-colors flex items-start gap-4">
-                        <div class="mt-1 w-10 h-10 rounded-full bg-error-container text-error flex items-center justify-center shrink-0">
-                            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">event_busy</span>
-                        </div>
-                        <div class="flex-1">
-                            <div class="flex justify-between items-start mb-1">
-                                <p class="font-body-md text-body-md text-on-surface font-medium">Alice Brown requested annual leave</p>
-                                <span class="font-body-sm text-body-sm text-on-surface-variant whitespace-nowrap">2 hrs ago</span>
-                            </div>
-                            <p class="font-body-sm text-body-sm text-on-surface-variant">Dates: Oct 28 - Nov 1. Requires approval.</p>
-                        </div>
-                    </li>
-                    <li class="p-md hover:bg-surface-bright transition-colors flex items-start gap-4">
-                        <div class="mt-1 w-10 h-10 rounded-full bg-primary-fixed/30 text-primary-container flex items-center justify-center shrink-0">
-                            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">assignment</span>
-                        </div>
-                        <div class="flex-1">
-                            <div class="flex justify-between items-start mb-1">
-                                <p class="font-body-md text-body-md text-on-surface font-medium">New task assigned to Emily Wong</p>
-                                <span class="font-body-sm text-body-sm text-on-surface-variant whitespace-nowrap">4 hrs ago</span>
-                            </div>
-                            <p class="font-body-sm text-body-sm text-on-surface-variant">Task: "Update Q3 Architecture Documentation". Due by Friday.</p>
-                        </div>
-                    </li>
-                    <li class="p-md hover:bg-surface-bright transition-colors flex items-start gap-4">
-                        <div class="mt-1 w-10 h-10 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
-                            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">how_to_reg</span>
-                        </div>
-                        <div class="flex-1">
-                            <div class="flex justify-between items-start mb-1">
-                                <p class="font-body-md text-body-md text-on-surface font-medium">Team attendance marked for Oct 24</p>
-                                <span class="font-body-sm text-body-sm text-on-surface-variant whitespace-nowrap">Today, 9:00 AM</span>
-                            </div>
-                            <p class="font-body-sm text-body-sm text-on-surface-variant">System auto-recorded daily check-ins.</p>
-                        </div>
-                    </li>
-                </ul>
+                @if (Model.RecentActivities.Any())
+                {
+                    <ul class="divide-y divide-surface-container">
+                        @foreach (var activity in Model.RecentActivities)
+                        {
+                            <li class="p-md hover:bg-surface-bright transition-colors flex items-start gap-4">
+                                <div class="mt-1 w-10 h-10 rounded-full @activity.IconColorClass flex items-center justify-center shrink-0">
+                                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">@activity.Icon</span>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <p class="font-body-md text-body-md text-on-surface font-medium">@activity.Title</p>
+                                        <span class="font-body-sm text-body-sm text-on-surface-variant whitespace-nowrap">@activity.TimeAgo</span>
+                                    </div>
+                                    <p class="font-body-sm text-body-sm text-on-surface-variant">@activity.Description</p>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <div class="p-8 text-center text-on-surface-variant">
+                        <span class="material-symbols-outlined text-4xl text-slate-300 mb-2">notifications_off</span>
+                        <p class="font-body-md">No recent team activity recorded yet.</p>
+                    </div>
+                }
             </div>
         </div>
     </div>

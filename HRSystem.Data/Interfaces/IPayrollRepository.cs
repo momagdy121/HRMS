@@ -23,6 +23,7 @@ public interface IPayrollRepository
         PayrollStatus? status,
         int page,
         int pageSize,
+        string? search = null,
         CancellationToken cancellationToken = default);
 
     Task AddAsync(Payroll payroll, CancellationToken cancellationToken = default);

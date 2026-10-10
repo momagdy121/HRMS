@@ -20,6 +20,7 @@ public interface IAttendanceRepository
         int? departmentId,
         int page,
         int pageSize,
+        string? search = null,
         CancellationToken cancellationToken = default);
 
     Task<int> SoftDeleteAllForEmployeeAsync(int employeeId, CancellationToken cancellationToken = default);

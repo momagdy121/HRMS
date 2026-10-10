@@ -95,6 +95,21 @@ public class LeaveService : ILeaveService
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 
+    public async Task CancelAsync(int leaveRequestId, CancellationToken cancellationToken = default)
+    {
+        var request = await GetLeaveRequestAsync(leaveRequestId, cancellationToken);
+        if (request.Status != LeaveRequestStatus.Pending)
+            throw new BusinessRuleException("Only pending leave requests can be cancelled.");
+
+        var currentEmployee = await _currentUser.GetCurrentEmployeeAsync(cancellationToken);
+        if (request.EmployeeId != currentEmployee.Id && !_currentUser.IsHR())
+            throw new BusinessRuleException("You can only cancel your own leave requests.");
+
+        LeaveWorkflow.Cancel(request);
+        _unitOfWork.LeaveRequests.Update(request);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+    }
+
     public async Task<LeaveBalance?> GetBalanceAsync(int employeeId, int year, LeaveType leaveType, CancellationToken cancellationToken = default)
     {
         if (leaveType is LeaveType.Unpaid)
@@ -125,9 +140,10 @@ public class LeaveService : ILeaveService
         LeaveRequestStatus? status,
         int page = 1,
         int pageSize = 20,
+        string? search = null,
         CancellationToken cancellationToken = default)
     {
-        var result = await _unitOfWork.LeaveRequests.GetFilteredPagedAsync(status, page, pageSize, cancellationToken);
+        var result = await _unitOfWork.LeaveRequests.GetFilteredPagedAsync(status, page, pageSize, search, cancellationToken);
         return PagedResultMapper.Map(result);
     }
 
@@ -157,6 +173,54 @@ public class LeaveService : ILeaveService
         await GetOrCreateBalanceAsync(employeeId, year, LeaveType.Annual, cancellationToken);
         await GetOrCreateBalanceAsync(employeeId, year, LeaveType.Sick, cancellationToken);
         return await _unitOfWork.LeaveBalances.GetByEmployeeAndYearAsync(employeeId, year, cancellationToken);
+    }
+
+    public async Task AdjustBalanceAsync(
+        int employeeId,
+        int year,
+        LeaveType leaveType,
+        int totalDays,
+        int usedDays,
+        CancellationToken cancellationToken = default)
+    {
+        if (!_currentUser.IsHR())
+            throw new BusinessRuleException("Only HR can adjust leave balances.");
+
+        if (leaveType is LeaveType.Unpaid)
+            throw new BusinessRuleException("Cannot manage balance for unpaid leave.");
+
+        if (totalDays < 0)
+            throw new BusinessRuleException("Total days cannot be negative.");
+
+        if (usedDays < 0)
+            throw new BusinessRuleException("Used days cannot be negative.");
+
+        var balance = await GetOrCreateBalanceAsync(employeeId, year, leaveType, cancellationToken);
+        balance.TotalDays = totalDays;
+        balance.UsedDays = usedDays;
+
+        _unitOfWork.LeaveBalances.Update(balance);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task RolloverBalancesAsync(int fromYear, int toYear, CancellationToken cancellationToken = default)
+    {
+        if (!_currentUser.IsHR())
+            throw new BusinessRuleException("Only HR can perform annual leave rollover.");
+
+        var employees = await _unitOfWork.Employees.GetAllPagedAsync(1, 1000, cancellationToken);
+        foreach (var emp in employees.Items.Where(e => !e.IsDeleted && e.IsActive))
+        {
+            var fromAnnual = await _unitOfWork.LeaveBalances.GetAsync(emp.Id, fromYear, LeaveType.Annual, cancellationToken);
+            if (fromAnnual != null)
+            {
+                var remaining = Math.Max(0, fromAnnual.TotalDays - fromAnnual.UsedDays);
+                var toAnnual = await GetOrCreateBalanceAsync(emp.Id, toYear, LeaveType.Annual, cancellationToken);
+                toAnnual.TotalDays = LeaveBalanceDefaults.TotalDaysFor(LeaveType.Annual) + remaining;
+                _unitOfWork.LeaveBalances.Update(toAnnual);
+            }
+        }
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task<LeaveRequest> GetLeaveRequestAsync(int id, CancellationToken cancellationToken) =>

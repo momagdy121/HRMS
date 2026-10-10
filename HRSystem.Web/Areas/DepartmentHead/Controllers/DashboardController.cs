@@ -1,5 +1,6 @@
 using HRSystem.Business.Interfaces.Services;
 using HRSystem.Data.Interfaces;
+using HRSystem.Web.Helpers;
 using HRSystem.Web.ViewModels.Dashboard;
 using Microsoft.AspNetCore.Mvc;
 using EmployeeTaskStatus = HRSystem.Common.Enums.TaskStatus;
@@ -59,7 +60,8 @@ public class DashboardController : DepartmentHeadBaseController
 
         var now = DateTime.UtcNow;
         var today = DateOnly.FromDateTime(now);
-        var employeeIds = (await _employeeService.GetByDepartmentAsync(department.Id, 1, 500)).Items.Select(e => e.Id).ToHashSet();
+        var deptEmployeesMap = (await _employeeService.GetByDepartmentAsync(department.Id, 1, 500)).Items.ToDictionary(e => e.Id);
+        var employeeIds = deptEmployeesMap.Keys.ToHashSet();
 
         var presentCount = 0;
         foreach (var employeeId in employeeIds)
@@ -83,6 +85,60 @@ public class DashboardController : DepartmentHeadBaseController
             && t.DueDate.HasValue
             && t.DueDate.Value < today);
 
+        var activities = new List<DashboardActivityItemViewModel>();
+
+        foreach (var l in pendingLeave.Items.Take(2))
+        {
+            deptEmployeesMap.TryGetValue(l.EmployeeId, out var lEmp);
+            var empName = lEmp != null ? $"{lEmp.FirstName} {lEmp.LastName}" : "Team member";
+            activities.Add(new DashboardActivityItemViewModel
+            {
+                Title = $"{empName} requested {l.LeaveType} leave",
+                Description = $"{l.StartDate:MMM dd} - {l.EndDate:MMM dd}. Requires review.",
+                TimeAgo = l.RequestDate.ToString("MMM dd"),
+                Icon = "event_busy",
+                IconColorClass = "bg-error-container text-error"
+            });
+        }
+
+        foreach (var t in tasks.Items.Take(2))
+        {
+            deptEmployeesMap.TryGetValue(t.AssignedToId, out var tEmp);
+            var empName = tEmp != null ? $"{tEmp.FirstName} {tEmp.LastName}" : "Employee";
+            activities.Add(new DashboardActivityItemViewModel
+            {
+                Title = $"Task '{t.Title}' assigned to {empName}",
+                Description = $"Status: {t.Status}. Due: {(t.DueDate.HasValue ? t.DueDate.Value.ToString("MMM dd") : "No due date")}.",
+                TimeAgo = t.CreatedAt.ToString("MMM dd"),
+                Icon = "assignment",
+                IconColorClass = "bg-primary-fixed/30 text-primary-container"
+            });
+        }
+
+        var todayAttendance = await UnitOfWork.Attendances.GetReportPagedAsync(today, department.Id, 1, 5);
+        foreach (var a in todayAttendance.Items.Where(x => x.CheckInTime.HasValue).Take(2))
+        {
+            var empName = a.Employee != null ? $"{a.Employee.FirstName} {a.Employee.LastName}" : "Team member";
+            activities.Add(new DashboardActivityItemViewModel
+            {
+                Title = $"{empName} checked in",
+                Description = $"Time: {a.CheckInTime:hh\\:mm}. Date: {a.Date:MMM dd}.",
+                TimeAgo = "Today",
+                Icon = "how_to_reg",
+                IconColorClass = "bg-[#d1fae5] text-[#047857]"
+            });
+        }
+
+        var teamMembers = deptEmployeesMap.Values.Select(e => new DepartmentTeamMemberViewModel
+        {
+            Id = e.Id,
+            FullName = $"{e.FirstName} {e.LastName}",
+            Email = e.Email ?? string.Empty,
+            Role = department.ManagerId == e.Id ? "Department Head" : (e.IsHR ? "HR Specialist" : "Team Member"),
+            Initials = HrDisplayHelper.GetInitials(e.FirstName, e.LastName),
+            IsActive = e.IsActive
+        }).OrderBy(e => e.FullName).ToList();
+
         return new DepartmentHeadDashboardViewModel
         {
             DepartmentName = department.Name,
@@ -90,7 +146,9 @@ public class DashboardController : DepartmentHeadBaseController
             PendingLeaveRequests = pendingLeave.TotalCount,
             PresentThisMonth = presentCount,
             AttendancePercent = attendancePercent,
-            OverdueTasks = overdueTasks
+            OverdueTasks = overdueTasks,
+            RecentActivities = activities,
+            TeamMembers = teamMembers
         };
     }
 }

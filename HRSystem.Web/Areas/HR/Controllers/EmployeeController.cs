@@ -24,19 +24,19 @@ public class EmployeeController : HRBaseController
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index(int page = 1, int? departmentId = null, int? editId = null, bool showCreate = false)
+    public async Task<IActionResult> Index(int page = 1, int? departmentId = null, string? search = null, int? editId = null, bool showCreate = false)
     {
         await SetLayoutAsync("Employees", "Search employees...");
-        return View(await BuildIndexModelAsync(page, departmentId, editId, showCreate));
+        return View(await BuildIndexModelAsync(page, departmentId, search, editId, showCreate));
     }
 
     [HttpGet]
-    public async Task<IActionResult> Deleted(int page = 1)
+    public async Task<IActionResult> Deleted(int page = 1, string? search = null)
     {
         await SetLayoutAsync("Employees", "Search deleted employees...");
 
         var departments = await HrDisplayHelper.LoadDepartmentsAsync(UnitOfWork);
-        var paged = await _employeeService.GetDeletedAsync(page, PageSize);
+        var paged = await _employeeService.GetDeletedAsync(page, PageSize, search);
 
         return View("Index", new EmployeeIndexViewModel
         {
@@ -149,14 +149,15 @@ public class EmployeeController : HRBaseController
     private async Task<EmployeeIndexViewModel> BuildIndexModelAsync(
         int page,
         int? departmentId,
+        string? search = null,
         int? editId = null,
         bool showCreate = false,
         CreateEmployeeViewModel? createForm = null)
     {
         var departments = await HrDisplayHelper.LoadDepartmentsAsync(UnitOfWork);
         var paged = departmentId.HasValue
-            ? await _employeeService.GetByDepartmentAsync(departmentId.Value, page, PageSize)
-            : await _employeeService.GetAllAsync(page, PageSize);
+            ? await _employeeService.GetByDepartmentAsync(departmentId.Value, page, PageSize, search)
+            : await _employeeService.GetAllAsync(page, PageSize, search);
 
         var activeManagerIds = departments.Values.Select(d => d.ManagerId).ToHashSet();
         var canDeleteMap = paged.Items.ToDictionary(e => e.Id, e => !activeManagerIds.Contains(e.Id));

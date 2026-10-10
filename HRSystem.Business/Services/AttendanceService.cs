@@ -117,9 +117,10 @@ public class AttendanceService : IAttendanceService
         int? departmentId,
         int page = 1,
         int pageSize = 20,
+        string? search = null,
         CancellationToken cancellationToken = default)
     {
-        var result = await _unitOfWork.Attendances.GetReportPagedAsync(date, departmentId, page, pageSize, cancellationToken);
+        var result = await _unitOfWork.Attendances.GetReportPagedAsync(date, departmentId, page, pageSize, search, cancellationToken);
         return PagedResultMapper.Map(result);
     }
 }

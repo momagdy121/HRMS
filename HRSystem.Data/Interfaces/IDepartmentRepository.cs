@@ -11,9 +11,9 @@ public interface IDepartmentRepository
 
     Task<Department?> GetByManagerIdAsync(int managerId, CancellationToken cancellationToken = default);
 
-    Task<PagedList<Department>> GetActivePagedAsync(int page, int pageSize, CancellationToken cancellationToken = default);
+    Task<PagedList<Department>> GetActivePagedAsync(int page, int pageSize, string? search = null, CancellationToken cancellationToken = default);
 
-    Task<PagedList<Department>> GetDeletedPagedAsync(int page, int pageSize, CancellationToken cancellationToken = default);
+    Task<PagedList<Department>> GetDeletedPagedAsync(int page, int pageSize, string? search = null, CancellationToken cancellationToken = default);
 
     Task<int> CountActiveEmployeesAsync(int departmentId, CancellationToken cancellationToken = default);
 

@@ -13,6 +13,8 @@ public interface ILeaveService
 
     Task RejectAsync(int leaveRequestId, string rejectionReason, CancellationToken cancellationToken = default);
 
+    Task CancelAsync(int leaveRequestId, CancellationToken cancellationToken = default);
+
     Task<LeaveBalance?> GetBalanceAsync(int employeeId, int year, LeaveType leaveType, CancellationToken cancellationToken = default);
 
     Task<PagedResult<LeaveRequest>> GetPendingByDepartmentAsync(int departmentId, int page = 1, int pageSize = 20, CancellationToken cancellationToken = default);
@@ -25,6 +27,7 @@ public interface ILeaveService
         LeaveRequestStatus? status,
         int page = 1,
         int pageSize = 20,
+        string? search = null,
         CancellationToken cancellationToken = default);
 
     Task<PagedResult<LeaveRequest>> GetByEmployeeAsync(int employeeId, int page = 1, int pageSize = 20, CancellationToken cancellationToken = default);
@@ -37,4 +40,8 @@ public interface ILeaveService
         CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<LeaveBalance>> GetEmployeeBalancesAsync(int employeeId, int year, CancellationToken cancellationToken = default);
+
+    Task AdjustBalanceAsync(int employeeId, int year, LeaveType leaveType, int totalDays, int usedDays, CancellationToken cancellationToken = default);
+
+    Task RolloverBalancesAsync(int fromYear, int toYear, CancellationToken cancellationToken = default);
 }

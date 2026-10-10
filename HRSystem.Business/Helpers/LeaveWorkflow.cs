@@ -20,4 +20,11 @@ public static class LeaveWorkflow
         request.ApprovedBy = null;
         request.ApprovedAt = null;
     }
+
+    public static void Cancel(LeaveRequest request)
+    {
+        request.Status = LeaveRequestStatus.Cancelled;
+        request.ApprovedBy = null;
+        request.ApprovedAt = null;
+    }
 }

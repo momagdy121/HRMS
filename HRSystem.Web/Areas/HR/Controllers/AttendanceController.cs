@@ -23,17 +23,17 @@ public class AttendanceController : HRBaseController
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index(string? date = null, int? departmentId = null, int page = 1)
+    public async Task<IActionResult> Index(string? date = null, int? departmentId = null, string? search = null, int page = 1)
     {
         await SetLayoutAsync("Attendance", "Search attendance records...");
         var resolvedDate = !string.IsNullOrWhiteSpace(date) && DateOnly.TryParse(date, out var d)
             ? d
             : DateOnly.FromDateTime(DateTime.UtcNow);
 
-        return View(await BuildIndexModelAsync(resolvedDate, departmentId, page));
+        return View(await BuildIndexModelAsync(resolvedDate, departmentId, search, page));
     }
 
-    private async Task<HrAttendanceIndexViewModel> BuildIndexModelAsync(DateOnly date, int? departmentId, int page)
+    private async Task<HrAttendanceIndexViewModel> BuildIndexModelAsync(DateOnly date, int? departmentId, string? search, int page)
     {
         var departmentsPaged = await UnitOfWork.Departments.GetActivePagedAsync(1, 500);
         var departments = departmentsPaged.Items
@@ -42,7 +42,7 @@ public class AttendanceController : HRBaseController
             .Select(d => (d.Id, d.Name))
             .ToList();
 
-        var paged = await _attendanceService.GetReportAsync(date, departmentId, page, PageSize);
+        var paged = await _attendanceService.GetReportAsync(date, departmentId, page, PageSize, search);
 
         var records = paged.Items.Select(a =>
         {

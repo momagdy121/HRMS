@@ -55,6 +55,7 @@ public class AttendanceRepository : IAttendanceRepository
         int? departmentId,
         int page,
         int pageSize,
+        string? search = null,
         CancellationToken cancellationToken = default)
     {
         var query = _context.Attendances
@@ -66,6 +67,15 @@ public class AttendanceRepository : IAttendanceRepository
         if (departmentId.HasValue)
         {
             query = query.Where(a => a.Employee.DepartmentId == departmentId.Value);
+        }
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var term = search.Trim().ToLower();
+            query = query.Where(a =>
+                a.Employee.FirstName.ToLower().Contains(term) ||
+                a.Employee.LastName.ToLower().Contains(term) ||
+                (a.Employee.Email != null && a.Employee.Email.ToLower().Contains(term)));
         }
 
         return query
