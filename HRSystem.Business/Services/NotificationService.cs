@@ -38,6 +38,16 @@ public class NotificationService : INotificationService
         return notification;
     }
 
+    public async Task CreateManyAsync(IEnumerable<UserNotification> notifications, CancellationToken cancellationToken = default)
+    {
+        var list = notifications?.ToList();
+        if (list == null || list.Count == 0)
+            return;
+
+        await _unitOfWork.UserNotifications.AddRangeAsync(list, cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+    }
+
     public Task<int> GetUnreadCountAsync(int employeeId, CancellationToken cancellationToken = default) =>
         _unitOfWork.UserNotifications.GetUnreadCountAsync(employeeId, cancellationToken);
 

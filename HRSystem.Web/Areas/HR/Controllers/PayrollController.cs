@@ -314,7 +314,7 @@ public class PayrollController : HRBaseController
         try
         {
             var result = await _payrollService.BulkMarkPaidAsync(month, year, departmentId);
-            TempData["Success"] = $"Marked {result.UpdatedCount} payroll record(s) as paid. Payslip notifications sent.";
+            TempData["Success"] = $"Marked {result.UpdatedCount} payroll record(s) as paid. Payslips are being dispatched in the background.";
         }
         catch (BusinessRuleException ex)
         {

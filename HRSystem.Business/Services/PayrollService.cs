@@ -206,15 +206,21 @@ public class PayrollService : IPayrollService
         {
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            // Send in-app notifications (no email at this stage)
-            foreach (var payroll in drafts.Where(p => p.Status == PayrollStatus.Approved))
+            // Send in-app notifications in bulk (no email at this stage)
+            var approvedList = drafts.Where(p => p.Status == PayrollStatus.Approved).ToList();
+            var employeeIds = approvedList.Select(p => p.EmployeeId).Distinct().ToList();
+            var employeeMap = await _unitOfWork.Employees.GetByIdsAsync(employeeIds, cancellationToken);
+
+            var pairs = new List<(Payroll payroll, Employee employee)>();
+            foreach (var payroll in approvedList)
             {
-                var employee = await _unitOfWork.Employees.GetByIdAsync(payroll.EmployeeId, cancellationToken);
-                if (employee != null)
+                if (employeeMap.TryGetValue(payroll.EmployeeId, out var employee))
                 {
-                    await _workflowNotifications.NotifyPayrollApprovedAsync(payroll, employee, cancellationToken);
+                    pairs.Add((payroll, employee));
                 }
             }
+
+            await _workflowNotifications.NotifyBulkPayrollApprovedAsync(pairs, cancellationToken);
         }
 
         return result;
@@ -240,15 +246,20 @@ public class PayrollService : IPayrollService
         {
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            // Send full notifications (in-app + email) — payslip is now final
+            // Send notifications in bulk (batch in-app insertion + background email queue dispatch)
+            var employeeIds = approved.Select(p => p.EmployeeId).Distinct().ToList();
+            var employeeMap = await _unitOfWork.Employees.GetByIdsAsync(employeeIds, cancellationToken);
+
+            var pairs = new List<(Payroll payroll, Employee employee)>();
             foreach (var payroll in approved)
             {
-                var employee = await _unitOfWork.Employees.GetByIdAsync(payroll.EmployeeId, cancellationToken);
-                if (employee != null)
+                if (employeeMap.TryGetValue(payroll.EmployeeId, out var employee))
                 {
-                    await _workflowNotifications.NotifyPayslipAvailableAsync(payroll, employee, cancellationToken);
+                    pairs.Add((payroll, employee));
                 }
             }
+
+            await _workflowNotifications.NotifyBulkPayslipsAvailableAsync(pairs, cancellationToken);
         }
 
         return result;

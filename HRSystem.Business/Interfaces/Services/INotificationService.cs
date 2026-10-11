@@ -13,6 +13,8 @@ public interface INotificationService
         string? linkUrl = null,
         CancellationToken cancellationToken = default);
 
+    Task CreateManyAsync(IEnumerable<UserNotification> notifications, CancellationToken cancellationToken = default);
+
     Task<int> GetUnreadCountAsync(int employeeId, CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<UserNotification>> GetRecentAsync(int employeeId, int take = 10, CancellationToken cancellationToken = default);

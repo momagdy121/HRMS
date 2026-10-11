@@ -6,6 +6,8 @@ public interface IUserNotificationRepository
 {
     Task AddAsync(UserNotification notification, CancellationToken cancellationToken = default);
 
+    Task AddRangeAsync(IEnumerable<UserNotification> notifications, CancellationToken cancellationToken = default);
+
     Task<int> GetUnreadCountAsync(int employeeId, CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<UserNotification>> GetRecentAsync(int employeeId, int take, CancellationToken cancellationToken = default);

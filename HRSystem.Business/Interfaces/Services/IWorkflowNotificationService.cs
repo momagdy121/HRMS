@@ -14,5 +14,9 @@ public interface IWorkflowNotificationService
 
     Task NotifyPayrollApprovedAsync(Payroll payroll, Employee employee, CancellationToken cancellationToken = default);
 
+    Task NotifyBulkPayrollApprovedAsync(IEnumerable<(Payroll payroll, Employee employee)> items, CancellationToken cancellationToken = default);
+
     Task NotifyPayslipAvailableAsync(Payroll payroll, Employee employee, CancellationToken cancellationToken = default);
+
+    Task NotifyBulkPayslipsAvailableAsync(IEnumerable<(Payroll payroll, Employee employee)> items, CancellationToken cancellationToken = default);
 }

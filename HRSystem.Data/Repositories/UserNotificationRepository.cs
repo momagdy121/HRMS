@@ -20,6 +20,11 @@ public class UserNotificationRepository : IUserNotificationRepository
         return Task.CompletedTask;
     }
 
+    public async Task AddRangeAsync(IEnumerable<UserNotification> notifications, CancellationToken cancellationToken = default)
+    {
+        await _context.UserNotifications.AddRangeAsync(notifications, cancellationToken);
+    }
+
     public Task<int> GetUnreadCountAsync(int employeeId, CancellationToken cancellationToken = default) =>
         _context.UserNotifications.CountAsync(n => n.EmployeeId == employeeId && !n.IsRead, cancellationToken);
 

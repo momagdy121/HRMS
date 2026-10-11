@@ -16,6 +16,8 @@ public static class DependencyInjection
 
         services.Configure<BravoApiSettings>(configuration.GetSection(BravoApiSettings.SectionName));
         services.AddScoped<IEmailService, BrevoEmailService>();
+        services.AddSingleton<IBackgroundEmailQueue, BackgroundEmailQueue>();
+        services.AddHostedService<EmailBackgroundWorker>();
 
         services.Configure<CloudinarySettings>(configuration.GetSection(CloudinarySettings.SectionName));
         services.AddScoped<ICloudinaryService, CloudinaryService>();

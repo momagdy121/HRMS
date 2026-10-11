@@ -1,3 +1,4 @@
+using HRSystem.Business.DTOs.Email;
 using HRSystem.Business.Interfaces.Services;
 using HRSystem.Common.Constants;
 using HRSystem.Common.Enums;
@@ -10,18 +11,18 @@ namespace HRSystem.Business.Services;
 public class WorkflowNotificationService : IWorkflowNotificationService
 {
     private readonly INotificationService _notificationService;
-    private readonly IEmailService _emailService;
+    private readonly IBackgroundEmailQueue _emailQueue;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<WorkflowNotificationService> _logger;
 
     public WorkflowNotificationService(
         INotificationService notificationService,
-        IEmailService emailService,
+        IBackgroundEmailQueue emailQueue,
         IUnitOfWork unitOfWork,
         ILogger<WorkflowNotificationService> logger)
     {
         _notificationService = notificationService;
-        _emailService = emailService;
+        _emailQueue = emailQueue;
         _unitOfWork = unitOfWork;
         _logger = logger;
     }
@@ -197,6 +198,30 @@ public class WorkflowNotificationService : IWorkflowNotificationService
             cancellationToken);
     }
 
+    public async Task NotifyBulkPayrollApprovedAsync(IEnumerable<(Payroll payroll, Employee employee)> items, CancellationToken cancellationToken = default)
+    {
+        var notifications = new List<UserNotification>();
+        foreach (var (payroll, employee) in items)
+        {
+            var period = $"{new DateTime(payroll.Year, payroll.Month, 1):MMMM yyyy}";
+            notifications.Add(new UserNotification
+            {
+                EmployeeId = employee.Id,
+                Kind = NotificationKind.PayrollApproved,
+                Title = "Payroll Approved",
+                Message = $"Your payroll for {period} has been approved and is being processed for payment.",
+                LinkUrl = $"/Employee/Payroll/Payslip/{payroll.Id}",
+                IsRead = false,
+                CreatedAt = DateTime.UtcNow
+            });
+        }
+
+        if (notifications.Count > 0)
+        {
+            await _notificationService.CreateManyAsync(notifications, cancellationToken);
+        }
+    }
+
     public async Task NotifyPayslipAvailableAsync(Payroll payroll, Employee employee, CancellationToken cancellationToken = default)
     {
         var title = "Monthly Payslip Ready";
@@ -226,15 +251,78 @@ public class WorkflowNotificationService : IWorkflowNotificationService
         }
     }
 
+    public async Task NotifyBulkPayslipsAvailableAsync(IEnumerable<(Payroll payroll, Employee employee)> items, CancellationToken cancellationToken = default)
+    {
+        var notifications = new List<UserNotification>();
+        var emailMessages = new List<EmailMessage>();
+
+        foreach (var (payroll, employee) in items)
+        {
+            var period = $"{new DateTime(payroll.Year, payroll.Month, 1):MMMM yyyy}";
+            notifications.Add(new UserNotification
+            {
+                EmployeeId = employee.Id,
+                Kind = NotificationKind.PayslipAvailable,
+                Title = "Monthly Payslip Ready",
+                Message = $"Your payslip for {period} is now available. Net pay: ${payroll.NetSalary:N2}.",
+                LinkUrl = $"/Employee/Payroll/Payslip/{payroll.Id}",
+                IsRead = false,
+                CreatedAt = DateTime.UtcNow
+            });
+
+            if (!string.IsNullOrWhiteSpace(employee.Email))
+            {
+                var html = $@"
+<div style='font-family: sans-serif; max-width: 600px; margin: auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 12px;'>
+    <h2 style='color: #1e3a8a;'>Your Payslip is Ready</h2>
+    <p>Hello <strong>{employee.FirstName}</strong>,</p>
+    <p>Your monthly payslip for <strong>{period}</strong> has been processed and payment has been completed.</p>
+    <p><strong>Net Amount:</strong> ${payroll.NetSalary:N2}</p>
+    <p>You can view and print your full payslip breakdown in the HRMS Portal.</p>
+</div>";
+                emailMessages.Add(new EmailMessage
+                {
+                    ToEmail = employee.Email,
+                    ToName = $"{employee.FirstName} {employee.LastName}",
+                    Subject = $"Payslip Ready - {period}",
+                    HtmlContent = html
+                });
+            }
+        }
+
+        if (notifications.Count > 0)
+        {
+            await _notificationService.CreateManyAsync(notifications, cancellationToken);
+        }
+
+        if (emailMessages.Count > 0)
+        {
+            try
+            {
+                await _emailQueue.QueueEmailsAsync(emailMessages);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to enqueue bulk payslip emails. Notifications were preserved.");
+            }
+        }
+    }
+
     private async Task TrySendEmailAsync(string toEmail, string toName, string subject, string htmlContent, CancellationToken cancellationToken)
     {
         try
         {
-            await _emailService.SendEmailAsync(toEmail, toName, subject, htmlContent, cancellationToken);
+            await _emailQueue.QueueEmailAsync(new EmailMessage
+            {
+                ToEmail = toEmail,
+                ToName = toName,
+                Subject = subject,
+                HtmlContent = htmlContent
+            });
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Could not deliver email to {Email}. In-app notification was preserved.", toEmail);
+            _logger.LogWarning(ex, "Could not enqueue email to {Email}. In-app notification was preserved.", toEmail);
         }
     }
 }
