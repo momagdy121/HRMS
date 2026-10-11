@@ -1,5 +1,6 @@
 using HRSystem.Business.DTOs.Payroll;
 using HRSystem.Business.Exceptions;
+using HRSystem.Business.Helpers;
 using HRSystem.Business.Interfaces.Services;
 using HRSystem.Common.Enums;
 using HRSystem.Data.Interfaces;
@@ -324,6 +325,76 @@ public class PayrollController : HRBaseController
         return RedirectToAction(nameof(Index), new { month, year, departmentId });
     }
 
+    [HttpGet]
+    public async Task<IActionResult> ExportCsv(
+        int? departmentId = null,
+        int? month = null,
+        int? year = null,
+        PayrollStatus? status = null,
+        string? search = null)
+    {
+        var paged = await UnitOfWork.Payrolls.GetFilteredPagedAsync(departmentId, month, year, status, page: 1, pageSize: 10000, search: search);
+        var payrolls = paged.Items;
+
+        var employeeIds = payrolls.Select(p => p.EmployeeId).Distinct().ToList();
+        var employeeMap = await UnitOfWork.Employees.GetByIdsAsync(employeeIds);
+        var departmentsMap = await HrDisplayHelper.LoadDepartmentsAsync(UnitOfWork);
+
+        var headers = new[]
+        {
+            "Payroll ID",
+            "Employee ID",
+            "Employee Name",
+            "Email",
+            "Department",
+            "Period",
+            "Year",
+            "Month",
+            "Status",
+            "Base Salary",
+            "Total Bonus",
+            "Total Deduction",
+            "Net Salary",
+            "Processed Date"
+        };
+
+        var rows = payrolls.Select(p =>
+        {
+            employeeMap.TryGetValue(p.EmployeeId, out var emp);
+            string deptName = "—";
+            if (emp != null && departmentsMap.TryGetValue(emp.DepartmentId, out var dept))
+            {
+                deptName = dept.Name;
+            }
+
+            var periodLabel = $"{PayrollDisplayHelper.GetMonthName(p.Month)} {p.Year}";
+            var empName = emp != null ? $"{emp.FirstName} {emp.LastName}" : $"Employee #{p.EmployeeId}";
+            var empEmail = emp?.Email ?? string.Empty;
+
+            return new object?[]
+            {
+                p.Id,
+                p.EmployeeId,
+                empName,
+                empEmail,
+                deptName,
+                periodLabel,
+                p.Year,
+                p.Month,
+                p.Status.ToString(),
+                p.BaseSalary,
+                p.TotalBonus,
+                p.TotalDeduction,
+                p.NetSalary,
+                p.ProcessedAt.HasValue ? p.ProcessedAt.Value.ToString("yyyy-MM-dd HH:mm") : "—"
+            };
+        });
+
+        var csvBytes = CsvExportHelper.CreateCsvBytes(headers, rows);
+        var fileName = $"Payroll_Export_{year ?? DateTime.UtcNow.Year}_{(month.HasValue ? month.Value.ToString("D2") : "All")}_{DateTime.UtcNow:yyyyMMdd_HHmm}.csv";
+        return File(csvBytes, "text/csv; charset=utf-8", fileName);
+    }
+
     private async Task<HrPayrollIndexViewModel> BuildIndexModelAsync(
         int page,
         int? departmentId = null,
@@ -370,6 +441,7 @@ public class PayrollController : HRBaseController
             MonthFilter = month,
             YearFilter = year,
             StatusFilter = status,
+            Search = search,
             ShowProcessModal = showProcess,
             ShowBatchProcessModal = showBatchProcess,
             TotalNetForPeriod = statsPage.Items.Sum(p => p.NetSalary),

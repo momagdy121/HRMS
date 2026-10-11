@@ -37,6 +37,18 @@
             <button type="submit" class="px-4 py-1.5 bg-primary text-white text-sm font-semibold rounded-lg hover:bg-primary/90 transition-colors">
                 View
             </button>
+            @if (User.IsInRole("HR"))
+            {
+                <a asp-area="HR" asp-controller="Attendance" asp-action="ExportTimesheetCsv" asp-route-employeeId="@Model.EmployeeId" asp-route-year="@Model.Year" asp-route-month="@Model.Month" class="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold rounded-lg transition-colors flex items-center gap-1 shadow-sm" title="Export this timesheet to CSV">
+                    <span class="material-symbols-outlined text-sm">download</span>Export CSV
+                </a>
+            }
+            else
+            {
+                <a asp-area="Employee" asp-controller="Attendance" asp-action="ExportTimesheetCsv" asp-route-year="@Model.Year" asp-route-month="@Model.Month" class="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold rounded-lg transition-colors flex items-center gap-1 shadow-sm" title="Export your timesheet to CSV">
+                    <span class="material-symbols-outlined text-sm">download</span>Export CSV
+                </a>
+            }
         </form>
     </div>
 

@@ -1,5 +1,6 @@
 using HRSystem.Business.DTOs.Employees;
 using HRSystem.Business.Exceptions;
+using HRSystem.Business.Helpers;
 using HRSystem.Business.Interfaces.Services;
 using HRSystem.Data.Interfaces;
 using HRSystem.Data.Models;
@@ -47,6 +48,57 @@ public class EmployeeController : HRBaseController
             TotalCount = paged.TotalCount,
             PageSize = paged.PageSize
         });
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> ExportCsv(int? departmentId = null, string? search = null)
+    {
+        var employees = await UnitOfWork.Employees.GetActiveForPayrollAsync(departmentId);
+        var departmentsMap = await HrDisplayHelper.LoadDepartmentsAsync(UnitOfWork);
+
+        var headers = new[]
+        {
+            "Employee ID",
+            "First Name",
+            "Last Name",
+            "Email",
+            "Department",
+            "Role",
+            "Base Salary",
+            "Hire Date",
+            "Status"
+        };
+
+        var rows = new List<IEnumerable<object?>>();
+        foreach (var emp in employees)
+        {
+            var fullName = $"{emp.FirstName} {emp.LastName}";
+            if (!string.IsNullOrWhiteSpace(search) &&
+                !fullName.Contains(search, StringComparison.OrdinalIgnoreCase) &&
+                !(emp.Email?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false))
+            {
+                continue;
+            }
+
+            departmentsMap.TryGetValue(emp.DepartmentId, out var dept);
+
+            rows.Add(new object?[]
+            {
+                emp.Id,
+                emp.FirstName,
+                emp.LastName,
+                emp.Email ?? string.Empty,
+                dept?.Name ?? "—",
+                emp.IsHR ? "HR" : "Employee",
+                emp.Salary,
+                emp.HireDate.ToString("yyyy-MM-dd"),
+                emp.IsActive ? "Active" : "Inactive"
+            });
+        }
+
+        var csvBytes = CsvExportHelper.CreateCsvBytes(headers, rows);
+        var fileName = $"Employees_Directory_{DateTime.UtcNow:yyyyMMdd_HHmm}.csv";
+        return File(csvBytes, "text/csv; charset=utf-8", fileName);
     }
 
     [HttpPost]

@@ -10,6 +10,9 @@
             <p class="font-body-md text-body-md text-on-surface-variant mt-1">Process and manage employee payroll</p>
         </div>
         <div class="flex items-center gap-3">
+            <a asp-action="ExportCsv" asp-route-departmentId="@Model.DepartmentFilter" asp-route-month="@Model.MonthFilter" asp-route-year="@Model.YearFilter" asp-route-status="@Model.StatusFilter" asp-route-search="@Model.Search" class="bg-surface border border-slate-200 text-slate-700 px-4 py-2.5 rounded-lg font-label-bold flex items-center gap-2 hover:bg-slate-50 transition-colors shadow-sm" title="Export filtered payroll records to CSV (Excel compatible)">
+                <span class="material-symbols-outlined text-sm">download</span>Export CSV
+            </a>
             <a asp-action="Index" asp-route-showBatchProcess="true" class="bg-surface border border-outline-variant text-primary-container px-4 py-2.5 rounded-lg font-label-bold flex items-center gap-2 hover:bg-surface-variant transition-colors shadow-sm">
                 <span class="material-symbols-outlined text-sm">dynamic_feed</span>Run Monthly Payroll
             </a>

@@ -1,3 +1,4 @@
+using HRSystem.Business.Helpers;
 using HRSystem.Business.Interfaces.Services;
 using HRSystem.Data.Interfaces;
 using HRSystem.Data.Models;
@@ -143,6 +144,135 @@ public class AttendanceController : HRBaseController
         };
 
         return View("~/Areas/Employee/Views/Attendance/Timesheet.cshtml", model);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> ExportMonthlyCsv(int? year = null, int? month = null, int? departmentId = null, string? search = null)
+    {
+        var y = year ?? DateTime.UtcNow.Year;
+        var m = month ?? DateTime.UtcNow.Month;
+
+        var employees = await UnitOfWork.Employees.GetActiveForPayrollAsync(departmentId);
+        var timesheets = await _attendanceService.GetMonthlyDepartmentTimesheetsAsync(departmentId, y, m);
+        var byEmp = timesheets.ToDictionary(t => t.EmployeeId);
+        var departmentsMap = await HrDisplayHelper.LoadDepartmentsAsync(UnitOfWork);
+
+        var start = new DateOnly(y, m, 1);
+        var end = start.AddMonths(1).AddDays(-1);
+        var workDaysTotal = 0;
+        for (var dt = start; dt <= end; dt = dt.AddDays(1))
+        {
+            if (dt.DayOfWeek is not (DayOfWeek.Saturday or DayOfWeek.Sunday))
+                workDaysTotal++;
+        }
+
+        var headers = new[]
+        {
+            "Employee ID",
+            "Employee Name",
+            "Email",
+            "Department",
+            "Job Title",
+            "Year",
+            "Month",
+            "Working Days in Month",
+            "Days Present",
+            "Weekday Absences",
+            "Late Check-Ins",
+            "Total Hours Worked",
+            "Attendance Rate (%)"
+        };
+
+        var rows = new List<IEnumerable<object?>>();
+        foreach (var emp in employees)
+        {
+            var fullName = $"{emp.FirstName} {emp.LastName}";
+            if (!string.IsNullOrWhiteSpace(search) &&
+                !fullName.Contains(search, StringComparison.OrdinalIgnoreCase) &&
+                !(emp.Email?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false))
+            {
+                continue;
+            }
+
+            departmentsMap.TryGetValue(emp.DepartmentId, out var dept);
+            byEmp.TryGetValue(emp.Id, out var ts);
+
+            var daysPresent = ts?.DaysPresent ?? 0;
+            var absences = ts?.WeekdayAbsences ?? 0;
+            var late = ts?.LateCheckIns ?? 0;
+            var totalHours = ts?.TotalHours ?? 0;
+            var rate = workDaysTotal > 0 ? (double)daysPresent / workDaysTotal * 100 : 0.0;
+
+            rows.Add(new object?[]
+            {
+                emp.Id,
+                fullName,
+                emp.Email ?? string.Empty,
+                dept?.Name ?? "—",
+                emp.IsHR ? "HR Specialist" : "Staff Member",
+                y,
+                m,
+                workDaysTotal,
+                daysPresent,
+                absences,
+                late,
+                Math.Round(totalHours, 2),
+                Math.Round(rate, 1)
+            });
+        }
+
+        var csvBytes = CsvExportHelper.CreateCsvBytes(headers, rows);
+        var fileName = $"Monthly_Attendance_Summary_{y}_{m:D2}_{DateTime.UtcNow:yyyyMMdd_HHmm}.csv";
+        return File(csvBytes, "text/csv; charset=utf-8", fileName);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> ExportTimesheetCsv(int employeeId, int? year = null, int? month = null)
+    {
+        var employee = await UnitOfWork.Employees.GetByIdAsync(employeeId);
+        if (employee == null)
+            return NotFound();
+
+        var y = year ?? DateTime.UtcNow.Year;
+        var m = month ?? DateTime.UtcNow.Month;
+
+        var timesheetDto = await _attendanceService.GetMonthlyTimesheetAsync(employee.Id, y, m);
+
+        var headers = new[]
+        {
+            "Date",
+            "Day of Week",
+            "Status",
+            "Check In Time",
+            "Check Out Time",
+            "Hours Worked",
+            "Late Check-In"
+        };
+
+        var rows = timesheetDto.Days.Select(day =>
+        {
+            string status;
+            if (day.IsPresent) status = day.IsLate ? "Late" : "Present";
+            else if (day.IsFuture) status = "Upcoming";
+            else if (day.IsWeekday) status = "Absent";
+            else status = "Weekend";
+
+            return new object?[]
+            {
+                day.Date.ToString("yyyy-MM-dd"),
+                day.Date.DayOfWeek.ToString(),
+                status,
+                day.CheckInTime.HasValue ? day.CheckInTime.Value.ToString("HH:mm:ss") : "—",
+                day.CheckOutTime.HasValue ? day.CheckOutTime.Value.ToString("HH:mm:ss") : "—",
+                day.HoursWorked.HasValue ? Math.Round(day.HoursWorked.Value, 2) : 0.0,
+                day.IsLate ? "Yes" : "No"
+            };
+        });
+
+        var csvBytes = CsvExportHelper.CreateCsvBytes(headers, rows);
+        var sanitized = $"{employee.FirstName}_{employee.LastName}".Replace(" ", "_");
+        var fileName = $"Timesheet_{sanitized}_{y}_{m:D2}.csv";
+        return File(csvBytes, "text/csv; charset=utf-8", fileName);
     }
 
     private async Task<HrAttendanceIndexViewModel> BuildIndexModelAsync(DateOnly date, int? departmentId, string? search, int page)

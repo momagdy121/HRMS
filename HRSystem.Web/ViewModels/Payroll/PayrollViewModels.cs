@@ -117,6 +117,7 @@ public class HrPayrollIndexViewModel
     public int? MonthFilter { get; set; }
     public int? YearFilter { get; set; }
     public PayrollStatus? StatusFilter { get; set; }
+    public string? Search { get; set; }
     public bool ShowProcessModal { get; set; }
     public bool ShowBatchProcessModal { get; set; }
     public decimal TotalNetForPeriod { get; set; }

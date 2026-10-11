@@ -33,9 +33,14 @@
         </form>
         @if (!isDeletedView)
         {
-            <a asp-action="Index" asp-route-showCreate="true" class="bg-primary text-on-primary px-4 py-2 rounded-lg font-label-bold text-label-bold hover:bg-primary/90 transition-colors shadow-sm flex items-center gap-2">
-                <span class="material-symbols-outlined text-sm">add</span>Add Employee
-            </a>
+            <div class="flex items-center gap-2">
+                <a asp-action="ExportCsv" asp-route-departmentId="@Model.DepartmentFilter" class="bg-surface border border-slate-200 text-slate-700 px-4 py-2 rounded-lg font-label-bold text-label-bold hover:bg-slate-50 transition-colors shadow-sm flex items-center gap-1.5" title="Export employee directory to CSV (Excel compatible)">
+                    <span class="material-symbols-outlined text-sm">download</span>Export CSV
+                </a>
+                <a asp-action="Index" asp-route-showCreate="true" class="bg-primary text-on-primary px-4 py-2 rounded-lg font-label-bold text-label-bold hover:bg-primary/90 transition-colors shadow-sm flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">add</span>Add Employee
+                </a>
+            </div>
         }
     </div>
 

@@ -1,4 +1,5 @@
 using HRSystem.Business.Exceptions;
+using HRSystem.Business.Helpers;
 using HRSystem.Business.Interfaces.Services;
 using HRSystem.Data.Interfaces;
 using HRSystem.Web.Helpers;
@@ -56,6 +57,52 @@ public class AttendanceController : EmployeeBaseController
         };
 
         return View(model);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> ExportTimesheetCsv(int? year = null, int? month = null)
+    {
+        var employee = await CurrentUser.GetCurrentEmployeeAsync();
+        var y = year ?? DateTime.UtcNow.Year;
+        var m = month ?? DateTime.UtcNow.Month;
+
+        var timesheetDto = await _attendanceService.GetMonthlyTimesheetAsync(employee.Id, y, m);
+
+        var headers = new[]
+        {
+            "Date",
+            "Day of Week",
+            "Status",
+            "Check In Time",
+            "Check Out Time",
+            "Hours Worked",
+            "Late Check-In"
+        };
+
+        var rows = timesheetDto.Days.Select(day =>
+        {
+            string status;
+            if (day.IsPresent) status = day.IsLate ? "Late" : "Present";
+            else if (day.IsFuture) status = "Upcoming";
+            else if (day.IsWeekday) status = "Absent";
+            else status = "Weekend";
+
+            return new object?[]
+            {
+                day.Date.ToString("yyyy-MM-dd"),
+                day.Date.DayOfWeek.ToString(),
+                status,
+                day.CheckInTime.HasValue ? day.CheckInTime.Value.ToString("HH:mm:ss") : "—",
+                day.CheckOutTime.HasValue ? day.CheckOutTime.Value.ToString("HH:mm:ss") : "—",
+                day.HoursWorked.HasValue ? Math.Round(day.HoursWorked.Value, 2) : 0.0,
+                day.IsLate ? "Yes" : "No"
+            };
+        });
+
+        var csvBytes = CsvExportHelper.CreateCsvBytes(headers, rows);
+        var sanitized = $"{employee.FirstName}_{employee.LastName}".Replace(" ", "_");
+        var fileName = $"My_Timesheet_{sanitized}_{y}_{m:D2}.csv";
+        return File(csvBytes, "text/csv; charset=utf-8", fileName);
     }
 
     [HttpPost]
