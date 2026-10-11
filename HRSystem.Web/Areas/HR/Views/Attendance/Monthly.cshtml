@@ -149,17 +149,26 @@
                     {
                         <tr class="hover:bg-slate-50/80 transition-colors">
                             <td class="px-6 py-4">
-                                <div class="flex items-center gap-3">
+                                <a asp-controller="Employee" asp-action="Detail" asp-route-id="@row.EmployeeId" class="flex items-center gap-3 group">
                                     <div class="w-9 h-9 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-xs">
                                         @row.EmployeeInitials
                                     </div>
                                     <div>
-                                        <p class="font-semibold text-slate-900">@row.EmployeeName</p>
+                                        <p class="font-semibold text-slate-900 group-hover:text-primary transition-colors">@row.EmployeeName</p>
                                         <p class="text-xs text-slate-400">@row.JobTitle</p>
                                     </div>
-                                </div>
+                                </a>
                             </td>
-                            <td class="px-6 py-4 text-slate-600 font-medium">@row.DepartmentName</td>
+                            <td class="px-6 py-4 text-slate-600 font-medium">
+                                @if (row.DepartmentId > 0)
+                                {
+                                    <a asp-controller="Department" asp-action="Detail" asp-route-id="@row.DepartmentId" class="hover:text-primary hover:underline transition-colors">@row.DepartmentName</a>
+                                }
+                                else
+                                {
+                                    <span>@row.DepartmentName</span>
+                                }
+                            </td>
                             <td class="px-6 py-4 text-center">
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
                                     @row.DaysPresent / @(Model.WorkDaysToDate > 0 ? Model.WorkDaysToDate : Model.TotalWorkDaysInMonth)

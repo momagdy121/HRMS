@@ -1,0 +1,379 @@
+@model HRSystem.Web.ViewModels.HR.EmployeeDetailViewModel
+@{
+    ViewBag.Title = $"{Model.FullName} - Employee Profile";
+}
+
+<div class="max-w-7xl mx-auto space-y-6">
+    <!-- Breadcrumb -->
+    <div>
+        <a asp-action="Index" class="inline-flex items-center gap-1.5 text-slate-500 hover:text-primary font-medium text-sm transition-colors mb-3">
+            <span class="material-symbols-outlined text-base">arrow_back</span>
+            Back to Employees
+        </a>
+
+        <!-- Hero Profile Banner -->
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 lg:p-8">
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 text-center sm:text-left">
+                    @if (!string.IsNullOrWhiteSpace(Model.AvatarUrl))
+                    {
+                        <img src="@Model.AvatarUrl" alt="@Model.FullName" class="w-24 h-24 rounded-2xl object-cover ring-4 ring-primary-fixed shadow-md" />
+                    }
+                    else
+                    {
+                        <div class="w-24 h-24 rounded-2xl bg-gradient-to-br from-primary-container to-primary text-white text-3xl font-black flex items-center justify-center shadow-md">
+                            @Model.Initials
+                        </div>
+                    }
+
+                    <div class="space-y-2">
+                        <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2.5">
+                            <h1 class="text-2xl font-black text-slate-900">@Model.FullName</h1>
+                            @if (Model.IsActive)
+                            {
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">Active</span>
+                            }
+                            else
+                            {
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-100 text-slate-600 border border-slate-200">Inactive</span>
+                            }
+                            @if (Model.IsManager)
+                            {
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">Department Head</span>
+                            }
+                            @if (Model.IsHR)
+                            {
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-50 text-purple-700 border border-purple-200">HR Specialist</span>
+                            }
+                        </div>
+
+                        <div class="flex flex-wrap items-center justify-center sm:justify-start gap-4 text-xs text-slate-600 pt-1">
+                            <a asp-controller="Department" asp-action="Detail" asp-route-id="@Model.DepartmentId" class="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 hover:bg-primary-fixed/40 text-slate-800 hover:text-primary rounded-xl font-bold transition-all shadow-sm" title="View Department Details">
+                                <span class="material-symbols-outlined text-sm text-primary">apartment</span>
+                                @Model.DepartmentName
+                                <span class="material-symbols-outlined text-xs">arrow_forward</span>
+                            </a>
+                            <span class="inline-flex items-center gap-1 text-slate-500">
+                                <span class="material-symbols-outlined text-sm text-slate-400">mail</span>
+                                <a href="mailto:@Model.Email" class="hover:underline">@Model.Email</a>
+                            </span>
+                            @if (!string.IsNullOrWhiteSpace(Model.PhoneNumber))
+                            {
+                                <span class="inline-flex items-center gap-1 text-slate-500">
+                                    <span class="material-symbols-outlined text-sm text-slate-400">call</span>
+                                    <a href="tel:@Model.PhoneNumber" class="hover:underline">@Model.PhoneNumber</a>
+                                </span>
+                            }
+                        </div>
+
+                        <div class="flex flex-wrap items-center justify-center sm:justify-start gap-4 text-xs text-slate-500 pt-1">
+                            <span>Joined <strong>@Model.HireDate.ToString("MMM dd, yyyy")</strong> (@Model.Tenure)</span>
+                            @if (Model.ManagerId.HasValue && Model.ManagerId.Value > 0)
+                            {
+                                <span>• Manager: <a asp-controller="Employee" asp-action="Detail" asp-route-id="@Model.ManagerId.Value" class="text-primary font-bold hover:underline">@Model.ManagerName</a></span>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap sm:flex-nowrap items-center justify-center gap-2 pt-4 lg:pt-0 border-t lg:border-t-0 border-slate-100">
+                    <a asp-controller="Attendance" asp-action="Timesheet" asp-route-employeeId="@Model.Id" class="inline-flex items-center gap-1.5 px-4 py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50 transition-all shadow-sm">
+                        <span class="material-symbols-outlined text-sm text-blue-600">calendar_month</span>
+                        Timesheet
+                    </a>
+                    <a asp-action="Index" asp-route-editId="@Model.Id" class="inline-flex items-center gap-1.5 px-4 py-2 bg-primary-container text-white rounded-xl text-xs font-bold hover:bg-primary transition-all shadow-sm">
+                        <span class="material-symbols-outlined text-sm">edit</span>
+                        Edit Details
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+            <div>
+                <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Base Salary</p>
+                <p class="text-2xl font-black text-slate-900 mt-1">@HRSystem.Web.Helpers.PayrollDisplayHelper.FormatCurrency(Model.Salary)</p>
+                <p class="text-xs text-slate-500 mt-0.5">Per month</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                <span class="material-symbols-outlined">payments</span>
+            </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+            <div>
+                <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Leave Balance</p>
+                <p class="text-2xl font-black text-slate-900 mt-1">@Model.LeaveBalances.Sum(b => b.RemainingDays) <span class="text-xs font-medium text-slate-400">days left</span></p>
+                <p class="text-xs text-slate-500 mt-0.5">@Model.LeaveBalances.Sum(b => b.UsedDays) days used this year</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                <span class="material-symbols-outlined">beach_access</span>
+            </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+            <div>
+                <p class="text-xs font-bold uppercase tracking-wider text-slate-400">This Month Attendance</p>
+                <p class="text-2xl font-black text-slate-900 mt-1">@Model.DaysPresentThisMonth <span class="text-xs font-medium text-slate-400">days present</span></p>
+                <p class="text-xs text-rose-500 mt-0.5 font-semibold">@Model.AbsencesThisMonth absences</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                <span class="material-symbols-outlined">schedule</span>
+            </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+            <div>
+                <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Active Tasks</p>
+                <p class="text-2xl font-black text-slate-900 mt-1">@Model.ActiveTasksCount</p>
+                <p class="text-xs text-slate-500 mt-0.5">Assigned pending/in-progress</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                <span class="material-symbols-outlined">task_alt</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2 Column Layout for Details -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Left Column: Leave Balances & Recent Requests -->
+        <div class="space-y-6">
+            <!-- Leave Balances -->
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+                <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-900">Leave Entitlements (@DateTime.UtcNow.Year)</h2>
+                        <p class="text-xs text-slate-500">Allocated allowances and remaining quota</p>
+                    </div>
+                    <span class="material-symbols-outlined text-slate-400">event_available</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-5">
+                    @if (Model.LeaveBalances.Count == 0)
+                    {
+                        <p class="col-span-3 text-xs text-slate-400 italic py-2">No leave balance records found for the current calendar year.</p>
+                    }
+                    @foreach (var balance in Model.LeaveBalances)
+                    {
+                        var pct = balance.TotalDays > 0 ? (int)Math.Min(100, Math.Round((double)balance.UsedDays / balance.TotalDays * 100)) : 0;
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs font-bold text-slate-700">@balance.LeaveType</span>
+                                <span class="text-xs font-black text-primary">@balance.RemainingDays / @balance.TotalDays</span>
+                            </div>
+                            <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden mt-2">
+                                <div class="bg-primary h-full rounded-full" style="width: @pct%"></div>
+                            </div>
+                            <p class="text-[11px] text-slate-400 mt-2">@balance.UsedDays days taken</p>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Recent Leave Requests -->
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                    <div>
+                        <h2 class="text-base font-bold text-slate-900">Recent Leave Requests</h2>
+                        <p class="text-xs text-slate-500">Past applications and approval statuses</p>
+                    </div>
+                    <a asp-controller="Leave" asp-action="Index" class="text-xs font-bold text-primary hover:underline flex items-center gap-1">
+                        View All
+                        <span class="material-symbols-outlined text-xs">arrow_forward</span>
+                    </a>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead class="bg-slate-50/70 border-b border-slate-100">
+                            <tr>
+                                <th class="px-5 py-3 font-label-bold text-slate-500 uppercase tracking-wider">Type</th>
+                                <th class="px-5 py-3 font-label-bold text-slate-500 uppercase tracking-wider">Dates</th>
+                                <th class="px-5 py-3 font-label-bold text-slate-500 uppercase tracking-wider text-center">Days</th>
+                                <th class="px-5 py-3 font-label-bold text-slate-500 uppercase tracking-wider text-right">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            @if (Model.RecentLeaves.Count == 0)
+                            {
+                                <tr>
+                                    <td colspan="4" class="px-5 py-6 text-center text-slate-400">No leave requests logged.</td>
+                                </tr>
+                            }
+                            @foreach (var leave in Model.RecentLeaves)
+                            {
+                                <tr class="hover:bg-slate-50/80 transition-colors">
+                                    <td class="px-5 py-3 font-semibold text-slate-800">@leave.LeaveType</td>
+                                    <td class="px-5 py-3 text-slate-600">@leave.StartDate.ToString("MMM dd") - @leave.EndDate.ToString("MMM dd, yyyy")</td>
+                                    <td class="px-5 py-3 text-center font-bold text-slate-700">@leave.DaysCount</td>
+                                    <td class="px-5 py-3 text-right">
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold @HRSystem.Web.Helpers.LeaveDisplayHelper.GetStatusBadgeClass(leave.Status)">
+                                            @HRSystem.Web.Helpers.LeaveDisplayHelper.GetStatusLabel(leave.Status)
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Assigned Tasks -->
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+                <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                    <div>
+                        <h2 class="text-base font-bold text-slate-900">Assigned Tasks</h2>
+                        <p class="text-xs text-slate-500">Recent action items and deliverables</p>
+                    </div>
+                    <span class="material-symbols-outlined text-slate-400">checklist</span>
+                </div>
+
+                <div class="divide-y divide-slate-100 pt-2">
+                    @if (Model.AssignedTasks.Count == 0)
+                    {
+                        <p class="text-xs text-slate-400 italic py-4 text-center">No tasks currently assigned to this employee.</p>
+                    }
+                    @foreach (var task in Model.AssignedTasks)
+                    {
+                        <div class="py-3 flex items-center justify-between gap-3">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-base @(task.IsCompleted ? "text-emerald-500" : "text-slate-400")">
+                                    @(task.IsCompleted ? "check_circle" : "radio_button_unchecked")
+                                </span>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-800 @(task.IsCompleted ? "line-through text-slate-400" : "")">@task.Title</p>
+                                    <p class="text-[11px] text-slate-400">Due: @(task.DueDate.HasValue ? task.DueDate.Value.ToString("MMM dd, yyyy") : "No deadline")</p>
+                                </div>
+                            </div>
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold @(task.IsCompleted ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700")">
+                                @task.Status
+                            </span>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Payroll & Attendance -->
+        <div class="space-y-6">
+            <!-- Recent Payroll History -->
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                    <div>
+                        <h2 class="text-base font-bold text-slate-900">Recent Payslips & Compensation</h2>
+                        <p class="text-xs text-slate-500">Processed monthly salaries and earnings</p>
+                    </div>
+                    <a asp-controller="Payroll" asp-action="Index" class="text-xs font-bold text-primary hover:underline flex items-center gap-1">
+                        Payroll Portal
+                        <span class="material-symbols-outlined text-xs">arrow_forward</span>
+                    </a>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead class="bg-slate-50/70 border-b border-slate-100">
+                            <tr>
+                                <th class="px-5 py-3 font-label-bold text-slate-500 uppercase tracking-wider">Period</th>
+                                <th class="px-5 py-3 font-label-bold text-slate-500 uppercase tracking-wider text-right">Net Salary</th>
+                                <th class="px-5 py-3 font-label-bold text-slate-500 uppercase tracking-wider text-center">Status</th>
+                                <th class="px-5 py-3 font-label-bold text-slate-500 uppercase tracking-wider text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            @if (Model.RecentPayrolls.Count == 0)
+                            {
+                                <tr>
+                                    <td colspan="4" class="px-5 py-6 text-center text-slate-400">No payroll history available yet.</td>
+                                </tr>
+                            }
+                            @foreach (var payroll in Model.RecentPayrolls)
+                            {
+                                <tr class="hover:bg-slate-50/80 transition-colors">
+                                    <td class="px-5 py-3 font-bold text-slate-800">@payroll.Period</td>
+                                    <td class="px-5 py-3 text-right font-black text-slate-900">
+                                        @HRSystem.Web.Helpers.PayrollDisplayHelper.FormatCurrency(payroll.NetSalary)
+                                    </td>
+                                    <td class="px-5 py-3 text-center">
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold @HRSystem.Web.Helpers.PayrollDisplayHelper.GetStatusBadgeClass(payroll.Status)">
+                                            @HRSystem.Web.Helpers.PayrollDisplayHelper.GetStatusLabel(payroll.Status)
+                                        </span>
+                                    </td>
+                                    <td class="px-5 py-3 text-right">
+                                        <a asp-controller="Payroll" asp-action="Payslip" asp-route-id="@payroll.Id" target="_blank" class="inline-flex items-center gap-1 text-[11px] font-bold text-blue-600 hover:text-blue-800" title="Print Payslip">
+                                            <span class="material-symbols-outlined text-sm">print</span>
+                                            Slip
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Recent Attendance Records -->
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                    <div>
+                        <h2 class="text-base font-bold text-slate-900">Recent Attendance Logs</h2>
+                        <p class="text-xs text-slate-500">Daily check-in and check-out tracking</p>
+                    </div>
+                    <a asp-controller="Attendance" asp-action="Timesheet" asp-route-employeeId="@Model.Id" class="text-xs font-bold text-primary hover:underline flex items-center gap-1">
+                        Full Timesheet
+                        <span class="material-symbols-outlined text-xs">arrow_forward</span>
+                    </a>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead class="bg-slate-50/70 border-b border-slate-100">
+                            <tr>
+                                <th class="px-5 py-3 font-label-bold text-slate-500 uppercase tracking-wider">Date</th>
+                                <th class="px-5 py-3 font-label-bold text-slate-500 uppercase tracking-wider">In / Out</th>
+                                <th class="px-5 py-3 font-label-bold text-slate-500 uppercase tracking-wider text-center">Duration</th>
+                                <th class="px-5 py-3 font-label-bold text-slate-500 uppercase tracking-wider text-right">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            @if (Model.RecentAttendances.Count == 0)
+                            {
+                                <tr>
+                                    <td colspan="4" class="px-5 py-6 text-center text-slate-400">No attendance entries recorded.</td>
+                                </tr>
+                            }
+                            @foreach (var att in Model.RecentAttendances)
+                            {
+                                <tr class="hover:bg-slate-50/80 transition-colors">
+                                    <td class="px-5 py-3 font-bold text-slate-800">@att.Date.ToString("ddd, MMM dd")</td>
+                                    <td class="px-5 py-3 text-slate-600">
+                                        @(att.CheckInTime.HasValue ? att.CheckInTime.Value.ToString("hh:mm tt") : "—")
+                                        /
+                                        @(att.CheckOutTime.HasValue ? att.CheckOutTime.Value.ToString("hh:mm tt") : "—")
+                                    </td>
+                                    <td class="px-5 py-3 text-center text-slate-700 font-semibold">@att.DurationLabel</td>
+                                    <td class="px-5 py-3 text-right">
+                                        @if (att.StatusLabel == "Present")
+                                        {
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700">Present</span>
+                                        }
+                                        else if (att.StatusLabel == "Late Check-in")
+                                        {
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700">Late</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700">Absent</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

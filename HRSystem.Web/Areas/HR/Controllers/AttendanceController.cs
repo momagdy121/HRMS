@@ -74,6 +74,7 @@ public class AttendanceController : HRBaseController
                 EmployeeName = fullName,
                 EmployeeInitials = TaskDisplayHelper.GetInitials(emp),
                 DepartmentName = dept?.Name ?? "—",
+                DepartmentId = emp.DepartmentId,
                 JobTitle = emp.IsHR ? "HR Specialist" : "Staff Member",
                 DaysPresent = ts?.DaysPresent ?? 0,
                 WeekdayAbsences = ts?.WeekdayAbsences ?? 0,
@@ -132,6 +133,7 @@ public class AttendanceController : HRBaseController
         {
             EmployeeId = employee.Id,
             EmployeeName = $"{employee.FirstName} {employee.LastName}",
+            DepartmentId = employee.DepartmentId,
             DepartmentName = dept?.Name ?? "—",
             JobTitle = employee.IsHR ? "HR Specialist" : "Staff Member",
             Year = y,

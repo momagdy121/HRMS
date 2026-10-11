@@ -51,10 +51,10 @@
                     {
                         <tr class="hover:bg-slate-50 transition-colors">
                             <td class="px-6 py-4">
-                                <div class="flex items-center gap-3">
+                                <a asp-controller="Employee" asp-action="Detail" asp-route-id="@request.EmployeeId" class="flex items-center gap-3 group">
                                     <div class="w-9 h-9 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-bold text-xs">@request.EmployeeInitials</div>
-                                    <span class="text-sm font-semibold text-slate-900">@request.EmployeeName</span>
-                                </div>
+                                    <span class="text-sm font-semibold text-slate-900 group-hover:text-primary transition-colors">@request.EmployeeName</span>
+                                </a>
                             </td>
                             <td class="px-6 py-4">
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium @LeaveDisplayHelper.GetLeaveTypeBadgeClass(request.LeaveType)">@LeaveDisplayHelper.GetLeaveTypeLabel(request.LeaveType)</span>

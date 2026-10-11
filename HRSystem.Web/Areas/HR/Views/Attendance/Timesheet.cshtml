@@ -12,8 +12,20 @@
             <a asp-action="Monthly" asp-route-year="@Model.Year" asp-route-month="@Model.Month" class="text-primary hover:underline text-sm font-medium mb-2 inline-flex items-center gap-1">
                 <span class="material-symbols-outlined text-sm">arrow_back</span>Back to Monthly Summary
             </a>
-            <h2 class="font-h1 text-h1 text-slate-900">@Model.EmployeeName's Timesheet</h2>
-            <p class="font-body-md text-slate-500 mt-1">@Model.DepartmentName · @Model.JobTitle · <strong>@monthName @Model.Year</strong></p>
+            <h2 class="font-h1 text-h1 text-slate-900">
+                <a asp-controller="Employee" asp-action="Detail" asp-route-id="@Model.EmployeeId" class="hover:text-primary transition-colors hover:underline">@Model.EmployeeName</a>'s Timesheet
+            </h2>
+            <p class="font-body-md text-slate-500 mt-1">
+                @if (Model.DepartmentId > 0)
+                {
+                    <a asp-controller="Department" asp-action="Detail" asp-route-id="@Model.DepartmentId" class="hover:text-primary hover:underline transition-colors font-medium">@Model.DepartmentName</a>
+                }
+                else
+                {
+                    <span>@Model.DepartmentName</span>
+                }
+                · @Model.JobTitle · <strong>@monthName @Model.Year</strong>
+            </p>
         </div>
 
         <!-- Month & Year Filter Selector -->

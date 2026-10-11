@@ -6,6 +6,7 @@ using HRSystem.Data.Models;
 using HRSystem.Web.Helpers;
 using HRSystem.Web.ViewModels.HR;
 using Microsoft.AspNetCore.Mvc;
+using EmployeeEntity = HRSystem.Data.Models.Employee;
 
 namespace HRSystem.Web.Areas.HR.Controllers;
 
@@ -28,6 +29,72 @@ public class DepartmentController : HRBaseController
     {
         await SetLayoutAsync("Departments", "Search departments...");
         return View(await BuildIndexModelAsync(page, editId, replaceId, showCreate, search: search));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Detail(int id)
+    {
+        await SetLayoutAsync("Departments", "Search departments...");
+
+        var department = await UnitOfWork.Departments.GetByIdAsync(id);
+        if (department == null)
+            return NotFound();
+
+        var employeesPaged = await UnitOfWork.Employees.GetByDepartmentPagedAsync(id, 1, 1000);
+        var employees = employeesPaged.Items;
+
+        EmployeeEntity? manager = null;
+        if (department.ManagerId > 0)
+        {
+            manager = await UnitOfWork.Employees.GetByIdAsync(department.ManagerId);
+        }
+
+        var activeEmployees = employees.Where(e => !e.IsDeleted && e.IsActive).ToList();
+        var totalSalary = activeEmployees.Sum(e => e.Salary);
+        var averageSalary = activeEmployees.Count > 0 ? Math.Round(totalSalary / activeEmployees.Count, 2) : 0m;
+
+        var allEmployees = await HrDisplayHelper.LoadEmployeesAsync(UnitOfWork);
+        var managerOptions = allEmployees.Values
+            .Where(e => e is { IsActive: true, IsDeleted: false, IsHR: false })
+            .Select(e => new ManagerOptionViewModel { Id = e.Id, Name = $"{e.FirstName} {e.LastName}" })
+            .OrderBy(e => e.Name)
+            .ToList();
+
+        var model = new DepartmentDetailViewModel
+        {
+            Id = department.Id,
+            Name = department.Name,
+            IsDeleted = department.IsDeleted,
+            ManagerId = department.ManagerId > 0 ? department.ManagerId : null,
+            ManagerName = manager != null ? $"{manager.FirstName} {manager.LastName}" : "(Unassigned)",
+            ManagerInitials = manager != null ? HrDisplayHelper.GetInitials(manager.FirstName, manager.LastName) : string.Empty,
+            ManagerEmail = manager?.Email ?? string.Empty,
+            ManagerPhone = manager?.PhoneNumber,
+            ManagerAvatarUrl = manager?.ProfilePictureUrl,
+            ManagerHireDate = manager?.HireDate,
+            TotalEmployees = activeEmployees.Count,
+            TotalSalaryBudget = totalSalary,
+            AverageSalary = averageSalary,
+            Employees = employees.Select(e => new DepartmentEmployeeItemViewModel
+            {
+                Id = e.Id,
+                FullName = $"{e.FirstName} {e.LastName}",
+                Initials = HrDisplayHelper.GetInitials(e.FirstName, e.LastName),
+                AvatarUrl = e.ProfilePictureUrl,
+                Email = e.Email ?? string.Empty,
+                PhoneNumber = e.PhoneNumber,
+                Salary = e.Salary,
+                HireDate = e.HireDate,
+                IsManager = e.Id == department.ManagerId,
+                IsHR = e.IsHR,
+                IsActive = e.IsActive && !e.IsDeleted
+            }).OrderByDescending(e => e.IsManager).ThenBy(e => e.FullName).ToList(),
+            ManagerOptions = managerOptions,
+            EditForm = new EditDepartmentViewModel { Id = department.Id, Name = department.Name },
+            ReplaceForm = new ReplaceManagerViewModel { DepartmentId = department.Id, DepartmentName = department.Name }
+        };
+
+        return View(model);
     }
 
     [HttpGet]
@@ -242,6 +309,7 @@ public class DepartmentController : HRBaseController
                 Id = department.Id,
                 Name = department.Name,
                 HasManager = managerInDepartment,
+                ManagerId = managerInDepartment ? manager!.Id : null,
                 ManagerName = managerInDepartment ? $"{manager!.FirstName} {manager.LastName}" : "(Unassigned)",
                 ManagerInitials = managerInDepartment ? HrDisplayHelper.GetInitials(manager!.FirstName, manager.LastName) : string.Empty,
                 EmployeeCount = countsByDept.GetValueOrDefault(department.Id, 0)

@@ -144,8 +144,15 @@
                                 <div class="flex items-center gap-3">
                                     <div class="w-9 h-9 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-xs">@payroll.EmployeeInitials</div>
                                     <div>
-                                        <p class="font-semibold">@payroll.EmployeeName</p>
-                                        <p class="text-body-sm text-slate-500">@payroll.DepartmentName</p>
+                                        <a asp-controller="Employee" asp-action="Detail" asp-route-id="@payroll.EmployeeId" class="font-semibold text-slate-900 hover:text-primary hover:underline transition-colors block">@payroll.EmployeeName</a>
+                                        @if (payroll.DepartmentId > 0)
+                                        {
+                                            <a asp-controller="Department" asp-action="Detail" asp-route-id="@payroll.DepartmentId" class="text-body-sm text-slate-500 hover:text-primary hover:underline transition-colors block">@payroll.DepartmentName</a>
+                                        }
+                                        else
+                                        {
+                                            <p class="text-body-sm text-slate-500">@payroll.DepartmentName</p>
+                                        }
                                     </div>
                                 </div>
                             </td>

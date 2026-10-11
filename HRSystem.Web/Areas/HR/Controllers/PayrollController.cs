@@ -511,6 +511,7 @@ public class PayrollController : HRBaseController
             Id = payroll.Id,
             EmployeeId = payroll.EmployeeId,
             EmployeeName = employee != null ? $"{employee.FirstName} {employee.LastName}" : "Unknown",
+            DepartmentId = employee?.DepartmentId ?? 0,
             DepartmentName = employee != null && departments.TryGetValue(employee.DepartmentId, out var dept)
                 ? dept.Name
                 : "Unknown",
@@ -556,6 +557,7 @@ public class PayrollController : HRBaseController
             EmployeeInitials = employee != null
                 ? HrDisplayHelper.GetInitials(employee.FirstName, employee.LastName)
                 : "?",
+            DepartmentId = employee?.DepartmentId ?? 0,
             DepartmentName = departmentName,
             Month = payroll.Month,
             Year = payroll.Year,

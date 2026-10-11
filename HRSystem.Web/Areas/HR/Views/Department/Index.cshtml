@@ -41,9 +41,18 @@
                     @foreach (var dept in Model.Departments)
                     {
                         <tr class="hover:bg-slate-50 transition-colors">
-                            <td class="px-lg py-5 font-body-lg font-semibold text-slate-900">@dept.Name</td>
+                            <td class="px-lg py-5 font-body-lg font-semibold text-slate-900">
+                                <a asp-action="Detail" asp-route-id="@dept.Id" class="hover:text-primary transition-colors hover:underline">@dept.Name</a>
+                            </td>
                             <td class="px-lg py-5">
-                                @if (dept.HasManager)
+                                @if (dept.HasManager && dept.ManagerId.HasValue)
+                                {
+                                    <a asp-controller="Employee" asp-action="Detail" asp-route-id="@dept.ManagerId.Value" class="flex items-center gap-3 group">
+                                        <div class="w-8 h-8 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-sm">@dept.ManagerInitials</div>
+                                        <span class="text-body-md font-medium text-slate-700 group-hover:text-primary transition-colors">@dept.ManagerName</span>
+                                    </a>
+                                }
+                                else if (dept.HasManager)
                                 {
                                     <div class="flex items-center gap-3">
                                         <div class="w-8 h-8 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-sm">@dept.ManagerInitials</div>
@@ -70,6 +79,7 @@
                                     }
                                     else
                                     {
+                                        <a asp-action="Detail" asp-route-id="@dept.Id" class="p-2 text-slate-500 hover:text-primary transition-colors" title="View Details"><span class="material-symbols-outlined text-lg">visibility</span></a>
                                         <a asp-action="Index" asp-route-editId="@dept.Id" class="p-2 text-slate-500 hover:text-primary transition-colors" title="Edit"><span class="material-symbols-outlined text-lg">edit</span></a>
                                         <a asp-action="Index" asp-route-replaceId="@dept.Id" class="p-2 text-slate-500 hover:text-amber-600 transition-colors" title="Replace Manager"><span class="material-symbols-outlined text-lg">swap_horiz</span></a>
                                         <form asp-action="Delete" method="post" class="inline" onsubmit="return confirm('Delete this department?');">

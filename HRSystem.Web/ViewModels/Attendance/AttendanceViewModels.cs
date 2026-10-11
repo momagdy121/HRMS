@@ -106,6 +106,7 @@ public class EmployeeTimesheetViewModel
 {
     public int EmployeeId { get; set; }
     public string EmployeeName { get; set; } = string.Empty;
+    public int DepartmentId { get; set; }
     public string DepartmentName { get; set; } = string.Empty;
     public string JobTitle { get; set; } = string.Empty;
     public int Year { get; set; }
@@ -123,6 +124,7 @@ public class HrMonthlyAttendanceRowViewModel
     public string EmployeeName { get; set; } = string.Empty;
     public string EmployeeInitials { get; set; } = string.Empty;
     public string DepartmentName { get; set; } = string.Empty;
+    public int DepartmentId { get; set; }
     public string JobTitle { get; set; } = string.Empty;
     public int DaysPresent { get; set; }
     public int WeekdayAbsences { get; set; }

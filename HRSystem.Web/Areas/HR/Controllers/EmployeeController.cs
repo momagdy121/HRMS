@@ -7,6 +7,7 @@ using HRSystem.Data.Models;
 using HRSystem.Web.Helpers;
 using HRSystem.Web.ViewModels.HR;
 using Microsoft.AspNetCore.Mvc;
+using EmployeeEntity = HRSystem.Data.Models.Employee;
 
 namespace HRSystem.Web.Areas.HR.Controllers;
 
@@ -14,14 +15,17 @@ public class EmployeeController : HRBaseController
 {
     private const int PageSize = PaginationDefaults.DefaultPageSize;
     private readonly IEmployeeService _employeeService;
+    private readonly IAttendanceService _attendanceService;
 
     public EmployeeController(
         ICurrentUserService currentUser,
         IUnitOfWork unitOfWork,
-        IEmployeeService employeeService)
+        IEmployeeService employeeService,
+        IAttendanceService attendanceService)
         : base(currentUser, unitOfWork)
     {
         _employeeService = employeeService;
+        _attendanceService = attendanceService;
     }
 
     [HttpGet]
@@ -29,6 +33,156 @@ public class EmployeeController : HRBaseController
     {
         await SetLayoutAsync("Employees", "Search employees...");
         return View(await BuildIndexModelAsync(page, departmentId, search, editId, showCreate));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Detail(int id)
+    {
+        await SetLayoutAsync("Employees", "Search employees...");
+
+        var employee = await UnitOfWork.Employees.GetByIdAsync(id);
+        if (employee == null)
+            return NotFound();
+
+        var departments = await HrDisplayHelper.LoadDepartmentsAsync(UnitOfWork);
+        departments.TryGetValue(employee.DepartmentId, out var dept);
+
+        EmployeeEntity? manager = null;
+        if (dept?.ManagerId > 0)
+        {
+            manager = await UnitOfWork.Employees.GetByIdAsync(dept.ManagerId);
+        }
+
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var totalDays = Math.Max(0, today.DayNumber - employee.HireDate.DayNumber);
+        var years = totalDays / 365;
+        var months = (totalDays % 365) / 30;
+        string tenure;
+        if (totalDays < 30)
+            tenure = $"{totalDays} day{(totalDays != 1 ? "s" : "")}";
+        else if (years == 0)
+            tenure = $"{months} month{(months != 1 ? "s" : "")}";
+        else
+            tenure = $"{years} yr{(years != 1 ? "s" : "")} {months} mo{(months != 1 ? "s" : "")}";
+
+        var balances = await UnitOfWork.LeaveBalances.GetByEmployeeAndYearAsync(id, DateTime.UtcNow.Year);
+        var balanceItems = balances.Select(b => new EmployeeLeaveBalanceItemViewModel
+        {
+            LeaveType = b.LeaveType,
+            TotalDays = b.TotalDays,
+            UsedDays = b.UsedDays
+        }).ToList();
+
+        var leavesPaged = await UnitOfWork.LeaveRequests.GetByEmployeePagedAsync(id, 1, 5);
+        var recentLeaves = leavesPaged.Items.Select(l => new EmployeeRecentLeaveViewModel
+        {
+            Id = l.Id,
+            LeaveType = l.LeaveType,
+            StartDate = l.StartDate,
+            EndDate = l.EndDate,
+            DaysCount = Math.Max(1, l.EndDate.DayNumber - l.StartDate.DayNumber + 1),
+            Status = l.Status,
+            Reason = l.Reason
+        }).ToList();
+
+        var payrollsPaged = await UnitOfWork.Payrolls.GetByEmployeePagedAsync(id, 1, 5);
+        var recentPayrolls = payrollsPaged.Items.Select(p => new EmployeeRecentPayrollViewModel
+        {
+            Id = p.Id,
+            Month = p.Month,
+            Year = p.Year,
+            Period = new DateTime(p.Year, p.Month, 1).ToString("MMM yyyy"),
+            BaseSalary = p.BaseSalary,
+            TotalBonus = p.TotalBonus,
+            TotalDeduction = p.TotalDeduction,
+            NetSalary = p.NetSalary,
+            Status = p.Status
+        }).ToList();
+
+        var attendancesPaged = await UnitOfWork.Attendances.GetByEmployeePagedAsync(id, 1, 7);
+        var recentAttendances = attendancesPaged.Items.Select(a =>
+        {
+            string duration = "—";
+            if (a.CheckInTime.HasValue && a.CheckOutTime.HasValue)
+            {
+                var dur = a.CheckOutTime.Value - a.CheckInTime.Value;
+                duration = $"{dur.TotalHours:0.1} hrs";
+            }
+
+            string status = "Absent";
+            if (a.CheckInTime.HasValue)
+            {
+                status = a.CheckInTime.Value.TimeOfDay > new TimeSpan(9, 15, 0) ? "Late Check-in" : "Present";
+            }
+
+            return new EmployeeRecentAttendanceViewModel
+            {
+                Date = a.Date,
+                CheckInTime = a.CheckInTime,
+                CheckOutTime = a.CheckOutTime,
+                DurationLabel = duration,
+                StatusLabel = status
+            };
+        }).ToList();
+
+        var timesheetDto = await _attendanceService.GetMonthlyTimesheetAsync(id, DateTime.UtcNow.Year, DateTime.UtcNow.Month);
+
+        var tasksPaged = await UnitOfWork.EmployeeTasks.GetByAssignedToPagedAsync(id, 1, 5);
+        var recentTasks = tasksPaged.Items.Select(t => new EmployeeRecentTaskViewModel
+        {
+            Id = t.Id,
+            Title = t.Title,
+            Status = t.Status.ToString(),
+            DueDate = t.DueDate,
+            IsCompleted = t.Status == global::HRSystem.Common.Enums.TaskStatus.Completed
+        }).ToList();
+
+        var activeTasksCount = tasksPaged.Items.Count(t => t.Status != global::HRSystem.Common.Enums.TaskStatus.Completed);
+
+        var isManager = dept?.ManagerId == employee.Id;
+
+        var model = new EmployeeDetailViewModel
+        {
+            Id = employee.Id,
+            FirstName = employee.FirstName,
+            LastName = employee.LastName,
+            Initials = HrDisplayHelper.GetInitials(employee.FirstName, employee.LastName),
+            AvatarUrl = employee.ProfilePictureUrl,
+            Email = employee.Email ?? string.Empty,
+            PhoneNumber = employee.PhoneNumber,
+            DepartmentId = employee.DepartmentId,
+            DepartmentName = dept?.Name ?? "—",
+            IsManager = isManager,
+            IsHR = employee.IsHR,
+            IsActive = employee.IsActive,
+            IsDeleted = employee.IsDeleted,
+            HireDate = employee.HireDate,
+            Salary = employee.Salary,
+            ManagerName = manager != null ? $"{manager.FirstName} {manager.LastName}" : null,
+            ManagerId = manager?.Id,
+            Tenure = tenure,
+            LeaveBalances = balanceItems,
+            RecentLeaves = recentLeaves,
+            RecentPayrolls = recentPayrolls,
+            RecentAttendances = recentAttendances,
+            DaysPresentThisMonth = timesheetDto.DaysPresent,
+            AbsencesThisMonth = timesheetDto.WeekdayAbsences,
+            AssignedTasks = recentTasks,
+            ActiveTasksCount = activeTasksCount,
+            EditForm = new EditEmployeeViewModel
+            {
+                Id = employee.Id,
+                FirstName = employee.FirstName,
+                LastName = employee.LastName,
+                Email = employee.Email ?? string.Empty,
+                DepartmentId = employee.DepartmentId,
+                Salary = employee.Salary,
+                HireDate = employee.HireDate,
+                IsActive = employee.IsActive
+            }
+        };
+
+        return View(model);
     }
 
     [HttpGet]
@@ -262,6 +416,7 @@ public class EmployeeController : HRBaseController
             Id = employee.Id,
             FullName = $"{employee.FirstName} {employee.LastName}",
             Email = employee.Email ?? string.Empty,
+            DepartmentId = employee.DepartmentId,
             DepartmentName = department?.Name ?? "—",
             IsManager = isManager,
             HireDate = employee.HireDate,

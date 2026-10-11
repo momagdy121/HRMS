@@ -62,13 +62,22 @@
                     {
                         <tr class="hover:bg-surface-container/50 transition-colors">
                             <td class="py-3 px-4">
-                                <div class="flex items-center gap-3">
+                                <a asp-action="Detail" asp-route-id="@employee.Id" class="flex items-center gap-3 group">
                                     <div class="w-8 h-8 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-bold text-sm">@employee.Initials</div>
-                                    <span class="font-body-md font-medium text-on-surface">@employee.FullName</span>
-                                </div>
+                                    <span class="font-body-md font-medium text-on-surface group-hover:text-primary transition-colors">@employee.FullName</span>
+                                </a>
                             </td>
                             <td class="py-3 px-4 font-body-sm text-on-surface-variant">@employee.Email</td>
-                            <td class="py-3 px-4 font-body-sm text-on-surface">@employee.DepartmentName</td>
+                            <td class="py-3 px-4 font-body-sm text-on-surface">
+                                @if (employee.DepartmentId > 0)
+                                {
+                                    <a asp-controller="Department" asp-action="Detail" asp-route-id="@employee.DepartmentId" class="hover:text-primary hover:underline transition-colors font-medium">@employee.DepartmentName</a>
+                                }
+                                else
+                                {
+                                    <span>@employee.DepartmentName</span>
+                                }
+                            </td>
                             <td class="py-3 px-4">
                                 @if (employee.IsManager)
                                 {
@@ -90,6 +99,9 @@
                                     }
                                     else
                                     {
+                                        <a asp-action="Detail" asp-route-id="@employee.Id" class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-primary/10 rounded transition-colors inline-flex" title="View Profile">
+                                            <span class="material-symbols-outlined text-sm">visibility</span>
+                                        </a>
                                         <a asp-action="Index" asp-route-editId="@employee.Id" class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-primary/10 rounded transition-colors inline-flex" title="Edit">
                                             <span class="material-symbols-outlined text-sm">edit</span>
                                         </a>
