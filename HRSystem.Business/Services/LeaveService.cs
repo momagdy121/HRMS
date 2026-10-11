@@ -14,11 +14,16 @@ public class LeaveService : ILeaveService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUserService _currentUser;
+    private readonly IWorkflowNotificationService _workflowNotifications;
 
-    public LeaveService(IUnitOfWork unitOfWork, ICurrentUserService currentUser)
+    public LeaveService(
+        IUnitOfWork unitOfWork,
+        ICurrentUserService currentUser,
+        IWorkflowNotificationService workflowNotifications)
     {
         _unitOfWork = unitOfWork;
         _currentUser = currentUser;
+        _workflowNotifications = workflowNotifications;
     }
 
     public async Task<LeaveRequest> RequestAsync(RequestLeaveDto dto, CancellationToken cancellationToken = default)
@@ -52,6 +57,8 @@ public class LeaveService : ILeaveService
 
         await _unitOfWork.LeaveRequests.AddAsync(request, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        await _workflowNotifications.NotifyLeaveSubmittedAsync(request, employee, cancellationToken);
         return request;
     }
 
@@ -70,6 +77,12 @@ public class LeaveService : ILeaveService
 
         _unitOfWork.LeaveRequests.Update(request);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        var requester = await _unitOfWork.Employees.GetByIdAsync(request.EmployeeId, cancellationToken);
+        if (requester != null)
+        {
+            await _workflowNotifications.NotifyLeaveApprovedAsync(request, requester, cancellationToken);
+        }
     }
 
     public async Task RejectAsync(int leaveRequestId, string rejectionReason, CancellationToken cancellationToken = default)
@@ -93,6 +106,12 @@ public class LeaveService : ILeaveService
 
         _unitOfWork.LeaveRequests.Update(request);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        var requester = await _unitOfWork.Employees.GetByIdAsync(request.EmployeeId, cancellationToken);
+        if (requester != null)
+        {
+            await _workflowNotifications.NotifyLeaveRejectedAsync(request, requester, rejectionReason, cancellationToken);
+        }
     }
 
     public async Task CancelAsync(int leaveRequestId, CancellationToken cancellationToken = default)

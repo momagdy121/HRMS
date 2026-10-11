@@ -1,0 +1,202 @@
+@model HRSystem.Web.ViewModels.Attendance.HrMonthlyAttendanceIndexViewModel
+@{
+    ViewBag.Title = "Monthly Attendance Summary - HRMS Portal";
+    var monthName = HRSystem.Web.Helpers.PayrollDisplayHelper.GetMonthName(Model.SelectedMonth);
+    var currentYear = DateTime.UtcNow.Year;
+}
+
+<div class="max-w-7xl mx-auto space-y-6">
+    <!-- Header with View Toggle -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+            <h2 class="font-h1 text-h1 text-slate-900">Monthly Attendance Summary</h2>
+            <p class="font-body-md text-slate-500 mt-1">Review team hours, attendance frequency, absences, and timesheets for <strong>@monthName @Model.SelectedYear</strong></p>
+        </div>
+
+        <div class="inline-flex rounded-xl bg-slate-100 p-1 border border-slate-200">
+            <a asp-action="Index" class="px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">
+                Daily Log
+            </a>
+            <a asp-action="Monthly" class="px-4 py-2 rounded-lg text-sm font-semibold bg-white text-primary shadow-sm">
+                Monthly Timesheets
+            </a>
+        </div>
+    </div>
+
+    <!-- Filters Bar -->
+    <form asp-action="Monthly" method="get" class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-wrap gap-4 items-end">
+        <div class="flex flex-col gap-1.5">
+            <label class="font-label-bold text-slate-500 text-[11px] uppercase tracking-wider">Month</label>
+            <select name="month" class="border-slate-200 rounded-lg text-sm font-body-md focus:border-primary focus:ring-0 px-3 py-2 bg-slate-50">
+                @for (var m = 1; m <= 12; m++)
+                {
+                    <option value="@m" selected="@(Model.SelectedMonth == m)">@HRSystem.Web.Helpers.PayrollDisplayHelper.GetMonthName(m)</option>
+                }
+            </select>
+        </div>
+
+        <div class="flex flex-col gap-1.5">
+            <label class="font-label-bold text-slate-500 text-[11px] uppercase tracking-wider">Year</label>
+            <select name="year" class="border-slate-200 rounded-lg text-sm font-body-md focus:border-primary focus:ring-0 px-3 py-2 bg-slate-50">
+                @for (var y = currentYear; y >= currentYear - 3; y--)
+                {
+                    <option value="@y" selected="@(Model.SelectedYear == y)">@y</option>
+                }
+            </select>
+        </div>
+
+        <div class="flex flex-col gap-1.5">
+            <label class="font-label-bold text-slate-500 text-[11px] uppercase tracking-wider">Department</label>
+            <select name="departmentId" class="border-slate-200 rounded-lg text-sm font-body-md focus:border-primary focus:ring-0 px-3 py-2 bg-slate-50">
+                <option value="">All Departments</option>
+                @foreach (var dept in Model.Departments)
+                {
+                    <option value="@dept.Id" selected="@(Model.DepartmentFilter == dept.Id)">@dept.Name</option>
+                }
+            </select>
+        </div>
+
+        <div class="flex flex-col gap-1.5 flex-1 min-w-[200px]">
+            <label class="font-label-bold text-slate-500 text-[11px] uppercase tracking-wider">Search Employee</label>
+            <input type="text" name="search" value="@Model.Search" placeholder="Filter by name..." class="border-slate-200 rounded-lg text-sm font-body-md focus:border-primary focus:ring-0 px-3 py-2" />
+        </div>
+
+        <button type="submit" class="px-6 py-2 bg-primary text-white rounded-lg font-semibold hover:bg-primary/90 transition-colors shadow-sm">
+            Filter
+        </button>
+    </form>
+
+    <!-- Monthly Summary KPIs -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+            <div>
+                <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Employees</p>
+                <p class="text-2xl font-black text-slate-900 mt-1">@Model.TotalActiveEmployees</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                <span class="material-symbols-outlined">badge</span>
+            </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+            <div>
+                <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Work Days</p>
+                <div class="text-2xl font-black text-slate-900 mt-1">
+                    @if (Model.WorkDaysToDate < Model.TotalWorkDaysInMonth)
+                    {
+                        <span>@Model.WorkDaysToDate <span class="text-xs font-medium text-slate-400">/ @Model.TotalWorkDaysInMonth in month</span></span>
+                    }
+                    else
+                    {
+                        <span>@Model.TotalWorkDaysInMonth</span>
+                    }
+                </div>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                <span class="material-symbols-outlined">calendar_month</span>
+            </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+            <div>
+                <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Hours Logged</p>
+                <p class="text-2xl font-black text-emerald-600 mt-1">@Model.Records.Sum(r => r.TotalHours).ToString("N0") hrs</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                <span class="material-symbols-outlined">schedule</span>
+            </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+            <div>
+                <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Late Incidents</p>
+                <p class="text-2xl font-black text-amber-600 mt-1">@Model.Records.Sum(r => r.LateCheckIns)</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                <span class="material-symbols-outlined">timer</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-slate-50 border-b border-slate-100">
+                    <tr>
+                        <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider text-xs">Employee</th>
+                        <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider text-xs">Department</th>
+                        <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider text-xs text-center">Days Present</th>
+                        <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider text-xs text-center">Absences</th>
+                        <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider text-xs text-center">Late Check-Ins</th>
+                        <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider text-xs text-right">Total Hours</th>
+                        <th class="px-6 py-4 font-label-bold text-slate-500 uppercase tracking-wider text-xs text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 font-body-md text-on-surface text-sm">
+                    @if (Model.Records.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="7" class="px-6 py-12 text-center text-slate-400">No employee records match the selected filter.</td>
+                        </tr>
+                    }
+                    @foreach (var row in Model.Records)
+                    {
+                        <tr class="hover:bg-slate-50/80 transition-colors">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-xs">
+                                        @row.EmployeeInitials
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-slate-900">@row.EmployeeName</p>
+                                        <p class="text-xs text-slate-400">@row.JobTitle</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-slate-600 font-medium">@row.DepartmentName</td>
+                            <td class="px-6 py-4 text-center">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    @row.DaysPresent / @(Model.WorkDaysToDate > 0 ? Model.WorkDaysToDate : Model.TotalWorkDaysInMonth)
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                @if (row.WeekdayAbsences > 0)
+                                {
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                                        @row.WeekdayAbsences
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="text-slate-400 text-xs font-semibold">0</span>
+                                }
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                @if (row.LateCheckIns > 0)
+                                {
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                                        @row.LateCheckIns
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="text-slate-400 text-xs font-semibold">0</span>
+                                }
+                            </td>
+                            <td class="px-6 py-4 text-right font-bold text-slate-800">
+                                @row.TotalHours.ToString("N1") hrs
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <a asp-action="Timesheet" asp-route-employeeId="@row.EmployeeId" asp-route-year="@Model.SelectedYear" asp-route-month="@Model.SelectedMonth" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors">
+                                    <span class="material-symbols-outlined text-sm">calendar_view_day</span>
+                                    Timesheet
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

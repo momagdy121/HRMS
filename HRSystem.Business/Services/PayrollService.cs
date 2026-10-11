@@ -14,11 +14,16 @@ public class PayrollService : IPayrollService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUserService _currentUser;
+    private readonly IWorkflowNotificationService _workflowNotifications;
 
-    public PayrollService(IUnitOfWork unitOfWork, ICurrentUserService currentUser)
+    public PayrollService(
+        IUnitOfWork unitOfWork,
+        ICurrentUserService currentUser,
+        IWorkflowNotificationService workflowNotifications)
     {
         _unitOfWork = unitOfWork;
         _currentUser = currentUser;
+        _workflowNotifications = workflowNotifications;
     }
 
     public async Task<Payroll> ProcessAsync(ProcessPayrollDto dto, CancellationToken cancellationToken = default)
@@ -40,6 +45,60 @@ public class PayrollService : IPayrollService
         await _unitOfWork.Payrolls.AddAsync(payroll, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         return payroll;
+    }
+
+    public async Task<BatchProcessPayrollResult> BatchProcessAsync(BatchProcessPayrollDto dto, CancellationToken cancellationToken = default)
+    {
+        EnsureHr();
+
+        if (dto.Month is < 1 or > 12)
+            throw new BusinessRuleException("Invalid month specified.");
+
+        if (dto.Year < 2000 || dto.Year > DateTime.UtcNow.Year + 1)
+            throw new BusinessRuleException("Invalid year specified.");
+
+        var employees = await _unitOfWork.Employees.GetActiveForPayrollAsync(dto.DepartmentId, cancellationToken);
+        var processor = await _currentUser.GetCurrentEmployeeAsync(cancellationToken);
+
+        var result = new BatchProcessPayrollResult();
+        var skippedDetails = new List<string>();
+
+        foreach (var employee in employees)
+        {
+            var exists = await _unitOfWork.Payrolls.ExistsForEmployeeMonthYearAsync(employee.Id, dto.Month, dto.Year, cancellationToken);
+            if (exists)
+            {
+                result.SkippedCount++;
+                skippedDetails.Add($"{employee.FirstName} {employee.LastName} (already generated)");
+                continue;
+            }
+
+            var baseSalary = employee.Salary > 0 ? employee.Salary : 0;
+            var payroll = new Payroll
+            {
+                EmployeeId = employee.Id,
+                Month = dto.Month,
+                Year = dto.Year,
+                BaseSalary = baseSalary,
+                TotalBonus = 0,
+                TotalDeduction = 0,
+                NetSalary = baseSalary,
+                Status = PayrollStatus.Draft,
+                ProcessedBy = processor.Id,
+                ProcessedAt = DateTime.UtcNow
+            };
+
+            await _unitOfWork.Payrolls.AddAsync(payroll, cancellationToken);
+            result.CreatedCount++;
+        }
+
+        if (result.CreatedCount > 0)
+        {
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+        }
+
+        result.SkippedDetails = skippedDetails;
+        return result;
     }
 
     public async Task<PayrollItem> AddPayrollItemAsync(AddPayrollItemDto dto, CancellationToken cancellationToken = default)
@@ -104,6 +163,95 @@ public class PayrollService : IPayrollService
         payroll.Status = status;
         _unitOfWork.Payrolls.Update(payroll);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        var employee = await _unitOfWork.Employees.GetByIdAsync(payroll.EmployeeId, cancellationToken);
+        if (employee != null)
+        {
+            if (status == PayrollStatus.Approved)
+            {
+                // In-app notification only — employee knows payroll is reviewed
+                await _workflowNotifications.NotifyPayrollApprovedAsync(payroll, employee, cancellationToken);
+            }
+            else if (status == PayrollStatus.Paid)
+            {
+                // Full notification (in-app + email) — payslip is final
+                await _workflowNotifications.NotifyPayslipAvailableAsync(payroll, employee, cancellationToken);
+            }
+        }
+    }
+
+    public async Task<BulkStatusUpdateResult> BulkApproveAsync(int? month = null, int? year = null, int? departmentId = null, CancellationToken cancellationToken = default)
+    {
+        EnsureHr();
+
+        var drafts = await _unitOfWork.Payrolls.GetByStatusAndPeriodAsync(
+            PayrollStatus.Draft, month, year, departmentId, cancellationToken);
+
+        var result = new BulkStatusUpdateResult();
+
+        foreach (var payroll in drafts)
+        {
+            if (payroll.BaseSalary <= 0)
+            {
+                result.SkippedCount++;
+                continue;
+            }
+
+            payroll.Status = PayrollStatus.Approved;
+            _unitOfWork.Payrolls.Update(payroll);
+            result.UpdatedCount++;
+        }
+
+        if (result.UpdatedCount > 0)
+        {
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            // Send in-app notifications (no email at this stage)
+            foreach (var payroll in drafts.Where(p => p.Status == PayrollStatus.Approved))
+            {
+                var employee = await _unitOfWork.Employees.GetByIdAsync(payroll.EmployeeId, cancellationToken);
+                if (employee != null)
+                {
+                    await _workflowNotifications.NotifyPayrollApprovedAsync(payroll, employee, cancellationToken);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public async Task<BulkStatusUpdateResult> BulkMarkPaidAsync(int? month = null, int? year = null, int? departmentId = null, CancellationToken cancellationToken = default)
+    {
+        EnsureHr();
+
+        var approved = await _unitOfWork.Payrolls.GetByStatusAndPeriodAsync(
+            PayrollStatus.Approved, month, year, departmentId, cancellationToken);
+
+        var result = new BulkStatusUpdateResult();
+
+        foreach (var payroll in approved)
+        {
+            payroll.Status = PayrollStatus.Paid;
+            _unitOfWork.Payrolls.Update(payroll);
+            result.UpdatedCount++;
+        }
+
+        if (result.UpdatedCount > 0)
+        {
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            // Send full notifications (in-app + email) — payslip is now final
+            foreach (var payroll in approved)
+            {
+                var employee = await _unitOfWork.Employees.GetByIdAsync(payroll.EmployeeId, cancellationToken);
+                if (employee != null)
+                {
+                    await _workflowNotifications.NotifyPayslipAvailableAsync(payroll, employee, cancellationToken);
+                }
+            }
+        }
+
+        return result;
     }
 
     public async Task<PagedResult<Payroll>> GetByEmployeeAsync(int employeeId, int page = 1, int pageSize = 20, CancellationToken cancellationToken = default)

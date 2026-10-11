@@ -9,6 +9,8 @@ public interface IPayrollService
 {
     Task<Payroll> ProcessAsync(ProcessPayrollDto dto, CancellationToken cancellationToken = default);
 
+    Task<BatchProcessPayrollResult> BatchProcessAsync(BatchProcessPayrollDto dto, CancellationToken cancellationToken = default);
+
     Task<PayrollItem> AddPayrollItemAsync(AddPayrollItemDto dto, CancellationToken cancellationToken = default);
 
     Task UpdatePayrollItemAsync(EditPayrollItemDto dto, CancellationToken cancellationToken = default);
@@ -16,6 +18,10 @@ public interface IPayrollService
     Task RemovePayrollItemAsync(int payrollItemId, CancellationToken cancellationToken = default);
 
     Task UpdateStatusAsync(int payrollId, PayrollStatus status, CancellationToken cancellationToken = default);
+
+    Task<BulkStatusUpdateResult> BulkApproveAsync(int? month = null, int? year = null, int? departmentId = null, CancellationToken cancellationToken = default);
+
+    Task<BulkStatusUpdateResult> BulkMarkPaidAsync(int? month = null, int? year = null, int? departmentId = null, CancellationToken cancellationToken = default);
 
     Task<PagedResult<Payroll>> GetByEmployeeAsync(int employeeId, int page = 1, int pageSize = 20, CancellationToken cancellationToken = default);
 

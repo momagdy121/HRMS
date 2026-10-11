@@ -257,6 +257,10 @@ namespace HRSystem.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("ProfilePictureUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.Property<decimal>("Salary")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
@@ -1331,6 +1335,51 @@ namespace HRSystem.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("HRSystem.Data.Models.UserNotification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsRead")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<byte>("Kind")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("LinkUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId", "IsRead", "CreatedAt");
+
+                    b.ToTable("UserNotifications");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
                 {
                     b.Property<int>("Id")
@@ -1466,29 +1515,35 @@ namespace HRSystem.Data.Migrations
 
             modelBuilder.Entity("HRSystem.Data.Models.Attendance", b =>
                 {
-                    b.HasOne("HRSystem.Data.Models.Employee", null)
-                        .WithMany()
+                    b.HasOne("HRSystem.Data.Models.Employee", "Employee")
+                        .WithMany("Attendances")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("HRSystem.Data.Models.Department", b =>
                 {
-                    b.HasOne("HRSystem.Data.Models.Employee", null)
+                    b.HasOne("HRSystem.Data.Models.Employee", "Manager")
                         .WithMany()
                         .HasForeignKey("ManagerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Manager");
                 });
 
             modelBuilder.Entity("HRSystem.Data.Models.Employee", b =>
                 {
-                    b.HasOne("HRSystem.Data.Models.Department", null)
-                        .WithMany()
+                    b.HasOne("HRSystem.Data.Models.Department", "Department")
+                        .WithMany("Employees")
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Department");
                 });
 
             modelBuilder.Entity("HRSystem.Data.Models.EmployeeTask", b =>
@@ -1553,6 +1608,15 @@ namespace HRSystem.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("HRSystem.Data.Models.UserNotification", b =>
+                {
+                    b.HasOne("HRSystem.Data.Models.Employee", null)
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
@@ -1602,6 +1666,16 @@ namespace HRSystem.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("HRSystem.Data.Models.Department", b =>
+                {
+                    b.Navigation("Employees");
+                });
+
+            modelBuilder.Entity("HRSystem.Data.Models.Employee", b =>
+                {
+                    b.Navigation("Attendances");
                 });
 #pragma warning restore 612, 618
         }

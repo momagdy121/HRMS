@@ -19,6 +19,7 @@ public class EmployeeProfileViewModel
     public string Initials { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string? PhoneNumber { get; set; }
+    public string? ProfilePictureUrl { get; set; }
     public string Role { get; set; } = string.Empty;
     public string DepartmentName { get; set; } = string.Empty;
     public string DepartmentManagerName { get; set; } = string.Empty;

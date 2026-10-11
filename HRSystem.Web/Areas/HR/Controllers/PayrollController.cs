@@ -35,10 +35,41 @@ public class PayrollController : HRBaseController
         int? year = null,
         PayrollStatus? status = null,
         string? search = null,
-        bool showProcess = false)
+        bool showProcess = false,
+        bool showBatchProcess = false)
     {
         await SetLayoutAsync("Payroll", "Search payroll records...");
-        return View(await BuildIndexModelAsync(page, departmentId, month, year, status, showProcess, search: search));
+        return View(await BuildIndexModelAsync(page, departmentId, month, year, status, showProcess, showBatchProcess: showBatchProcess, search: search));
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> BatchProcess([Bind(Prefix = "BatchProcessForm")] BatchProcessPayrollViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            await SetLayoutAsync("Payroll", "Search payroll records...");
+            return View("Index", await BuildIndexModelAsync(1, showBatchProcess: true, batchProcessForm: model));
+        }
+
+        try
+        {
+            var result = await _payrollService.BatchProcessAsync(new BatchProcessPayrollDto
+            {
+                Month = model.Month,
+                Year = model.Year,
+                DepartmentId = model.DepartmentId
+            });
+
+            TempData["Success"] = $"Bulk payroll generated {result.CreatedCount} draft(s) for {PayrollDisplayHelper.GetMonthName(model.Month)} {model.Year}. ({result.SkippedCount} skipped as already existing).";
+            return RedirectToAction(nameof(Index), new { month = model.Month, year = model.Year, departmentId = model.DepartmentId });
+        }
+        catch (BusinessRuleException ex)
+        {
+            await SetLayoutAsync("Payroll", "Search payroll records...");
+            ModalValidationHelper.AddFormErrors(ModelState, "BatchProcessForm", ex.Message);
+            return View("Index", await BuildIndexModelAsync(1, showBatchProcess: true, batchProcessForm: model));
+        }
     }
 
     [HttpPost]
@@ -81,6 +112,52 @@ public class PayrollController : HRBaseController
             return RedirectToAction(nameof(Index));
 
         return View(model);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Payslip(int id)
+    {
+        await SetLayoutAsync("Payroll", "Search payroll records...");
+        var payroll = await UnitOfWork.Payrolls.GetByIdAsync(id);
+        if (payroll == null)
+            return NotFound();
+
+        var employee = await UnitOfWork.Employees.GetByIdAsync(payroll.EmployeeId);
+        if (employee == null)
+            return NotFound();
+
+        var departments = await HrDisplayHelper.LoadDepartmentsAsync(UnitOfWork);
+        departments.TryGetValue(employee.DepartmentId, out var department);
+        var items = await UnitOfWork.PayrollItems.GetByPayrollIdAsync(payroll.Id);
+
+        var model = new PayslipViewModel
+        {
+            Id = payroll.Id,
+            EmployeeId = employee.Id,
+            EmployeeName = $"{employee.FirstName} {employee.LastName}",
+            EmployeeCode = $"EMP-{employee.Id:D4}",
+            DepartmentName = department?.Name ?? "—",
+            JobTitle = employee.IsHR ? "HR Specialist" : "Staff Member",
+            Email = employee.Email ?? "—",
+            JoinDate = employee.CreatedAt,
+            ProcessedAt = payroll.ProcessedAt,
+            Month = payroll.Month,
+            Year = payroll.Year,
+            BaseSalary = payroll.BaseSalary,
+            TotalBonus = payroll.TotalBonus,
+            TotalDeduction = payroll.TotalDeduction,
+            NetSalary = payroll.NetSalary,
+            Status = payroll.Status,
+            Items = items.Select(i => new PayrollItemRowViewModel
+            {
+                Id = i.Id,
+                ItemType = i.ItemType,
+                Description = i.Description,
+                Amount = i.Amount
+            }).ToList()
+        };
+
+        return View("~/Areas/Employee/Views/Payroll/Payslip.cshtml", model);
     }
 
     [HttpPost]
@@ -213,6 +290,40 @@ public class PayrollController : HRBaseController
         return RedirectToAction(nameof(Detail), new { id });
     }
 
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> BulkApprove(int? month, int? year, int? departmentId)
+    {
+        try
+        {
+            var result = await _payrollService.BulkApproveAsync(month, year, departmentId);
+            TempData["Success"] = $"Approved {result.UpdatedCount} payroll record(s). {result.SkippedCount} skipped.";
+        }
+        catch (BusinessRuleException ex)
+        {
+            TempData["Error"] = ex.Message;
+        }
+
+        return RedirectToAction(nameof(Index), new { month, year, departmentId });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> BulkMarkPaid(int? month, int? year, int? departmentId)
+    {
+        try
+        {
+            var result = await _payrollService.BulkMarkPaidAsync(month, year, departmentId);
+            TempData["Success"] = $"Marked {result.UpdatedCount} payroll record(s) as paid. Payslip notifications sent.";
+        }
+        catch (BusinessRuleException ex)
+        {
+            TempData["Error"] = ex.Message;
+        }
+
+        return RedirectToAction(nameof(Index), new { month, year, departmentId });
+    }
+
     private async Task<HrPayrollIndexViewModel> BuildIndexModelAsync(
         int page,
         int? departmentId = null,
@@ -220,7 +331,9 @@ public class PayrollController : HRBaseController
         int? year = null,
         PayrollStatus? status = null,
         bool showProcess = false,
+        bool showBatchProcess = false,
         ProcessPayrollViewModel? processForm = null,
+        BatchProcessPayrollViewModel? batchProcessForm = null,
         string? search = null)
     {
         var departments = await HrDisplayHelper.LoadDepartmentsAsync(UnitOfWork);
@@ -252,13 +365,16 @@ public class PayrollController : HRBaseController
                 })
                 .ToList(),
             ProcessForm = processForm ?? new ProcessPayrollViewModel(),
+            BatchProcessForm = batchProcessForm ?? new BatchProcessPayrollViewModel(),
             DepartmentFilter = departmentId,
             MonthFilter = month,
             YearFilter = year,
             StatusFilter = status,
             ShowProcessModal = showProcess,
+            ShowBatchProcessModal = showBatchProcess,
             TotalNetForPeriod = statsPage.Items.Sum(p => p.NetSalary),
             PendingApprovalCount = statsPage.Items.Count(p => p.Status == PayrollStatus.Draft),
+            ApprovedPendingPayCount = statsPage.Items.Count(p => p.Status == PayrollStatus.Approved),
             Page = paged.Page,
             TotalPages = paged.TotalPages,
             TotalCount = paged.TotalCount,

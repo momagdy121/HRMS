@@ -13,16 +13,19 @@ public class ProfileController : EmployeeBaseController
 {
     private readonly ILeaveService _leaveService;
     private readonly UserManager<Data.Models.Employee> _userManager;
+    private readonly ICloudinaryService _cloudinaryService;
 
     public ProfileController(
         ICurrentUserService currentUser,
         IUnitOfWork unitOfWork,
         ILeaveService leaveService,
-        UserManager<Data.Models.Employee> userManager)
+        UserManager<Data.Models.Employee> userManager,
+        ICloudinaryService cloudinaryService)
         : base(currentUser, unitOfWork)
     {
         _leaveService = leaveService;
         _userManager = userManager;
+        _cloudinaryService = cloudinaryService;
     }
 
     [HttpGet]
@@ -58,6 +61,51 @@ public class ProfileController : EmployeeBaseController
         return RedirectToAction(nameof(Index));
     }
 
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> UploadAvatar(IFormFile? avatarFile)
+    {
+        if (avatarFile == null || avatarFile.Length == 0)
+        {
+            TempData["Error"] = "Please select an image file to upload.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
+        var ext = Path.GetExtension(avatarFile.FileName).ToLowerInvariant();
+        if (!allowedExtensions.Contains(ext))
+        {
+            TempData["Error"] = "Only JPG, PNG, and WebP images are allowed.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        if (avatarFile.Length > 5 * 1024 * 1024)
+        {
+            TempData["Error"] = "Image file size cannot exceed 5MB.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        var userId = CurrentUser.GetCurrentUserId();
+        var employee = await UnitOfWork.Employees.GetByIdAsync(userId);
+        if (employee == null)
+            return RedirectToAction(nameof(Index));
+
+        var uploadedUrl = await _cloudinaryService.UploadImageAsync(avatarFile, "hrms/avatars");
+        if (!string.IsNullOrEmpty(uploadedUrl))
+        {
+            employee.ProfilePictureUrl = uploadedUrl;
+            UnitOfWork.Employees.Update(employee);
+            await UnitOfWork.SaveChangesAsync();
+            TempData["Success"] = "Profile photo updated successfully.";
+        }
+        else
+        {
+            TempData["Error"] = "Failed to upload photo. Please try again.";
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
+
     private async Task<EmployeeProfileViewModel> BuildProfileViewModelAsync()
     {
         var employee = await CurrentUser.GetCurrentEmployeeAsync();
@@ -89,6 +137,7 @@ public class ProfileController : EmployeeBaseController
             Initials = HrDisplayHelper.GetInitials(employee.FirstName, employee.LastName),
             Email = employee.Email ?? string.Empty,
             PhoneNumber = employee.PhoneNumber,
+            ProfilePictureUrl = employee.ProfilePictureUrl,
             Role = role,
             DepartmentName = department?.Name ?? "—",
             DepartmentManagerName = managerName,

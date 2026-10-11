@@ -17,6 +17,12 @@ public static class DependencyInjection
         services.Configure<BravoApiSettings>(configuration.GetSection(BravoApiSettings.SectionName));
         services.AddScoped<IEmailService, BrevoEmailService>();
 
+        services.Configure<CloudinarySettings>(configuration.GetSection(CloudinarySettings.SectionName));
+        services.AddScoped<ICloudinaryService, CloudinaryService>();
+
+        services.AddScoped<INotificationService, NotificationService>();
+        services.AddScoped<IWorkflowNotificationService, WorkflowNotificationService>();
+
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<IEmployeeService, EmployeeService>();

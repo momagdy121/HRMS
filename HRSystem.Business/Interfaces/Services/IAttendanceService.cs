@@ -23,4 +23,8 @@ public interface IAttendanceService
         int pageSize = 20,
         string? search = null,
         CancellationToken cancellationToken = default);
+
+    Task<MonthlyTimesheetDto> GetMonthlyTimesheetAsync(int employeeId, int year, int month, CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<MonthlyTimesheetDto>> GetMonthlyDepartmentTimesheetsAsync(int? departmentId, int year, int month, CancellationToken cancellationToken = default);
 }

@@ -36,6 +36,22 @@ public class ProcessPayrollViewModel
     public int Year { get; set; } = DateTime.UtcNow.Year;
 }
 
+public class BatchProcessPayrollViewModel
+{
+    [Required]
+    [Range(1, 12)]
+    [Display(Name = "Month")]
+    public int Month { get; set; } = DateTime.UtcNow.Month;
+
+    [Required]
+    [Range(2000, 2100)]
+    [Display(Name = "Year")]
+    public int Year { get; set; } = DateTime.UtcNow.Year;
+
+    [Display(Name = "Department (Optional)")]
+    public int? DepartmentId { get; set; }
+}
+
 public class AddPayrollItemViewModel
 {
     public int PayrollId { get; set; }
@@ -96,13 +112,16 @@ public class HrPayrollIndexViewModel
     public IReadOnlyList<DepartmentFilterOptionViewModel> Departments { get; set; } = [];
     public IReadOnlyList<EmployeeFilterOptionViewModel> Employees { get; set; } = [];
     public ProcessPayrollViewModel ProcessForm { get; set; } = new();
+    public BatchProcessPayrollViewModel BatchProcessForm { get; set; } = new();
     public int? DepartmentFilter { get; set; }
     public int? MonthFilter { get; set; }
     public int? YearFilter { get; set; }
     public PayrollStatus? StatusFilter { get; set; }
     public bool ShowProcessModal { get; set; }
+    public bool ShowBatchProcessModal { get; set; }
     public decimal TotalNetForPeriod { get; set; }
     public int PendingApprovalCount { get; set; }
+    public int ApprovedPendingPayCount { get; set; }
     public int Page { get; set; }
     public int TotalPages { get; set; }
     public int TotalCount { get; set; }
@@ -135,8 +154,14 @@ public class HrPayrollDetailViewModel
 public class PayslipViewModel
 {
     public int Id { get; set; }
+    public int EmployeeId { get; set; }
     public string EmployeeName { get; set; } = string.Empty;
+    public string EmployeeCode { get; set; } = string.Empty;
     public string DepartmentName { get; set; } = string.Empty;
+    public string JobTitle { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
+    public DateTime? JoinDate { get; set; }
+    public DateTime? ProcessedAt { get; set; }
     public int Month { get; set; }
     public int Year { get; set; }
     public decimal BaseSalary { get; set; }

@@ -125,6 +125,21 @@ public class EmployeeRepository : IEmployeeRepository
 
     public void Update(Employee employee) => _context.Employees.Update(employee);
 
+    public async Task<IReadOnlyList<Employee>> GetActiveForPayrollAsync(int? departmentId, CancellationToken cancellationToken = default)
+    {
+        var query = _context.Employees
+            .AsNoTracking()
+            .Where(e => e.IsActive && !e.IsDeleted);
+
+        if (departmentId.HasValue)
+            query = query.Where(e => e.DepartmentId == departmentId.Value);
+
+        return await query
+            .OrderBy(e => e.LastName)
+            .ThenBy(e => e.FirstName)
+            .ToListAsync(cancellationToken);
+    }
+
     private static IQueryable<Employee> ApplySearch(IQueryable<Employee> query, string? search)
     {
         if (string.IsNullOrWhiteSpace(search))

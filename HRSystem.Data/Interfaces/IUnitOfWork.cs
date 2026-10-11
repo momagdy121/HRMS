@@ -13,6 +13,8 @@ public interface IUnitOfWork : IAsyncDisposable
     ILeaveBalanceRepository LeaveBalances { get; }
     IAttendanceRepository Attendances { get; }
 
+    IUserNotificationRepository UserNotifications { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 
     Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default);

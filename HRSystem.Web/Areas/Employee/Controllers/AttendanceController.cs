@@ -28,6 +28,36 @@ public class AttendanceController : EmployeeBaseController
         return View(await BuildIndexModelAsync(page, showCheckIn, showCheckOut));
     }
 
+    [HttpGet]
+    public async Task<IActionResult> Timesheet(int? year = null, int? month = null)
+    {
+        await SetLayoutAsync("Attendance", "Search attendance...");
+        var employee = await CurrentUser.GetCurrentEmployeeAsync();
+        var y = year ?? DateTime.UtcNow.Year;
+        var m = month ?? DateTime.UtcNow.Month;
+
+        var timesheetDto = await _attendanceService.GetMonthlyTimesheetAsync(employee.Id, y, m);
+        var departments = await HrDisplayHelper.LoadDepartmentsAsync(UnitOfWork);
+        departments.TryGetValue(employee.DepartmentId, out var dept);
+
+        var model = new EmployeeTimesheetViewModel
+        {
+            EmployeeId = employee.Id,
+            EmployeeName = $"{employee.FirstName} {employee.LastName}",
+            DepartmentName = dept?.Name ?? "—",
+            JobTitle = employee.IsHR ? "HR Specialist" : "Staff Member",
+            Year = y,
+            Month = m,
+            DaysPresent = timesheetDto.DaysPresent,
+            WeekdayAbsences = timesheetDto.WeekdayAbsences,
+            LateCheckIns = timesheetDto.LateCheckIns,
+            TotalHours = timesheetDto.TotalHours,
+            Days = timesheetDto.Days
+        };
+
+        return View(model);
+    }
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CheckIn()

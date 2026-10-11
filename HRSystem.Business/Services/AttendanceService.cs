@@ -123,4 +123,24 @@ public class AttendanceService : IAttendanceService
         var result = await _unitOfWork.Attendances.GetReportPagedAsync(date, departmentId, page, pageSize, search, cancellationToken);
         return PagedResultMapper.Map(result);
     }
+
+    public async Task<MonthlyTimesheetDto> GetMonthlyTimesheetAsync(int employeeId, int year, int month, CancellationToken cancellationToken = default)
+    {
+        var records = await _unitOfWork.Attendances.GetByEmployeeForMonthAsync(employeeId, year, month, cancellationToken);
+        return TimesheetCalculator.Build(employeeId, year, month, records);
+    }
+
+    public async Task<IReadOnlyList<MonthlyTimesheetDto>> GetMonthlyDepartmentTimesheetsAsync(int? departmentId, int year, int month, CancellationToken cancellationToken = default)
+    {
+        var employees = await _unitOfWork.Employees.GetActiveForPayrollAsync(departmentId, cancellationToken);
+        var list = new List<MonthlyTimesheetDto>(employees.Count);
+
+        foreach (var employee in employees)
+        {
+            var records = await _unitOfWork.Attendances.GetByEmployeeForMonthAsync(employee.Id, year, month, cancellationToken);
+            list.Add(TimesheetCalculator.Build(employee.Id, year, month, records));
+        }
+
+        return list;
+    }
 }

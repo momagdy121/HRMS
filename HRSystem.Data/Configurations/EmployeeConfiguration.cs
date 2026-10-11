@@ -20,6 +20,7 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
         entity.Property(x => x.IsDeleted).HasDefaultValue(false);
         entity.Property(x => x.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
         entity.Property(x => x.IsPasswordChangeRequired).HasDefaultValue(false);
+        entity.Property(x => x.ProfilePictureUrl).HasMaxLength(500).IsRequired(false);
 
         entity.HasOne(e => e.Department)
             .WithMany(d => d.Employees)

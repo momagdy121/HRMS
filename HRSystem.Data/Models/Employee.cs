@@ -29,6 +29,9 @@ public class Employee : IdentityUser<int>
 
     public bool IsPasswordChangeRequired { get; set; } = true;
 
+    [MaxLength(500)]
+    public string? ProfilePictureUrl { get; set; }
+
     // ── Navigation Properties ──────────────────────────────────────
     public Department Department { get; set; } = null!;
 

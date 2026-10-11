@@ -102,3 +102,44 @@ public class HrAttendanceIndexViewModel
     public int PageSize { get; set; }
 }
 
+public class EmployeeTimesheetViewModel
+{
+    public int EmployeeId { get; set; }
+    public string EmployeeName { get; set; } = string.Empty;
+    public string DepartmentName { get; set; } = string.Empty;
+    public string JobTitle { get; set; } = string.Empty;
+    public int Year { get; set; }
+    public int Month { get; set; }
+    public int DaysPresent { get; set; }
+    public int WeekdayAbsences { get; set; }
+    public int LateCheckIns { get; set; }
+    public double TotalHours { get; set; }
+    public IReadOnlyList<HRSystem.Business.DTOs.Attendance.MonthlyTimesheetDayDto> Days { get; set; } = [];
+}
+
+public class HrMonthlyAttendanceRowViewModel
+{
+    public int EmployeeId { get; set; }
+    public string EmployeeName { get; set; } = string.Empty;
+    public string EmployeeInitials { get; set; } = string.Empty;
+    public string DepartmentName { get; set; } = string.Empty;
+    public string JobTitle { get; set; } = string.Empty;
+    public int DaysPresent { get; set; }
+    public int WeekdayAbsences { get; set; }
+    public int LateCheckIns { get; set; }
+    public double TotalHours { get; set; }
+}
+
+public class HrMonthlyAttendanceIndexViewModel
+{
+    public int SelectedYear { get; set; }
+    public int SelectedMonth { get; set; }
+    public int? DepartmentFilter { get; set; }
+    public string? Search { get; set; }
+    public IReadOnlyList<(int Id, string Name)> Departments { get; set; } = [];
+    public IReadOnlyList<HrMonthlyAttendanceRowViewModel> Records { get; set; } = [];
+    public int TotalActiveEmployees { get; set; }
+    public int TotalWorkDaysInMonth { get; set; }
+    public int WorkDaysToDate { get; set; }
+}
+

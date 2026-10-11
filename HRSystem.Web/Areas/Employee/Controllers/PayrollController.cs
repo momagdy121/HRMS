@@ -72,8 +72,14 @@ public class PayrollController : EmployeeBaseController
         return new PayslipViewModel
         {
             Id = payroll.Id,
+            EmployeeId = employee.Id,
             EmployeeName = $"{employee.FirstName} {employee.LastName}",
+            EmployeeCode = $"EMP-{employee.Id:D4}",
             DepartmentName = department?.Name ?? "Unknown",
+            JobTitle = employee.IsHR ? "HR Specialist" : "Staff Member",
+            Email = employee.Email ?? "—",
+            JoinDate = employee.CreatedAt,
+            ProcessedAt = payroll.ProcessedAt,
             Month = payroll.Month,
             Year = payroll.Year,
             BaseSalary = payroll.BaseSalary,
@@ -89,6 +95,22 @@ public class PayrollController : EmployeeBaseController
                 Amount = i.Amount
             }).ToList()
         };
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Payslip(int id)
+    {
+        await SetLayoutAsync("Payroll", "Search payslips...");
+        var employee = await CurrentUser.GetCurrentEmployeeAsync();
+        var payroll = await UnitOfWork.Payrolls.GetByIdAsync(id);
+
+        if (payroll == null || payroll.EmployeeId != employee.Id)
+            return NotFound();
+
+        var departments = await HrDisplayHelper.LoadDepartmentsAsync(UnitOfWork);
+        var payslip = await BuildPayslipAsync(payroll, employee, departments);
+
+        return View(payslip);
     }
 
     private static PayrollListItemViewModel MapListItem(

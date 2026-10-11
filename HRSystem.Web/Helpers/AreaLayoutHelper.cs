@@ -23,18 +23,28 @@ public static class AreaLayoutHelper
         var fullName = currentUser.GetFullName();
         var departmentName = currentUser.GetDepartmentName();
 
-        if (string.IsNullOrWhiteSpace(fullName))
+        string? avatarUrl = null;
+        try
         {
             var employee = await currentUser.GetCurrentEmployeeAsync();
-            fullName = $"{employee.FirstName} {employee.LastName}".Trim();
-            var department = await unitOfWork.Departments.GetByIdAsync(employee.DepartmentId);
-            departmentName = department?.Name;
+            avatarUrl = employee.ProfilePictureUrl;
+            if (string.IsNullOrWhiteSpace(fullName))
+            {
+                fullName = $"{employee.FirstName} {employee.LastName}".Trim();
+                var department = await unitOfWork.Departments.GetByIdAsync(employee.DepartmentId);
+                departmentName = department?.Name;
+            }
+        }
+        catch
+        {
+            // Fallback
         }
 
         controller.ViewBag.Role = effectiveRole;
         controller.ViewBag.ActivePage = activePage;
         controller.ViewBag.UserName = fullName;
         controller.ViewBag.UserTitle = BuildUserTitle(currentUser, departmentName);
+        controller.ViewBag.UserAvatar = avatarUrl;
         controller.ViewBag.SearchPlaceholder = searchPlaceholder ?? "Search...";
     }
 

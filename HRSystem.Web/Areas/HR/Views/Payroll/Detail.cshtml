@@ -14,9 +14,14 @@
                 @PayrollDisplayHelper.GetPeriodLabel(Model.Month, Model.Year) · @Model.DepartmentName
             </p>
         </div>
-        <span class="@PayrollDisplayHelper.GetStatusBadgeClass(Model.Status) px-3 py-1 rounded-full text-sm font-medium">
-            @PayrollDisplayHelper.GetStatusLabel(Model.Status)
-        </span>
+        <div class="flex items-center gap-3">
+            <a asp-action="Payslip" asp-route-id="@Model.Id" target="_blank" class="px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg shadow-sm flex items-center gap-1.5 transition-colors">
+                <span class="material-symbols-outlined text-sm">print</span> Print Payslip
+            </a>
+            <span class="@PayrollDisplayHelper.GetStatusBadgeClass(Model.Status) px-3 py-1 rounded-full text-sm font-medium">
+                @PayrollDisplayHelper.GetStatusLabel(Model.Status)
+            </span>
+        </div>
     </div>
 
     <partial name="_PayslipDetail" model="@(new PayslipViewModel {

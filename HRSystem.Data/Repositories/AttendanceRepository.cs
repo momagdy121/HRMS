@@ -23,6 +23,18 @@ public class AttendanceRepository : IAttendanceRepository
             a => a.EmployeeId == employeeId && a.Date == date && !a.IsDeleted,
             cancellationToken);
 
+    public async Task<IReadOnlyList<Attendance>> GetByEmployeeForMonthAsync(int employeeId, int year, int month, CancellationToken cancellationToken = default)
+    {
+        var start = new DateOnly(year, month, 1);
+        var end = start.AddMonths(1).AddDays(-1);
+
+        return await _context.Attendances
+            .AsNoTracking()
+            .Where(a => !a.IsDeleted && a.EmployeeId == employeeId && a.Date >= start && a.Date <= end)
+            .OrderBy(a => a.Date)
+            .ToListAsync(cancellationToken);
+    }
+
     public Task<List<Attendance>> GetByEmployeeIdsAndDateAsync(IEnumerable<int> employeeIds, DateOnly date, CancellationToken cancellationToken = default)
     {
         var idList = employeeIds.Distinct().ToList();

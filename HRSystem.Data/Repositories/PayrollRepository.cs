@@ -96,4 +96,31 @@ public class PayrollRepository : IPayrollRepository
         await _context.Payrolls.AddAsync(payroll, cancellationToken);
 
     public void Update(Payroll payroll) => _context.Payrolls.Update(payroll);
+
+    public async Task<IReadOnlyList<Payroll>> GetByStatusAndPeriodAsync(
+        PayrollStatus status,
+        int? month = null,
+        int? year = null,
+        int? departmentId = null,
+        CancellationToken cancellationToken = default)
+    {
+        var query = _context.Payrolls.Where(p => p.Status == status);
+
+        if (month.HasValue)
+            query = query.Where(p => p.Month == month.Value);
+
+        if (year.HasValue)
+            query = query.Where(p => p.Year == year.Value);
+
+        if (departmentId.HasValue)
+        {
+            query = query.Where(p =>
+                _context.Employees.Any(e =>
+                    e.Id == p.EmployeeId && e.DepartmentId == departmentId.Value && !e.IsDeleted));
+        }
+
+        return await query
+            .OrderBy(p => p.EmployeeId)
+            .ToListAsync(cancellationToken);
+    }
 }

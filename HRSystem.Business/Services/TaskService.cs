@@ -16,15 +16,18 @@ public class TaskService : ITaskService
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUserService _currentUser;
     private readonly ITaskAssignmentPolicy _assignmentPolicy;
+    private readonly IWorkflowNotificationService _workflowNotifications;
 
     public TaskService(
         IUnitOfWork unitOfWork,
         ICurrentUserService currentUser,
-        ITaskAssignmentPolicy assignmentPolicy)
+        ITaskAssignmentPolicy assignmentPolicy,
+        IWorkflowNotificationService workflowNotifications)
     {
         _unitOfWork = unitOfWork;
         _currentUser = currentUser;
         _assignmentPolicy = assignmentPolicy;
+        _workflowNotifications = workflowNotifications;
     }
 
     public async Task<EmployeeTask> AssignAsync(AssignTaskDto dto, CancellationToken cancellationToken = default)
@@ -49,6 +52,8 @@ public class TaskService : ITaskService
 
         await _unitOfWork.EmployeeTasks.AddAsync(task, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        await _workflowNotifications.NotifyTaskAssignedAsync(task, assignee, assigner, cancellationToken);
         return task;
     }
 

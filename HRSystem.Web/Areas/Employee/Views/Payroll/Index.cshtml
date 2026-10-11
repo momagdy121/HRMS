@@ -40,9 +40,14 @@
                                 <span class="@PayrollDisplayHelper.GetStatusBadgeClass(payroll.Status) px-2.5 py-0.5 rounded-full text-xs font-medium">@PayrollDisplayHelper.GetStatusLabel(payroll.Status)</span>
                             </td>
                             <td class="px-6 py-4 text-right">
-                                <a asp-action="Index" asp-route-detailId="@payroll.Id" class="text-secondary hover:text-primary" title="View payslip">
-                                    <span class="material-symbols-outlined">visibility</span>
-                                </a>
+                                <div class="flex items-center justify-end gap-2">
+                                    <a asp-action="Payslip" asp-route-id="@payroll.Id" target="_blank" class="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors" title="Print Payslip">
+                                        <span class="material-symbols-outlined text-sm">print</span>
+                                    </a>
+                                    <a asp-action="Index" asp-route-detailId="@payroll.Id" class="p-1.5 text-slate-500 hover:text-primary hover:bg-slate-50 rounded transition-colors" title="Quick Preview">
+                                        <span class="material-symbols-outlined text-sm">visibility</span>
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                     }
@@ -63,7 +68,10 @@
                     <a asp-action="Index" class="p-1 text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">close</span></a>
                 </div>
                 <partial name="_PayslipDetail" model="Model.PayslipDetail" />
-                <div class="flex justify-end mt-lg">
+                <div class="flex justify-end gap-3 mt-lg">
+                    <a asp-action="Payslip" asp-route-id="@Model.PayslipDetail.Id" target="_blank" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-label-bold flex items-center gap-1.5 transition-colors">
+                        <span class="material-symbols-outlined text-sm">print</span> Print / PDF
+                    </a>
                     <a asp-action="Index" class="px-6 py-2 border border-outline-variant rounded-lg text-on-surface-variant font-label-bold">Close</a>
                 </div>
             </div>

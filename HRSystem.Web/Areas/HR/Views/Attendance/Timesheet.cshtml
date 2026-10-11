@@ -1,0 +1,152 @@
+@model HRSystem.Web.ViewModels.Attendance.EmployeeTimesheetViewModel
+@{
+    ViewBag.Title = $"Timesheet — {Model.EmployeeName} - HRMS Portal";
+    var monthName = HRSystem.Web.Helpers.PayrollDisplayHelper.GetMonthName(Model.Month);
+    var currentYear = DateTime.UtcNow.Year;
+}
+
+<div class="max-w-7xl mx-auto space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+            <a asp-action="Monthly" asp-route-year="@Model.Year" asp-route-month="@Model.Month" class="text-primary hover:underline text-sm font-medium mb-2 inline-flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">arrow_back</span>Back to Monthly Summary
+            </a>
+            <h2 class="font-h1 text-h1 text-slate-900">@Model.EmployeeName's Timesheet</h2>
+            <p class="font-body-md text-slate-500 mt-1">@Model.DepartmentName · @Model.JobTitle · <strong>@monthName @Model.Year</strong></p>
+        </div>
+
+        <!-- Month & Year Filter Selector -->
+        <form asp-action="Timesheet" method="get" class="flex items-center gap-2 bg-white p-2 rounded-xl border border-slate-200 shadow-sm">
+            <input type="hidden" name="employeeId" value="@Model.EmployeeId" />
+            <select name="month" class="text-sm font-semibold border-slate-200 rounded-lg px-3 py-1.5 bg-slate-50">
+                @for (var m = 1; m <= 12; m++)
+                {
+                    <option value="@m" selected="@(Model.Month == m)">@HRSystem.Web.Helpers.PayrollDisplayHelper.GetMonthName(m)</option>
+                }
+            </select>
+            <select name="year" class="text-sm font-semibold border-slate-200 rounded-lg px-3 py-1.5 bg-slate-50">
+                @for (var y = currentYear; y >= currentYear - 3; y--)
+                {
+                    <option value="@y" selected="@(Model.Year == y)">@y</option>
+                }
+            </select>
+            <button type="submit" class="px-4 py-1.5 bg-primary text-white text-sm font-semibold rounded-lg hover:bg-primary/90 transition-colors">
+                View
+            </button>
+        </form>
+    </div>
+
+    <!-- Monthly Stats Overview KPIs -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+            <div>
+                <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Days Present</p>
+                <p class="text-3xl font-black text-emerald-600 mt-1">@Model.DaysPresent</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                <span class="material-symbols-outlined">event_available</span>
+            </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+            <div>
+                <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Weekday Absences</p>
+                <p class="text-3xl font-black text-rose-600 mt-1">@Model.WeekdayAbsences</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
+                <span class="material-symbols-outlined">event_busy</span>
+            </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+            <div>
+                <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Late Check-Ins</p>
+                <p class="text-3xl font-black text-amber-600 mt-1">@Model.LateCheckIns</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                <span class="material-symbols-outlined">alarm</span>
+            </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+            <div>
+                <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Hours</p>
+                <p class="text-3xl font-black text-blue-600 mt-1">@Model.TotalHours.ToString("N1")</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                <span class="material-symbols-outlined">schedule</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Daily Breakdown Table -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+            <h3 class="font-bold text-slate-800">Daily Attendance Breakdown</h3>
+            <span class="text-xs font-medium text-slate-500">@monthName @Model.Year</span>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-slate-50 border-b border-slate-100">
+                    <tr>
+                        <th class="px-6 py-3.5 font-label-bold text-slate-500 uppercase tracking-wider text-xs">Date</th>
+                        <th class="px-6 py-3.5 font-label-bold text-slate-500 uppercase tracking-wider text-xs">Day</th>
+                        <th class="px-6 py-3.5 font-label-bold text-slate-500 uppercase tracking-wider text-xs">Status</th>
+                        <th class="px-6 py-3.5 font-label-bold text-slate-500 uppercase tracking-wider text-xs">Check In</th>
+                        <th class="px-6 py-3.5 font-label-bold text-slate-500 uppercase tracking-wider text-xs">Check Out</th>
+                        <th class="px-6 py-3.5 font-label-bold text-slate-500 uppercase tracking-wider text-xs text-right">Hours Logged</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 font-body-md text-sm">
+                    @foreach (var day in Model.Days)
+                    {
+                        var isWeekend = !day.IsWeekday;
+                        <tr class="@(isWeekend ? "bg-slate-50/40 text-slate-400" : day.IsFuture ? "bg-white text-slate-400" : "hover:bg-slate-50/80 transition-colors")">
+                            <td class="px-6 py-3.5 font-medium @(isWeekend || day.IsFuture ? "text-slate-400" : "text-slate-900")">
+                                @day.Date.ToString("MMM dd, yyyy")
+                            </td>
+                            <td class="px-6 py-3.5 text-xs font-semibold uppercase tracking-wider @(isWeekend ? "text-slate-400" : "text-slate-600")">
+                                @day.Date.DayOfWeek.ToString()
+                            </td>
+                            <td class="px-6 py-3.5">
+                                @if (day.IsPresent)
+                                {
+                                    @if (day.IsLate)
+                                    {
+                                        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">Late</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">Present</span>
+                                    }
+                                }
+                                else if (day.IsFuture)
+                                {
+                                    <span class="px-2.5 py-0.5 rounded-full text-xs font-medium text-slate-400 bg-slate-50 border border-slate-200">Upcoming</span>
+                                }
+                                else if (day.IsWeekday)
+                                {
+                                    <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">Absent</span>
+                                }
+                                else
+                                {
+                                    <span class="px-2.5 py-0.5 rounded-full text-xs font-medium text-slate-400 bg-slate-100">Weekend</span>
+                                }
+                            </td>
+                            <td class="px-6 py-3.5 font-mono text-xs">
+                                @(day.CheckInTime.HasValue ? day.CheckInTime.Value.ToString("hh:mm tt") : "—")
+                            </td>
+                            <td class="px-6 py-3.5 font-mono text-xs">
+                                @(day.CheckOutTime.HasValue ? day.CheckOutTime.Value.ToString("hh:mm tt") : "—")
+                            </td>
+                            <td class="px-6 py-3.5 text-right font-semibold font-mono text-xs @(day.HoursWorked.HasValue && day.HoursWorked.Value >= 8 ? "text-emerald-700" : "text-slate-700")">
+                                @(day.HoursWorked.HasValue ? $"{day.HoursWorked.Value:F1} hrs" : "—")
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

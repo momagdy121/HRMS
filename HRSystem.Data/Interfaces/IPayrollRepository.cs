@@ -29,4 +29,11 @@ public interface IPayrollRepository
     Task AddAsync(Payroll payroll, CancellationToken cancellationToken = default);
 
     void Update(Payroll payroll);
+
+    Task<IReadOnlyList<Payroll>> GetByStatusAndPeriodAsync(
+        PayrollStatus status,
+        int? month = null,
+        int? year = null,
+        int? departmentId = null,
+        CancellationToken cancellationToken = default);
 }

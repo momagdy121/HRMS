@@ -17,7 +17,8 @@ public class UnitOfWork : IUnitOfWork
         IPayrollItemRepository payrollItems,
         ILeaveRequestRepository leaveRequests,
         ILeaveBalanceRepository leaveBalances,
-        IAttendanceRepository attendances)
+        IAttendanceRepository attendances,
+        IUserNotificationRepository userNotifications)
     {
         _context = context;
         Employees = employees;
@@ -28,6 +29,7 @@ public class UnitOfWork : IUnitOfWork
         LeaveRequests = leaveRequests;
         LeaveBalances = leaveBalances;
         Attendances = attendances;
+        UserNotifications = userNotifications;
     }
 
     public IEmployeeRepository Employees { get; }
@@ -45,6 +47,8 @@ public class UnitOfWork : IUnitOfWork
     public ILeaveBalanceRepository LeaveBalances { get; }
 
     public IAttendanceRepository Attendances { get; }
+
+    public IUserNotificationRepository UserNotifications { get; }
 
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) =>
         _context.SaveChangesAsync(cancellationToken);

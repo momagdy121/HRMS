@@ -9,8 +9,24 @@
         <div class="absolute right-0 top-0 w-96 h-96 bg-white/5 rounded-full blur-2xl -mr-20 -mt-20"></div>
         <div class="relative z-10 flex flex-col sm:flex-row items-center sm:items-start gap-6">
             <!-- Avatar -->
-            <div class="w-24 h-24 rounded-2xl bg-white text-[#1F4E79] flex items-center justify-center font-black text-3xl shadow-lg shrink-0 border-4 border-white/20">
-                @Model.Initials
+            <div class="relative group shrink-0">
+                @if (!string.IsNullOrEmpty(Model.ProfilePictureUrl))
+                {
+                    <img src="@Model.ProfilePictureUrl" alt="@Model.FullName" class="w-24 h-24 rounded-2xl object-cover shadow-lg border-4 border-white/20" />
+                }
+                else
+                {
+                    <div class="w-24 h-24 rounded-2xl bg-white text-[#1F4E79] flex items-center justify-center font-black text-3xl shadow-lg border-4 border-white/20">
+                        @Model.Initials
+                    </div>
+                }
+                <label for="avatarFileInput" class="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center shadow-md cursor-pointer transition-transform hover:scale-110" title="Upload new photo (Cloudinary)">
+                    <span class="material-symbols-outlined text-base">photo_camera</span>
+                </label>
+                <form id="avatarUploadForm" asp-action="UploadAvatar" method="post" enctype="multipart/form-data" class="hidden">
+                    @Html.AntiForgeryToken()
+                    <input type="file" id="avatarFileInput" name="avatarFile" accept="image/png,image/jpeg,image/webp" onchange="document.getElementById('avatarUploadForm').submit()" />
+                </form>
             </div>
             
             <div class="flex-1 text-center sm:text-left space-y-2">
