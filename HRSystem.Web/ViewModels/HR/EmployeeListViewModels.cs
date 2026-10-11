@@ -8,6 +8,8 @@ public class EmployeeListItemViewModel
     public int DepartmentId { get; set; }
     public string DepartmentName { get; set; } = string.Empty;
     public bool IsManager { get; set; }
+    public bool IsCEO { get; set; }
+    public bool IsHR { get => IsCEO; set => IsCEO = value; }
     public DateOnly HireDate { get; set; }
     public bool CanDelete { get; set; }
     public string Initials { get; set; } = string.Empty;

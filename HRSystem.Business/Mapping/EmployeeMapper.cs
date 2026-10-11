@@ -19,7 +19,7 @@ public static class EmployeeMapper
             DepartmentId = dto.DepartmentId,
             Salary = dto.Salary,
             HireDate = dto.HireDate,
-            IsHR = dto.Role == RoleNames.HR,
+            IsHR = dto.Role == RoleNames.CEO,
             IsActive = true,
             IsDeleted = false,
             CreatedAt = DateTime.UtcNow,

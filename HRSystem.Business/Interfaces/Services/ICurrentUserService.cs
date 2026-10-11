@@ -6,6 +6,8 @@ public interface ICurrentUserService
 {
     int GetCurrentUserId();
 
+    bool IsCEO();
+
     bool IsHR();
 
     bool IsDepartmentHead();

@@ -15,8 +15,8 @@ public static class AreaLayoutHelper
         string? searchPlaceholder = null)
     {
         string effectiveRole = "Employee";
-        if (currentUser.IsHR())
-            effectiveRole = "HR";
+        if (currentUser.IsCEO())
+            effectiveRole = "CEO";
         else if (currentUser.IsDepartmentHead())
             effectiveRole = "DeptHead";
 
@@ -50,8 +50,8 @@ public static class AreaLayoutHelper
 
     private static string BuildUserTitle(ICurrentUserService currentUser, string? departmentName)
     {
-        if (currentUser.IsHR())
-            return "HR";
+        if (currentUser.IsCEO())
+            return "CEO";
 
         if (currentUser.IsDepartmentHead())
             return string.IsNullOrEmpty(departmentName) ? "Department Head" : $"Department Head — {departmentName}";

@@ -13,7 +13,7 @@ public static class IdentityDataSeeder
 
     private static readonly SeedAccount[] DefaultAccounts =
     [
-        new(1, "admin@hr.com", "Admin@1234", RoleNames.HR),
+        new(1, "admin@hr.com", "Admin@1234", RoleNames.CEO),
         new(2, "jane@hr.com", "Jane@1234", RoleNames.DepartmentHead),
         new(3, "bob@hr.com", "Bob@1234", RoleNames.DepartmentHead),
         new(4, "alice@it.com", "Alice@1234", RoleNames.Employee),
@@ -41,7 +41,7 @@ public static class IdentityDataSeeder
             var roleManager = services.GetRequiredService<RoleManager<IdentityRole<int>>>();
             var userManager = services.GetRequiredService<UserManager<Employee>>();
 
-            await SeedRolesAsync(roleManager, logger);
+            await SeedRolesAsync(roleManager, userManager, logger);
             await SeedUsersAsync(userManager, logger);
         }
         catch (Exception ex)
@@ -51,8 +51,36 @@ public static class IdentityDataSeeder
         }
     }
 
-    private static async Task SeedRolesAsync(RoleManager<IdentityRole<int>> roleManager, ILogger logger)
+    private static async Task SeedRolesAsync(RoleManager<IdentityRole<int>> roleManager, UserManager<Employee> userManager, ILogger logger)
     {
+        // Migrate legacy "HR" role to "CEO" if present in the database
+        var legacyHrRole = await roleManager.FindByNameAsync("HR");
+        if (legacyHrRole != null)
+        {
+            var existingCeoRole = await roleManager.FindByNameAsync(RoleNames.CEO);
+            if (existingCeoRole == null)
+            {
+                legacyHrRole.Name = RoleNames.CEO;
+                legacyHrRole.NormalizedName = RoleNames.CEO.ToUpperInvariant();
+                await roleManager.UpdateAsync(legacyHrRole);
+                logger.LogInformation("Migrated legacy role 'HR' to '{Role}'.", RoleNames.CEO);
+            }
+            else
+            {
+                var usersInHr = await userManager.GetUsersInRoleAsync("HR");
+                foreach (var user in usersInHr)
+                {
+                    await userManager.RemoveFromRoleAsync(user, "HR");
+                    if (!await userManager.IsInRoleAsync(user, RoleNames.CEO))
+                    {
+                        await userManager.AddToRoleAsync(user, RoleNames.CEO);
+                    }
+                }
+                await roleManager.DeleteAsync(legacyHrRole);
+                logger.LogInformation("Migrated users from legacy 'HR' role to '{Role}' and removed 'HR' role.", RoleNames.CEO);
+            }
+        }
+
         foreach (var roleName in RoleNames.AllRoles)
         {
             if (!await roleManager.RoleExistsAsync(roleName))

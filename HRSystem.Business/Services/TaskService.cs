@@ -95,6 +95,12 @@ public class TaskService : ITaskService
         task.UpdatedAt = DateTime.UtcNow;
         _unitOfWork.EmployeeTasks.Update(task);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        var assignee = await _unitOfWork.Employees.GetByIdAsync(task.AssignedToId, cancellationToken);
+        if (assignee != null)
+        {
+            await _workflowNotifications.NotifyTaskUpdatedAsync(task, assignee, currentEmployee, cancellationToken);
+        }
     }
 
     public async Task<PagedResult<EmployeeTask>> GetByManagerAsync(int managerEmployeeId, int page = 1, int pageSize = 20, CancellationToken cancellationToken = default)

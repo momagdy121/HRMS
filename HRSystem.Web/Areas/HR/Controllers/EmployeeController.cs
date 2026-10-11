@@ -2,6 +2,7 @@ using HRSystem.Business.DTOs.Employees;
 using HRSystem.Business.Exceptions;
 using HRSystem.Business.Helpers;
 using HRSystem.Business.Interfaces.Services;
+using HRSystem.Common.Constants;
 using HRSystem.Data.Interfaces;
 using HRSystem.Data.Models;
 using HRSystem.Web.Helpers;
@@ -243,7 +244,7 @@ public class EmployeeController : HRBaseController
                 emp.LastName,
                 emp.Email ?? string.Empty,
                 dept?.Name ?? "—",
-                emp.IsHR ? "HR" : "Employee",
+                emp.IsHR ? "CEO" : (dept?.ManagerId == emp.Id ? "Department Head" : "Employee"),
                 emp.Salary,
                 emp.HireDate.ToString("yyyy-MM-dd"),
                 emp.IsActive ? "Active" : "Inactive"
@@ -259,6 +260,12 @@ public class EmployeeController : HRBaseController
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([Bind(Prefix = "CreateForm")] CreateEmployeeViewModel model)
     {
+        var assignerRole = CurrentUser.IsCEO() ? RoleNames.CEO : (CurrentUser.IsDepartmentHead() ? RoleNames.DepartmentHead : RoleNames.Employee);
+        if (!RoleHierarchy.CanAssignRole(assignerRole, model.Role))
+        {
+            ModelState.AddModelError("CreateForm.Role", $"You cannot assign a role equal to or higher than your position ({assignerRole}), nor can you create another CEO.");
+        }
+
         if (!ModelState.IsValid)
         {
             await SetLayoutAsync("Employees", "Search employees...");
@@ -419,6 +426,7 @@ public class EmployeeController : HRBaseController
             DepartmentId = employee.DepartmentId,
             DepartmentName = department?.Name ?? "—",
             IsManager = isManager,
+            IsCEO = employee.IsHR,
             HireDate = employee.HireDate,
             CanDelete = canDeleteMap.GetValueOrDefault(employee.Id, !isManager),
             Initials = HrDisplayHelper.GetInitials(employee.FirstName, employee.LastName)

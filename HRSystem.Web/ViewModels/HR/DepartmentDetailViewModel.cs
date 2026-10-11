@@ -36,5 +36,6 @@ public class DepartmentEmployeeItemViewModel
     public DateOnly HireDate { get; set; }
     public bool IsManager { get; set; }
     public bool IsHR { get; set; }
+    public bool IsCEO { get => IsHR; set => IsHR = value; }
     public bool IsActive { get; set; }
 }

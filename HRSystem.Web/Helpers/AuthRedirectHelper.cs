@@ -7,7 +7,7 @@ public static class AuthRedirectHelper
 {
     public static IActionResult ToRoleDashboard(Controller controller)
     {
-        if (controller.User.IsInRole(RoleNames.HR))
+        if (controller.User.IsInRole(RoleNames.CEO) || controller.User.IsInRole("HR"))
         {
             return controller.RedirectToAction("Index", "Dashboard", new { area = "HR" });
         }

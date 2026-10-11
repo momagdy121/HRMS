@@ -46,7 +46,7 @@ public class AttendanceController : EmployeeBaseController
             EmployeeId = employee.Id,
             EmployeeName = $"{employee.FirstName} {employee.LastName}",
             DepartmentName = dept?.Name ?? "—",
-            JobTitle = employee.IsHR ? "HR Specialist" : "Staff Member",
+            JobTitle = employee.IsHR ? "CEO" : "Staff Member",
             Year = y,
             Month = m,
             DaysPresent = timesheetDto.DaysPresent,

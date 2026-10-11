@@ -134,7 +134,7 @@ public class DashboardController : DepartmentHeadBaseController
             Id = e.Id,
             FullName = $"{e.FirstName} {e.LastName}",
             Email = e.Email ?? string.Empty,
-            Role = department.ManagerId == e.Id ? "Department Head" : (e.IsHR ? "HR Specialist" : "Team Member"),
+            Role = department.ManagerId == e.Id ? "Department Head" : (e.IsHR ? "CEO" : "Team Member"),
             Initials = HrDisplayHelper.GetInitials(e.FirstName, e.LastName),
             IsActive = e.IsActive
         }).OrderBy(e => e.FullName).ToList();

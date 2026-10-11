@@ -31,8 +31,11 @@ public class CurrentUserService : ICurrentUserService
         return userId;
     }
 
-    public bool IsHR() =>
-        _httpContextAccessor.HttpContext?.User.IsInRole(RoleNames.HR) ?? false;
+    public bool IsCEO() =>
+        (_httpContextAccessor.HttpContext?.User.IsInRole(RoleNames.CEO) ?? false)
+        || (_httpContextAccessor.HttpContext?.User.IsInRole("HR") ?? false);
+
+    public bool IsHR() => IsCEO();
 
     public bool IsDepartmentHead() =>
         _httpContextAccessor.HttpContext?.User.IsInRole(RoleNames.DepartmentHead) ?? false;

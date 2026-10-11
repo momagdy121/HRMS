@@ -13,6 +13,13 @@ public class Employee : IdentityUser<int>
     public string LastName { get; set; } = string.Empty;
 
     public bool IsHR { get; set; }
+    
+    [NotMapped]
+    public bool IsCEO
+    {
+        get => IsHR;
+        set => IsHR = value;
+    }
 
     public int DepartmentId { get; set; }
 

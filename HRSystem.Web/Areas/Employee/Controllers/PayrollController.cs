@@ -76,7 +76,7 @@ public class PayrollController : EmployeeBaseController
             EmployeeName = $"{employee.FirstName} {employee.LastName}",
             EmployeeCode = $"EMP-{employee.Id:D4}",
             DepartmentName = department?.Name ?? "Unknown",
-            JobTitle = employee.IsHR ? "HR Specialist" : "Staff Member",
+            JobTitle = employee.IsHR ? "CEO" : "Staff Member",
             Email = employee.Email ?? "—",
             JoinDate = employee.CreatedAt,
             ProcessedAt = payroll.ProcessedAt,

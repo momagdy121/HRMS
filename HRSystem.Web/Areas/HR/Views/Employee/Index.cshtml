@@ -79,7 +79,11 @@
                                 }
                             </td>
                             <td class="py-3 px-4">
-                                @if (employee.IsManager)
+                                @if (employee.IsCEO)
+                                {
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-200 uppercase tracking-wider">CEO</span>
+                                }
+                                else if (employee.IsManager)
                                 {
                                     <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary-container/10 text-primary-container uppercase tracking-wider">Manager</span>
                                 }
@@ -187,10 +191,10 @@
                         <div>
                             <label asp-for="CreateForm.Role" class="block font-label-bold text-label-bold text-on-surface-variant mb-xs"></label>
                             <select asp-for="CreateForm.Role" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-md">
-                                <option value="Employee">Employee</option>
-                                <option value="DepartmentHead">DepartmentHead</option>
-                                <option value="HR">HR</option>
+                                <option value="@HRSystem.Common.Constants.RoleNames.Employee">Employee</option>
+                                <option value="@HRSystem.Common.Constants.RoleNames.DepartmentHead">Department Head</option>
                             </select>
+                            <span asp-validation-for="CreateForm.Role" class="text-error font-body-sm"></span>
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-md">

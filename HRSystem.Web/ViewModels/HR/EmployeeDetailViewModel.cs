@@ -16,6 +16,7 @@ public class EmployeeDetailViewModel
     public string DepartmentName { get; set; } = string.Empty;
     public bool IsManager { get; set; }
     public bool IsHR { get; set; }
+    public bool IsCEO { get => IsHR; set => IsHR = value; }
     public bool IsActive { get; set; }
     public bool IsDeleted { get; set; }
     public DateOnly HireDate { get; set; }

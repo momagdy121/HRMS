@@ -238,10 +238,10 @@
                                             }
                                             @if (emp.IsHR)
                                             {
-                                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-200">HR</span>
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-200">CEO</span>
                                             }
                                         </div>
-                                        <p class="text-xs text-slate-400">@(emp.IsManager ? "Department Manager" : (emp.IsHR ? "HR Specialist" : "Team Member"))</p>
+                                        <p class="text-xs text-slate-400">@(emp.IsManager ? "Department Manager" : (emp.IsHR ? "CEO" : "Team Member"))</p>
                                     </div>
                                 </a>
                             </td>

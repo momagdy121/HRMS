@@ -1,6 +1,6 @@
 @{
     var hideShell = ViewBag.HideShell as bool? ?? false;
-    var role = ViewBag.Role as string ?? "HR";
+    var role = ViewBag.Role as string ?? "CEO";
     var activePage = ViewBag.ActivePage as string ?? "";
 }
 <!DOCTYPE html>
@@ -136,7 +136,7 @@
 else
 {
     <!-- Sidebar -->
-    @if (role == "HR")
+    @if (role == "CEO" || role == "HR")
     {
         await Html.RenderPartialAsync("_Sidebar_HR");
     }

@@ -77,7 +77,7 @@ public class DashboardController : EmployeeBaseController
             .Select(e =>
             {
                 var isManager = department?.ManagerId == e.Id;
-                var roleName = isManager ? "Department Head" : (e.IsHR ? "HR Specialist" : "Team Member");
+                var roleName = isManager ? "Department Head" : (e.IsHR ? "CEO" : "Team Member");
                 var hasCheckedIn = todayAttendanceMap.TryGetValue(e.Id, out var att) && att.CheckInTime.HasValue;
 
                 return new EmployeeDashboardTeamMemberViewModel

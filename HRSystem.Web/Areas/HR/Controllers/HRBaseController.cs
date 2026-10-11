@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace HRSystem.Web.Areas.HR.Controllers;
 
 [Area("HR")]
-[Authorize(Roles = RoleNames.HR)]
+[Authorize(Roles = RoleNames.CEO)]
 public abstract class HRBaseController : Controller
 {
     protected ICurrentUserService CurrentUser { get; }

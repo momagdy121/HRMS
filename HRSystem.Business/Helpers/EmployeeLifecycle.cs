@@ -10,7 +10,7 @@ public static class EmployeeLifecycle
         new()
         {
             DepartmentId = dto.DepartmentId,
-            IsHR = dto.Role == RoleNames.HR,
+            IsHR = dto.Role == RoleNames.CEO,
             IsActive = true,
             IsDeleted = false
         };

@@ -57,6 +57,11 @@ public class EmployeeService : IEmployeeService
     {
         ValidateRole(dto.Role);
 
+        if (string.Equals(dto.Role, RoleNames.CEO, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new BusinessRuleException("Cannot hire or create an employee with the CEO role.");
+        }
+
         if (await _unitOfWork.Employees.EmailExistsAsync(dto.Email, cancellationToken: cancellationToken))
             throw new BusinessRuleException("An employee with this email already exists.");
 
@@ -68,7 +73,7 @@ public class EmployeeService : IEmployeeService
         if (dto.Role == RoleNames.DepartmentHead && !_managerPolicy.IsValidManager(candidate, department))
         {
             throw new BusinessRuleException(
-                "Department head must be a non-HR, active employee in the same department.");
+                "Department head must be an active employee in the same department and cannot be the CEO.");
         }
 
         await using var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);

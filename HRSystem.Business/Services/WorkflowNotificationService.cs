@@ -1,9 +1,11 @@
 using HRSystem.Business.DTOs.Email;
+using HRSystem.Business.Helpers;
 using HRSystem.Business.Interfaces.Services;
 using HRSystem.Common.Constants;
 using HRSystem.Common.Enums;
 using HRSystem.Data.Interfaces;
 using HRSystem.Data.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 namespace HRSystem.Business.Services;
@@ -13,17 +15,20 @@ public class WorkflowNotificationService : IWorkflowNotificationService
     private readonly INotificationService _notificationService;
     private readonly IBackgroundEmailQueue _emailQueue;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ILogger<WorkflowNotificationService> _logger;
 
     public WorkflowNotificationService(
         INotificationService notificationService,
         IBackgroundEmailQueue emailQueue,
         IUnitOfWork unitOfWork,
+        IHttpContextAccessor httpContextAccessor,
         ILogger<WorkflowNotificationService> logger)
     {
         _notificationService = notificationService;
         _emailQueue = emailQueue;
         _unitOfWork = unitOfWork;
+        _httpContextAccessor = httpContextAccessor;
         _logger = logger;
     }
 
@@ -152,7 +157,9 @@ public class WorkflowNotificationService : IWorkflowNotificationService
     {
         var title = "New Task Assigned";
         var dueStr = task.DueDate.HasValue ? $" Due: {task.DueDate.Value:MMM dd, yyyy}." : string.Empty;
-        var message = $"'{task.Title}' assigned by {assigner.FirstName} {assigner.LastName}.{dueStr}";
+        var assignerName = $"{assigner.FirstName} {assigner.LastName}".Trim();
+        var assigneeName = $"{assignee.FirstName} {assignee.LastName}".Trim();
+        var message = $"'{task.Title}' assigned by {assignerName}.{dueStr}";
         var link = "/Employee/Tasks";
 
         await _notificationService.CreateAsync(
@@ -165,19 +172,50 @@ public class WorkflowNotificationService : IWorkflowNotificationService
 
         if (!string.IsNullOrWhiteSpace(assignee.Email))
         {
-            var html = $@"
-<div style='font-family: sans-serif; max-width: 600px; margin: auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 12px;'>
-    <h2 style='color: #2563eb;'>New Task Assigned: {task.Title}</h2>
-    <p>Hello <strong>{assignee.FirstName}</strong>,</p>
-    <p><strong>{assigner.FirstName} {assigner.LastName}</strong> has assigned you a new task:</p>
-    <ul>
-        <li><strong>Task:</strong> {task.Title}</li>
-        <li><strong>Due Date:</strong> {(task.DueDate.HasValue ? task.DueDate.Value.ToString("MMMM dd, yyyy") : "Not set")}</li>
-    </ul>
-    <p>{task.Description}</p>
-    <p>Log in to your HRMS dashboard to view and update task progress.</p>
-</div>";
-            await TrySendEmailAsync(assignee.Email, $"{assignee.FirstName} {assignee.LastName}", $"New Task: {task.Title}", html, cancellationToken);
+            var taskUrl = BuildAbsoluteUrl(link);
+            var html = EmailTemplates.TaskAssignedEmail(
+                assigneeName,
+                assignerName,
+                task.Title,
+                task.Description,
+                task.DueDate,
+                taskUrl);
+
+            _logger.LogInformation("Enqueuing task assignment notification email for employee {Email} (Task: '{Title}')", assignee.Email, task.Title);
+            await TrySendEmailAsync(assignee.Email, assigneeName, $"New Task Assigned: {task.Title}", html, cancellationToken);
+        }
+    }
+
+    public async Task NotifyTaskUpdatedAsync(EmployeeTask task, Employee assignee, Employee updater, CancellationToken cancellationToken = default)
+    {
+        var title = "Task Details Updated";
+        var dueStr = task.DueDate.HasValue ? $" Due: {task.DueDate.Value:MMM dd, yyyy}." : string.Empty;
+        var updaterName = $"{updater.FirstName} {updater.LastName}".Trim();
+        var assigneeName = $"{assignee.FirstName} {assignee.LastName}".Trim();
+        var message = $"Task '{task.Title}' was updated by {updaterName}.{dueStr}";
+        var link = "/Employee/Tasks";
+
+        await _notificationService.CreateAsync(
+            assignee.Id,
+            NotificationKind.TaskAssigned,
+            title,
+            message,
+            link,
+            cancellationToken);
+
+        if (!string.IsNullOrWhiteSpace(assignee.Email))
+        {
+            var taskUrl = BuildAbsoluteUrl(link);
+            var html = EmailTemplates.TaskUpdatedEmail(
+                assigneeName,
+                updaterName,
+                task.Title,
+                task.Description,
+                task.DueDate,
+                taskUrl);
+
+            _logger.LogInformation("Enqueuing task update notification email for employee {Email} (Task: '{Title}')", assignee.Email, task.Title);
+            await TrySendEmailAsync(assignee.Email, assigneeName, $"Task Details Updated: {task.Title}", html, cancellationToken);
         }
     }
 
@@ -324,5 +362,16 @@ public class WorkflowNotificationService : IWorkflowNotificationService
         {
             _logger.LogWarning(ex, "Could not enqueue email to {Email}. In-app notification was preserved.", toEmail);
         }
+    }
+
+    private string BuildAbsoluteUrl(string relativeUrl)
+    {
+        var httpContext = _httpContextAccessor.HttpContext;
+        if (httpContext != null)
+        {
+            var req = httpContext.Request;
+            return $"{req.Scheme}://{req.Host}{relativeUrl}";
+        }
+        return relativeUrl;
     }
 }
