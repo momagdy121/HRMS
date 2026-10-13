@@ -1,0 +1,156 @@
+@model HRSystem.Web.ViewModels.Recruitment.OnboardCandidateViewModel
+@{
+    ViewBag.Title = "Onboard Candidate - Create Employee Account";
+}
+
+<div class="max-w-3xl mx-auto space-y-6 font-['Inter']">
+    <div class="flex items-center justify-between">
+        <a asp-action="ApplicationDetails" asp-route-id="@Model.ApplicationId" class="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-slate-900 transition">
+            <span class="material-symbols-outlined text-sm">arrow_back</span>
+            Back to Application Details
+        </a>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-slate-200/80 p-8 shadow-sm">
+        <div class="border-b border-slate-100 pb-5 mb-6">
+            <div class="flex items-center gap-2 mb-1">
+                <span class="px-2.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 font-bold text-xs border border-emerald-200">
+                    Candidate Accepted
+                </span>
+                <span class="text-xs text-slate-400">&bull;</span>
+                <span class="text-xs text-slate-500">Position: <strong>@Model.JobTitle</strong></span>
+            </div>
+            <h1 class="text-2xl font-black text-slate-900 tracking-tight">Create Employee Account</h1>
+            <p class="text-xs text-slate-500 mt-1">
+                Complete the onboarding information below to create the employee record and system account for <strong>@Model.CandidateFullName</strong>.
+            </p>
+        </div>
+
+        <!-- Alert regarding password policy -->
+        <div class="p-4 rounded-xl bg-sky-50 border border-sky-200 text-xs text-sky-900 mb-6 flex items-start gap-3">
+            <span class="material-symbols-outlined text-sky-700 text-lg shrink-0 mt-0.5">security</span>
+            <div>
+                <span class="font-bold block">First-Login Password Policy</span>
+                The initial password provided below is temporary. An automated onboarding email with login credentials will be delivered to the candidate. Upon their first login, they will be strictly required to change their password before accessing the system.
+            </div>
+        </div>
+
+        @if (!ViewData.ModelState.IsValid && ViewData.ModelState[string.Empty]?.Errors.Count > 0)
+        {
+            <div class="mb-6 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-sm">
+                <ul class="list-disc pl-5 space-y-1">
+                    @foreach (var err in ViewData.ModelState[string.Empty]!.Errors)
+                    {
+                        <li>@err.ErrorMessage</li>
+                    }
+                </ul>
+            </div>
+        }
+
+        <form asp-action="Onboard" asp-route-id="@Model.ApplicationId" method="post" class="space-y-6">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="ApplicationId" />
+            <input type="hidden" asp-for="CandidateFullName" />
+            <input type="hidden" asp-for="JobTitle" />
+
+            <!-- First & Last Name -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label asp-for="FirstName" class="block text-sm font-semibold text-slate-800 mb-1.5"></label>
+                    <input asp-for="FirstName"
+                           class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#1f4e79] focus:border-transparent transition" />
+                    <span asp-validation-for="FirstName" class="text-rose-600 text-xs mt-1 block"></span>
+                </div>
+                <div>
+                    <label asp-for="LastName" class="block text-sm font-semibold text-slate-800 mb-1.5"></label>
+                    <input asp-for="LastName"
+                           class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#1f4e79] focus:border-transparent transition" />
+                    <span asp-validation-for="LastName" class="text-rose-600 text-xs mt-1 block"></span>
+                </div>
+            </div>
+
+            <!-- Email & Department -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label asp-for="Email" class="block text-sm font-semibold text-slate-800 mb-1.5"></label>
+                    <input asp-for="Email" type="email"
+                           class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#1f4e79] focus:border-transparent transition" />
+                    <span asp-validation-for="Email" class="text-rose-600 text-xs mt-1 block"></span>
+                </div>
+                <div>
+                    <label asp-for="DepartmentId" class="block text-sm font-semibold text-slate-800 mb-1.5"></label>
+                    <select asp-for="DepartmentId" asp-items="Model.Departments"
+                            class="w-full px-3 py-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#1f4e79] focus:border-transparent transition">
+                    </select>
+                    <span asp-validation-for="DepartmentId" class="text-rose-600 text-xs mt-1 block"></span>
+                </div>
+            </div>
+
+            <!-- Salary & Hire Date -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label asp-for="Salary" class="block text-sm font-semibold text-slate-800 mb-1.5"></label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-2.5 text-slate-400 text-sm font-semibold">$</span>
+                        <input asp-for="Salary" type="number" step="0.01" min="0" placeholder="0.00"
+                               class="w-full pl-8 pr-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#1f4e79] focus:border-transparent transition" />
+                    </div>
+                    <span asp-validation-for="Salary" class="text-rose-600 text-xs mt-1 block"></span>
+                </div>
+                <div>
+                    <label asp-for="HireDate" class="block text-sm font-semibold text-slate-800 mb-1.5"></label>
+                    <input asp-for="HireDate" type="date"
+                           class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#1f4e79] focus:border-transparent transition" />
+                    <span asp-validation-for="HireDate" class="text-rose-600 text-xs mt-1 block"></span>
+                </div>
+            </div>
+
+            <!-- Role & Temporary Password -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label asp-for="Role" class="block text-sm font-semibold text-slate-800 mb-1.5"></label>
+                    <select asp-for="Role" asp-items="Model.AllowedRoles"
+                            class="w-full px-3 py-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#1f4e79] focus:border-transparent transition">
+                    </select>
+                    <span asp-validation-for="Role" class="text-rose-600 text-xs mt-1 block"></span>
+                </div>
+                <div>
+                    <label asp-for="InitialPassword" class="block text-sm font-semibold text-slate-800 mb-1.5"></label>
+                    <div class="flex gap-2">
+                        <input asp-for="InitialPassword" id="passwordInput" type="text"
+                               class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#1f4e79] focus:border-transparent transition" />
+                        <button type="button" onclick="generateNewPassword()"
+                                class="px-3 py-2.5 rounded-lg border border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-semibold whitespace-nowrap"
+                                title="Generate a random password">
+                            <span class="material-symbols-outlined text-sm">casino</span>
+                        </button>
+                    </div>
+                    <span asp-validation-for="InitialPassword" class="text-rose-600 text-xs mt-1 block"></span>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center justify-end gap-3 pt-6 border-t border-slate-100">
+                <a asp-action="ApplicationDetails" asp-route-id="@Model.ApplicationId"
+                   class="px-5 py-2.5 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold text-sm transition">
+                    Cancel
+                </a>
+                <button type="submit"
+                        class="px-8 py-2.5 rounded-lg bg-[#1f4e79] hover:bg-[#163a5b] text-white font-bold text-sm shadow transition flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">how_to_reg</span>
+                    Complete Onboarding & Create Account
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function generateNewPassword() {
+            var randNum = Math.floor(100000 + Math.random() * 900000);
+            document.getElementById('passwordInput').value = 'Welcome#' + randNum + '!';
+        }
+    </script>
+}

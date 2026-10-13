@@ -14,6 +14,8 @@ public interface IUnitOfWork : IAsyncDisposable
     IAttendanceRepository Attendances { get; }
 
     IUserNotificationRepository UserNotifications { get; }
+    IJobPostingRepository JobPostings { get; }
+    IJobApplicationRepository JobApplications { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 

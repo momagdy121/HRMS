@@ -209,6 +209,152 @@ public class CloudinaryService : ICloudinaryService
         return false;
     }
 
+    public async Task<DocumentUploadResult> UploadDocumentAsync(IFormFile file, string folder = "hrms/cvs", CancellationToken cancellationToken = default)
+    {
+        var validation = Helpers.CvFileValidator.Validate(file);
+        if (!validation.IsValid)
+        {
+            return new DocumentUploadResult
+            {
+                Succeeded = false,
+                ErrorMessage = validation.ErrorMessage ?? "Invalid document."
+            };
+        }
+
+        var contentType = ResolveContentType(file.FileName, file.ContentType);
+        await using var memoryStream = new MemoryStream();
+        await file.CopyToAsync(memoryStream, cancellationToken);
+        var bytes = memoryStream.ToArray();
+
+        if (_cloudinary != null && _settings.IsConfigured)
+        {
+            try
+            {
+                using var uploadStream = new MemoryStream(bytes);
+                var uploadParams = new RawUploadParams
+                {
+                    File = new FileDescription(file.FileName, uploadStream),
+                    Folder = folder,
+                    UseFilename = false,
+                    UniqueFilename = true
+                };
+
+                var result = await _cloudinary.UploadAsync(uploadParams, "raw", cancellationToken);
+                if (result.Error != null)
+                {
+                    _logger.LogWarning("Cloudinary raw document upload error: {Message}. Falling back to private local storage.", result.Error.Message);
+                    return await FallbackPrivateDocumentUploadAsync(bytes, file.FileName, contentType, cancellationToken);
+                }
+
+                var storageUrl = result.SecureUrl?.ToString() ?? result.Url?.ToString() ?? string.Empty;
+                return new DocumentUploadResult
+                {
+                    Succeeded = true,
+                    PublicId = result.PublicId,
+                    StorageUrl = storageUrl,
+                    OriginalFileName = file.FileName,
+                    ContentType = contentType,
+                    FileSize = file.Length,
+                    ResourceType = "raw",
+                    IsLocalStorage = false
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Cloudinary document upload failed, falling back to private local storage.");
+                return await FallbackPrivateDocumentUploadAsync(bytes, file.FileName, contentType, cancellationToken);
+            }
+        }
+
+        return await FallbackPrivateDocumentUploadAsync(bytes, file.FileName, contentType, cancellationToken);
+    }
+
+    public async Task<(Stream Stream, string ContentType, string FileName)?> GetDocumentStreamAsync(
+        string publicId,
+        string storageUrl,
+        string originalFileName,
+        string contentType,
+        CancellationToken cancellationToken = default)
+    {
+        if (File.Exists(storageUrl))
+        {
+            var fileStream = new FileStream(storageUrl, FileMode.Open, FileAccess.Read, FileShare.Read);
+            return (fileStream, contentType, originalFileName);
+        }
+
+        if (Uri.TryCreate(storageUrl, UriKind.Absolute, out var uri) && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps))
+        {
+            try
+            {
+                using var client = new HttpClient();
+                var bytes = await client.GetByteArrayAsync(uri, cancellationToken);
+                var memStream = new MemoryStream(bytes);
+                return (memStream, contentType, originalFileName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to download document from Cloudinary URL: {Url}", storageUrl);
+                return null;
+            }
+        }
+
+        return null;
+    }
+
+    private async Task<DocumentUploadResult> FallbackPrivateDocumentUploadAsync(
+        byte[] bytes,
+        string fileName,
+        string contentType,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var privateDir = Path.Combine(AppContext.BaseDirectory, "App_Data", "cv_storage");
+            Directory.CreateDirectory(privateDir);
+
+            var safeId = Guid.NewGuid().ToString("N");
+            var ext = Path.GetExtension(fileName);
+            var safeStoredFileName = $"{safeId}{ext}";
+            var fullPath = Path.Combine(privateDir, safeStoredFileName);
+
+            await File.WriteAllBytesAsync(fullPath, bytes, cancellationToken);
+
+            return new DocumentUploadResult
+            {
+                Succeeded = true,
+                PublicId = safeId,
+                StorageUrl = fullPath,
+                LocalFilePath = fullPath,
+                OriginalFileName = fileName,
+                ContentType = contentType,
+                FileSize = bytes.Length,
+                ResourceType = "local",
+                IsLocalStorage = true
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to save document to private local storage.");
+            return new DocumentUploadResult
+            {
+                Succeeded = false,
+                ErrorMessage = "Failed to store CV document."
+            };
+        }
+    }
+
+    private static string ResolveContentType(string fileName, string? providedContentType)
+    {
+        var ext = Path.GetExtension(fileName).ToLowerInvariant();
+        return ext switch
+        {
+            ".pdf" => "application/pdf",
+            ".doc" => "application/msword",
+            ".docx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            _ => !string.IsNullOrWhiteSpace(providedContentType) ? providedContentType : "application/octet-stream"
+        };
+    }
+
     private async Task<string> FallbackLocalUploadAsync(byte[] bytes, string fileName, string folder, CancellationToken cancellationToken)
     {
         var webRoot = _environment?.WebRootPath;

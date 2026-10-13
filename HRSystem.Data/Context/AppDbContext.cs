@@ -20,6 +20,8 @@ public class AppDbContext : IdentityDbContext<Employee, IdentityRole<int>, int>
     public DbSet<LeaveBalance> LeaveBalances { get; set; } = null!;
     public DbSet<Attendance> Attendances { get; set; } = null!;
     public DbSet<UserNotification> UserNotifications { get; set; } = null!;
+    public DbSet<JobPosting> JobPostings { get; set; } = null!;
+    public DbSet<JobApplication> JobApplications { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

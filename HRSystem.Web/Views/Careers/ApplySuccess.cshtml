@@ -1,0 +1,59 @@
+@model HRSystem.Web.ViewModels.Recruitment.ApplySuccessViewModel
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Application Received - Careers";
+}
+
+<div class="min-h-screen bg-slate-50 flex flex-col font-['Inter']">
+    <header class="bg-[#1f4e79] text-white py-6 px-4 sm:px-6 lg:px-8 border-b border-slate-700/40 shadow-sm">
+        <div class="max-w-3xl mx-auto flex items-center justify-between">
+            <span class="text-sm font-bold text-sky-200">HRMS Careers</span>
+            <a asp-action="Index" class="inline-flex items-center gap-1.5 text-xs text-slate-300 hover:text-white transition">
+                <span class="material-symbols-outlined text-sm">home</span>
+                Careers Home
+            </a>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-2xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-16 flex items-center justify-center">
+        <div class="bg-white rounded-2xl border border-slate-200/80 p-8 sm:p-10 text-center shadow-lg w-full">
+            <div class="w-20 h-20 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+                <span class="material-symbols-outlined text-4xl">check_circle</span>
+            </div>
+
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                Application Received!
+            </h1>
+            <p class="text-slate-600 text-sm mt-2 max-w-md mx-auto">
+                Thank you for applying, <strong class="text-slate-800">@Model.CandidateName</strong>. We have successfully registered your application for the position of:
+            </p>
+
+            <div class="my-6 p-4 rounded-xl bg-slate-50 border border-slate-200 text-center">
+                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider block">Position Applied</span>
+                <span class="text-lg font-bold text-[#1f4e79] block mt-0.5">@Model.JobTitle</span>
+                <span class="text-xs text-slate-500 block mt-2">
+                    Submitted on @Model.SubmittedAt.ToString("MMMM dd, yyyy 'at' hh:mm tt 'UTC'")
+                </span>
+            </div>
+
+            <p class="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">
+                Our hiring team will carefully review your qualifications and experience. If your background aligns with our needs, we will reach out directly to <strong>@Model.Email</strong> with next steps.
+            </p>
+
+            <div class="mt-8 pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a asp-action="Index"
+                   class="w-full sm:w-auto px-6 py-3 rounded-xl bg-[#1f4e79] hover:bg-[#163a5b] text-white font-bold text-sm shadow transition">
+                    Browse Other Open Positions
+                </a>
+                <a asp-area="" asp-controller="Account" asp-action="Login"
+                   class="w-full sm:w-auto px-6 py-3 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold text-sm transition">
+                    Employee Portal Login
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 py-6 px-4 text-center text-xs text-slate-500 mt-auto">
+        <p>&copy; @DateTime.UtcNow.Year HRMS Portal. All rights reserved.</p>
+    </footer>
+</div>

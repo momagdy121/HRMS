@@ -1,0 +1,192 @@
+@model HRSystem.Web.ViewModels.Recruitment.ApplicationListViewModel
+@using HRSystem.Common.Enums
+@{
+    ViewBag.Title = "Recruitment Applications";
+}
+
+<div class="space-y-6 font-['Inter']">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm">
+        <div>
+            <div class="flex items-center gap-2">
+                <span class="p-2 rounded-xl bg-sky-50 text-[#1f4e79]">
+                    <span class="material-symbols-outlined text-2xl">group</span>
+                </span>
+                <div>
+                    <h1 class="text-2xl font-black text-slate-900 tracking-tight">Candidate Applications</h1>
+                    <p class="text-xs text-slate-500">Review submitted applications, manage evaluations, and onboard accepted hires.</p>
+                </div>
+            </div>
+        </div>
+        <div>
+            <a asp-action="Index"
+               class="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold text-sm transition flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">work</span>
+                Manage Job Openings
+            </a>
+        </div>
+    </div>
+
+    <!-- Filters Bar -->
+    <form method="get" asp-action="Applications" class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-sm grid grid-cols-1 sm:grid-cols-12 gap-3">
+        <div class="sm:col-span-4 relative">
+            <span class="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-lg">search</span>
+            <input type="text" name="search" value="@Model.Search" placeholder="Search by candidate name or email..."
+                   class="w-full pl-9 pr-3 py-2 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#1f4e79]" />
+        </div>
+        <div class="sm:col-span-3">
+            <select name="jobPostingId" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#1f4e79]">
+                <option value="">All Job Positions</option>
+                @foreach (var job in Model.JobPostings)
+                {
+                    <option value="@job.Value" selected="@(Model.JobPostingId?.ToString() == job.Value)">@job.Text</option>
+                }
+            </select>
+        </div>
+        <div class="sm:col-span-3">
+            <select name="status" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#1f4e79]">
+                <option value="">All Statuses</option>
+                <option value="Submitted" selected="@(Model.Status == JobApplicationStatus.Submitted)">Submitted</option>
+                <option value="Accepted" selected="@(Model.Status == JobApplicationStatus.Accepted)">Accepted</option>
+                <option value="Rejected" selected="@(Model.Status == JobApplicationStatus.Rejected)">Rejected</option>
+            </select>
+        </div>
+        <div class="sm:col-span-2 flex gap-2">
+            <button type="submit" class="w-full bg-[#1f4e79] hover:bg-[#163a5b] text-white font-semibold py-2 px-3 rounded-lg text-sm transition">
+                Filter
+            </button>
+            @if (Model.Status.HasValue || Model.JobPostingId.HasValue || !string.IsNullOrEmpty(Model.Search))
+            {
+                <a asp-action="Applications" class="bg-slate-100 hover:bg-slate-200 text-slate-700 py-2 px-3 rounded-lg text-sm transition flex items-center justify-center">
+                    Reset
+                </a>
+            }
+        </div>
+    </form>
+
+    <!-- Applications Table -->
+    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-sm">
+                <thead>
+                    <tr class="bg-slate-50/80 border-b border-slate-200 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                        <th class="py-3.5 px-6">Candidate</th>
+                        <th class="py-3.5 px-6">Position</th>
+                        <th class="py-3.5 px-6">Submitted At</th>
+                        <th class="py-3.5 px-6">Status</th>
+                        <th class="py-3.5 px-6">Onboarding</th>
+                        <th class="py-3.5 px-6 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    @if (!Model.Applications.Items.Any())
+                    {
+                        <tr>
+                            <td colspan="6" class="py-12 text-center text-slate-400">
+                                <span class="material-symbols-outlined text-4xl block mb-2">inbox</span>
+                                No applications match the selected criteria.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var app in Model.Applications.Items)
+                        {
+                            <tr class="hover:bg-slate-50/60 transition">
+                                <td class="py-4 px-6 font-bold text-slate-900">
+                                    <div class="flex flex-col">
+                                        <span>@app.FullName</span>
+                                        <span class="text-xs text-slate-500 font-normal">@app.Email &bull; @app.PhoneNumber</span>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-slate-700 font-medium">
+                                    <div class="flex flex-col">
+                                        <span>@app.JobPosting.Title</span>
+                                        <span class="text-xs text-slate-400">@(app.JobPosting.Department?.Name ?? "-")</span>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-slate-600 text-xs">
+                                    @app.SubmittedAt.ToString("MMM dd, yyyy")
+                                    <span class="block text-slate-400">@app.SubmittedAt.ToString("hh:mm tt") UTC</span>
+                                </td>
+                                <td class="py-4 px-6">
+                                    @switch (app.Status)
+                                    {
+                                        case JobApplicationStatus.Submitted:
+                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-sky-50 text-sky-700 border border-sky-200">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>
+                                                Submitted
+                                            </span>
+                                            break;
+                                        case JobApplicationStatus.Accepted:
+                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                                Accepted
+                                            </span>
+                                            break;
+                                        case JobApplicationStatus.Rejected:
+                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                                                Rejected
+                                            </span>
+                                            break;
+                                    }
+                                </td>
+                                <td class="py-4 px-6">
+                                    @if (app.CreatedEmployeeId.HasValue)
+                                    {
+                                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 font-semibold text-xs border border-emerald-200">
+                                            <span class="material-symbols-outlined text-xs">badge</span>
+                                            Employee Created
+                                        </span>
+                                    }
+                                    else if (app.Status == JobApplicationStatus.Accepted)
+                                    {
+                                        <a asp-action="Onboard" asp-route-id="@app.Id"
+                                           class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-sky-600 text-white font-bold text-xs hover:bg-sky-700 transition">
+                                            <span class="material-symbols-outlined text-xs">person_add</span>
+                                            Create Account
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-xs text-slate-400">-</span>
+                                    }
+                                </td>
+                                <td class="py-4 px-6 text-right">
+                                    <div class="inline-flex items-center gap-2">
+                                        <a asp-action="ApplicationDetails" asp-route-id="@app.Id"
+                                           class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition flex items-center gap-1">
+                                            Review
+                                            <span class="material-symbols-outlined text-xs">arrow_forward</span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (Model.Applications.TotalPages > 1)
+        {
+            <div class="py-4 px-6 border-t border-slate-100 flex justify-between items-center text-xs text-slate-500">
+                <span>Page @Model.Applications.Page of @Model.Applications.TotalPages (@Model.Applications.TotalCount total applications)</span>
+                <div class="flex gap-1">
+                    @for (var p = 1; p <= Model.Applications.TotalPages; p++)
+                    {
+                        <a asp-action="Applications"
+                           asp-route-page="@p"
+                           asp-route-jobPostingId="@Model.JobPostingId"
+                           asp-route-status="@Model.Status"
+                           asp-route-search="@Model.Search"
+                           class="px-3 py-1.5 rounded-md border @(p == Model.Applications.Page ? "bg-[#1f4e79] text-white border-[#1f4e79]" : "bg-white text-slate-600 border-slate-300 hover:bg-slate-50") font-medium">
+                            @p
+                        </a>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>

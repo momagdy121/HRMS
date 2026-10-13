@@ -1,0 +1,97 @@
+@model HRSystem.Web.ViewModels.Recruitment.JobDetailsViewModel
+@{
+    Layout = "_Layout";
+}
+
+<div class="min-h-screen bg-slate-50 flex flex-col font-['Inter']">
+    <!-- Navbar / Header -->
+    <header class="bg-[#1f4e79] text-white py-6 px-4 sm:px-6 lg:px-8 border-b border-slate-700/40 shadow-sm">
+        <div class="max-w-4xl mx-auto flex items-center justify-between">
+            <a asp-action="Index" class="inline-flex items-center gap-2 text-slate-300 hover:text-white transition text-sm font-semibold">
+                <span class="material-symbols-outlined text-sm">arrow_back</span>
+                Back to Open Positions
+            </a>
+            <div class="text-xs text-sky-200">HRMS Careers</div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <!-- Job Header Card -->
+        <div class="bg-white rounded-2xl border border-slate-200/80 p-8 shadow-sm mb-8">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6 border-b border-slate-100">
+                <div>
+                    <span class="px-3 py-1 rounded-full bg-sky-50 text-sky-700 font-semibold text-xs border border-sky-100 inline-block mb-3">
+                        @(Model.Posting.Department?.Name ?? "General")
+                    </span>
+                    <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                        @Model.Posting.Title
+                    </h1>
+                    <div class="flex flex-wrap items-center gap-4 text-xs text-slate-500 mt-3">
+                        <span class="flex items-center gap-1">
+                            <span class="material-symbols-outlined text-sm text-slate-400">calendar_today</span>
+                            Posted: @Model.Posting.CreatedAt.ToString("MMM dd, yyyy")
+                        </span>
+                        <span class="flex items-center gap-1">
+                            <span class="material-symbols-outlined text-sm text-slate-400">event_busy</span>
+                            Closing Date: @Model.Posting.ClosingDate.ToString("MMM dd, yyyy")
+                        </span>
+                    </div>
+                </div>
+
+                <div class="shrink-0">
+                    @if (Model.IsAcceptingApplications)
+                    {
+                        <a asp-action="Apply" asp-route-id="@Model.Posting.Id"
+                           class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#1f4e79] hover:bg-[#163a5b] text-white font-bold text-sm shadow-md hover:shadow-lg transition">
+                            Apply for this Position
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                        </a>
+                    }
+                    else
+                    {
+                        <span class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-100 text-slate-500 font-semibold text-sm border border-slate-200 cursor-not-allowed">
+                            <span class="material-symbols-outlined text-sm">lock</span>
+                            Applications Closed
+                        </span>
+                    }
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="py-6 border-b border-slate-100">
+                <h2 class="text-base font-bold text-slate-900 uppercase tracking-wider text-xs mb-3 text-sky-800">Job Overview</h2>
+                <div class="text-slate-700 text-sm leading-relaxed whitespace-pre-line">
+                    @Model.Posting.Description
+                </div>
+            </div>
+
+            <!-- Requirements -->
+            <div class="pt-6">
+                <h2 class="text-base font-bold text-slate-900 uppercase tracking-wider text-xs mb-3 text-sky-800">Key Requirements & Qualifications</h2>
+                <div class="text-slate-700 text-sm leading-relaxed whitespace-pre-line">
+                    @Model.Posting.Requirements
+                </div>
+            </div>
+        </div>
+
+        <!-- Call to Action Banner -->
+        @if (Model.IsAcceptingApplications)
+        {
+            <div class="bg-gradient-to-r from-sky-50 to-blue-50 rounded-2xl border border-sky-100 p-8 text-center shadow-sm">
+                <h3 class="text-lg font-bold text-slate-900">Ready to take the next step in your career?</h3>
+                <p class="text-slate-600 text-sm mt-1 mb-6 max-w-lg mx-auto">
+                    Submit your application today. Our hiring team reviews submissions on a rolling basis.
+                </p>
+                <a asp-action="Apply" asp-route-id="@Model.Posting.Id"
+                   class="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-[#1f4e79] hover:bg-[#163a5b] text-white font-bold text-sm shadow-md transition">
+                    Submit Application
+                    <span class="material-symbols-outlined text-sm">send</span>
+                </a>
+            </div>
+        }
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 py-6 px-4 text-center text-xs text-slate-500 mt-auto">
+        <p>&copy; @DateTime.UtcNow.Year HRMS Portal. All rights reserved.</p>
+    </footer>
+</div>

@@ -1,0 +1,186 @@
+@model HRSystem.Web.ViewModels.Recruitment.CareersIndexViewModel
+@{
+    Layout = "_Layout";
+    var today = DateOnly.FromDateTime(DateTime.UtcNow);
+}
+
+<div class="min-h-screen bg-slate-50 flex flex-col font-['Inter']">
+    <!-- Careers Header & Hero -->
+    <header class="bg-gradient-to-r from-[#00375e] via-[#1f4e79] to-[#002a48] text-white py-12 px-4 sm:px-6 lg:px-8 border-b border-slate-700/40 shadow-lg">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-400/20 text-sky-300 text-xs font-semibold uppercase tracking-wider mb-3">
+                        <span class="material-symbols-outlined text-sm">rocket_launch</span>
+                        We Are Hiring
+                    </div>
+                    <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight">Explore Career Opportunities</h1>
+                    <p class="mt-2 text-base text-slate-300 max-w-2xl">
+                        Discover open positions and join a collaborative team dedicated to innovation, excellence, and career growth.
+                    </p>
+                </div>
+                <div>
+                    <a asp-area="" asp-controller="Account" asp-action="Login"
+                       class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-medium text-sm backdrop-blur-sm transition border border-white/20">
+                        <span class="material-symbols-outlined text-sm">login</span>
+                        Employee Portal Login
+                    </a>
+                </div>
+            </div>
+
+            <!-- Search & Filter Bar -->
+            <form method="get" asp-action="Index" class="mt-8 bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/20 grid grid-cols-1 sm:grid-cols-12 gap-3">
+                <div class="sm:col-span-6 relative">
+                    <span class="material-symbols-outlined absolute left-3.5 top-3 text-slate-300 text-lg">search</span>
+                    <input type="text" name="search" value="@Model.Search" placeholder="Search by job title or keyword..."
+                           class="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 border-0" />
+                </div>
+                <div class="sm:col-span-4">
+                    <select name="departmentId"
+                            class="w-full px-3 py-2.5 rounded-lg bg-white text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 border-0">
+                        <option value="">All Departments</option>
+                        @foreach (var dept in Model.Departments)
+                        {
+                            <option value="@dept.Value" selected="@(Model.DepartmentId?.ToString() == dept.Value)">@dept.Text</option>
+                        }
+                    </select>
+                </div>
+                <div class="sm:col-span-2 flex gap-2">
+                    <button type="submit"
+                            class="w-full bg-sky-500 hover:bg-sky-400 text-white font-semibold py-2.5 px-4 rounded-lg text-sm transition flex items-center justify-center gap-1.5 shadow-sm">
+                        <span class="material-symbols-outlined text-sm">filter_list</span>
+                        Filter
+                    </button>
+                    @if (!string.IsNullOrEmpty(Model.Search) || Model.DepartmentId.HasValue)
+                    {
+                        <a asp-action="Index"
+                           class="bg-white/20 hover:bg-white/30 text-white font-medium py-2.5 px-3 rounded-lg text-sm transition flex items-center justify-center"
+                           title="Clear filters">
+                            <span class="material-symbols-outlined text-sm">close</span>
+                        </a>
+                    }
+                </div>
+            </form>
+        </div>
+    </header>
+
+    <!-- Main Positions List -->
+    <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        @if (TempData["Success"] is string success)
+        {
+            <div class="mb-6 p-4 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center gap-2">
+                <span class="material-symbols-outlined text-emerald-600">check_circle</span>
+                @success
+            </div>
+        }
+        @if (TempData["Error"] is string error)
+        {
+            <div class="mb-6 p-4 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 flex items-center gap-2">
+                <span class="material-symbols-outlined text-rose-600">error</span>
+                @error
+            </div>
+        }
+
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-bold text-slate-800">
+                Open Positions
+                <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 ml-2">@Model.Postings.TotalCount</span>
+            </h2>
+            <p class="text-xs text-slate-500">Updated in real-time</p>
+        </div>
+
+        @if (!Model.Postings.Items.Any())
+        {
+            <div class="bg-white rounded-xl border border-slate-200 p-12 text-center shadow-sm">
+                <div class="w-16 h-16 bg-sky-50 text-sky-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="material-symbols-outlined text-3xl">work_outline</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-800">No Open Positions Match Your Search</h3>
+                <p class="text-slate-500 text-sm mt-1 max-w-md mx-auto">
+                    We currently don't have open positions matching your filters. Try clearing your search or check back soon!
+                </p>
+                @if (!string.IsNullOrEmpty(Model.Search) || Model.DepartmentId.HasValue)
+                {
+                    <div class="mt-4">
+                        <a asp-action="Index" class="inline-flex items-center gap-1.5 text-sm font-semibold text-sky-600 hover:text-sky-700">
+                            <span class="material-symbols-outlined text-sm">refresh</span>
+                            View All Open Positions
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="space-y-4">
+                @foreach (var job in Model.Postings.Items)
+                {
+                    var daysLeft = Math.Max(0, job.ClosingDate.DayNumber - today.DayNumber);
+                    <div class="bg-white rounded-xl border border-slate-200/80 p-6 shadow-sm hover:shadow-md transition duration-200 flex flex-col md:flex-row md:items-center justify-between gap-6 group">
+                        <div class="flex-1">
+                            <div class="flex flex-wrap items-center gap-2 mb-2">
+                                <span class="px-2.5 py-0.5 rounded-md bg-sky-50 text-sky-700 font-semibold text-xs border border-sky-100">
+                                    @(job.Department?.Name ?? "General")
+                                </span>
+                                @if (daysLeft <= 3)
+                                {
+                                    <span class="px-2.5 py-0.5 rounded-md bg-amber-50 text-amber-700 font-semibold text-xs border border-amber-200 flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-xs">hourglass_bottom</span>
+                                        Closes Soon (@daysLeft days left)
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-600 font-medium text-xs">
+                                        Closing @job.ClosingDate.ToString("MMM dd, yyyy")
+                                    </span>
+                                }
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 group-hover:text-[#1f4e79] transition">
+                                <a asp-action="Detail" asp-route-id="@job.Id">@job.Title</a>
+                            </h3>
+                            <p class="text-slate-600 text-sm mt-2 line-clamp-2 leading-relaxed">
+                                @job.Description
+                            </p>
+                        </div>
+                        <div class="flex items-center gap-3 self-end md:self-center shrink-0">
+                            <a asp-action="Detail" asp-route-id="@job.Id"
+                               class="px-4 py-2 rounded-lg border border-slate-300 hover:border-slate-400 text-slate-700 font-semibold text-sm transition">
+                                Details
+                            </a>
+                            <a asp-action="Apply" asp-route-id="@job.Id"
+                               class="px-5 py-2 rounded-lg bg-[#1f4e79] hover:bg-[#163a5b] text-white font-semibold text-sm transition shadow-sm flex items-center gap-1">
+                                Apply Now
+                                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Pagination -->
+            @if (Model.Postings.TotalPages > 1)
+            {
+                <div class="mt-8 flex justify-center">
+                    <nav class="inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                        @for (var p = 1; p <= Model.Postings.TotalPages; p++)
+                        {
+                            <a asp-action="Index"
+                               asp-route-page="@p"
+                               asp-route-departmentId="@Model.DepartmentId"
+                               asp-route-search="@Model.Search"
+                               class="relative inline-flex items-center px-4 py-2 border text-sm font-medium @(p == Model.Postings.Page ? "z-10 bg-[#1f4e79] border-[#1f4e79] text-white" : "bg-white border-slate-300 text-slate-500 hover:bg-slate-50")">
+                                @p
+                            </a>
+                        }
+                    </nav>
+                </div>
+            }
+        }
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-6 px-4 text-center text-xs text-slate-500 mt-auto">
+        <p>&copy; @DateTime.UtcNow.Year HRMS Portal. All rights reserved.</p>
+    </footer>
+</div>

@@ -34,6 +34,7 @@ public static class DependencyInjection
         services.AddScoped<ILeaveService, LeaveService>();
         services.AddScoped<IAttendanceService, AttendanceService>();
         services.AddScoped<IUserAccountService, UserAccountService>();
+        services.AddScoped<IRecruitmentService, RecruitmentService>();
 
         services.AddScoped<IDepartmentManagerPolicy, DepartmentManagerPolicy>();
         services.AddScoped<IEmployeeDeletionPolicy, EmployeeDeletionPolicy>();

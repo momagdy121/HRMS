@@ -1,0 +1,222 @@
+@model HRSystem.Web.ViewModels.Recruitment.JobPostingListViewModel
+@using HRSystem.Common.Enums
+@{
+    ViewBag.Title = "Recruitment & Job Postings";
+    var today = DateOnly.FromDateTime(DateTime.UtcNow);
+}
+
+<div class="space-y-6 font-['Inter']">
+    <!-- Page Header & Action Bar -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm">
+        <div>
+            <div class="flex items-center gap-2">
+                <span class="p-2 rounded-xl bg-sky-50 text-[#1f4e79]">
+                    <span class="material-symbols-outlined text-2xl">work</span>
+                </span>
+                <div>
+                    <h1 class="text-2xl font-black text-slate-900 tracking-tight">Recruitment & Openings</h1>
+                    <p class="text-xs text-slate-500">Manage job postings, review applications, and onboard accepted candidates.</p>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-wrap items-center gap-3">
+            <a asp-action="Applications"
+               class="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold text-sm transition flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">group</span>
+                View Applications
+            </a>
+            <a asp-area="" asp-controller="Careers" asp-action="Index" target="_blank"
+               class="px-4 py-2.5 rounded-xl border border-sky-200 text-sky-700 hover:bg-sky-50 font-semibold text-sm transition flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">open_in_new</span>
+                Public Careers Page
+            </a>
+            <a asp-action="Create"
+               class="px-5 py-2.5 rounded-xl bg-[#1f4e79] hover:bg-[#163a5b] text-white font-bold text-sm shadow transition flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">add</span>
+                Create Job Opening
+            </a>
+        </div>
+    </div>
+
+    <!-- Filters Bar -->
+    <form method="get" asp-action="Index" class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-sm grid grid-cols-1 sm:grid-cols-12 gap-3">
+        <div class="sm:col-span-4 relative">
+            <span class="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-lg">search</span>
+            <input type="text" name="search" value="@Model.Search" placeholder="Search by title..."
+                   class="w-full pl-9 pr-3 py-2 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#1f4e79] focus:border-transparent" />
+        </div>
+        <div class="sm:col-span-3">
+            <select name="status" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#1f4e79]">
+                <option value="">All Statuses</option>
+                <option value="Draft" selected="@(Model.Status == JobPostingStatus.Draft)">Draft</option>
+                <option value="Published" selected="@(Model.Status == JobPostingStatus.Published)">Published</option>
+                <option value="Closed" selected="@(Model.Status == JobPostingStatus.Closed)">Closed</option>
+            </select>
+        </div>
+        <div class="sm:col-span-3">
+            <select name="departmentId" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#1f4e79]">
+                <option value="">All Departments</option>
+                @foreach (var dept in Model.Departments)
+                {
+                    <option value="@dept.Value" selected="@(Model.DepartmentId?.ToString() == dept.Value)">@dept.Text</option>
+                }
+            </select>
+        </div>
+        <div class="sm:col-span-2 flex gap-2">
+            <button type="submit" class="w-full bg-[#1f4e79] hover:bg-[#163a5b] text-white font-semibold py-2 px-3 rounded-lg text-sm transition">
+                Filter
+            </button>
+            @if (Model.Status.HasValue || Model.DepartmentId.HasValue || !string.IsNullOrEmpty(Model.Search))
+            {
+                <a asp-action="Index" class="bg-slate-100 hover:bg-slate-200 text-slate-700 py-2 px-3 rounded-lg text-sm transition flex items-center justify-center">
+                    Reset
+                </a>
+            }
+        </div>
+    </form>
+
+    <!-- Postings Table -->
+    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-sm">
+                <thead>
+                    <tr class="bg-slate-50/80 border-b border-slate-200 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                        <th class="py-3.5 px-6">Job Title</th>
+                        <th class="py-3.5 px-6">Department</th>
+                        <th class="py-3.5 px-6">Closing Date</th>
+                        <th class="py-3.5 px-6">Status</th>
+                        <th class="py-3.5 px-6">Applications</th>
+                        <th class="py-3.5 px-6 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    @if (!Model.Postings.Items.Any())
+                    {
+                        <tr>
+                            <td colspan="6" class="py-12 text-center text-slate-400">
+                                <span class="material-symbols-outlined text-4xl block mb-2">work_off</span>
+                                No job postings found. Click "Create Job Opening" to post a new position.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var item in Model.Postings.Items)
+                        {
+                            var isExpired = item.ClosingDate < today;
+                            <tr class="hover:bg-slate-50/60 transition">
+                                <td class="py-4 px-6 font-bold text-slate-900">
+                                    <div class="flex flex-col">
+                                        <span>@item.Title</span>
+                                        <span class="text-xs text-slate-400 font-normal">Created @item.CreatedAt.ToString("MMM dd, yyyy")</span>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-slate-700 font-medium">
+                                    @(item.Department?.Name ?? "-")
+                                </td>
+                                <td class="py-4 px-6">
+                                    <span class="@(isExpired ? "text-rose-600 font-bold" : "text-slate-700")">
+                                        @item.ClosingDate.ToString("MMM dd, yyyy")
+                                    </span>
+                                    @if (isExpired && item.Status == JobPostingStatus.Published)
+                                    {
+                                        <span class="block text-[11px] text-rose-500">Deadline Passed</span>
+                                    }
+                                </td>
+                                <td class="py-4 px-6">
+                                    @switch (item.Status)
+                                    {
+                                        case JobPostingStatus.Draft:
+                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                                Draft
+                                            </span>
+                                            break;
+                                        case JobPostingStatus.Published:
+                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                                Published
+                                            </span>
+                                            break;
+                                        case JobPostingStatus.Closed:
+                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                                                Closed
+                                            </span>
+                                            break;
+                                    }
+                                </td>
+                                <td class="py-4 px-6">
+                                    <a asp-action="Applications" asp-route-jobPostingId="@item.Id"
+                                       class="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-sky-50 text-sky-800 hover:bg-sky-100 font-bold text-xs transition">
+                                        <span class="material-symbols-outlined text-xs">group</span>
+                                        @item.Applications.Count Applications
+                                    </a>
+                                </td>
+                                <td class="py-4 px-6 text-right">
+                                    <div class="inline-flex items-center gap-2">
+                                        @if (item.Status == JobPostingStatus.Draft)
+                                        {
+                                            <a asp-action="Edit" asp-route-id="@item.Id"
+                                               class="p-1.5 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition" title="Edit Posting">
+                                                <span class="material-symbols-outlined text-lg">edit</span>
+                                            </a>
+                                            <form asp-action="Publish" asp-route-id="@item.Id" method="post" class="inline">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit"
+                                                        class="p-1.5 rounded-lg text-emerald-600 hover:bg-emerald-50 transition"
+                                                        title="Publish Opening">
+                                                    <span class="material-symbols-outlined text-lg">publish</span>
+                                                </button>
+                                            </form>
+                                        }
+                                        else if (item.Status == JobPostingStatus.Published)
+                                        {
+                                            <a asp-action="Edit" asp-route-id="@item.Id"
+                                               class="p-1.5 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition" title="Edit Posting">
+                                                <span class="material-symbols-outlined text-lg">edit</span>
+                                            </a>
+                                            <form asp-action="Close" asp-route-id="@item.Id" method="post" class="inline"
+                                                  onsubmit="return confirm('Are you sure you want to close this job opening? It will no longer accept applications.');">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit"
+                                                        class="p-1.5 rounded-lg text-rose-600 hover:bg-rose-50 transition"
+                                                        title="Close Opening">
+                                                    <span class="material-symbols-outlined text-lg">cancel</span>
+                                                </button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-xs text-slate-400 italic">Closed</span>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (Model.Postings.TotalPages > 1)
+        {
+            <div class="py-4 px-6 border-t border-slate-100 flex justify-between items-center text-xs text-slate-500">
+                <span>Showing page @Model.Postings.Page of @Model.Postings.TotalPages (@Model.Postings.TotalCount total postings)</span>
+                <div class="flex gap-1">
+                    @for (var p = 1; p <= Model.Postings.TotalPages; p++)
+                    {
+                        <a asp-action="Index"
+                           asp-route-page="@p"
+                           asp-route-status="@Model.Status"
+                           asp-route-departmentId="@Model.DepartmentId"
+                           asp-route-search="@Model.Search"
+                           class="px-3 py-1.5 rounded-md border @(p == Model.Postings.Page ? "bg-[#1f4e79] text-white border-[#1f4e79]" : "bg-white text-slate-600 border-slate-300 hover:bg-slate-50") font-medium">
+                            @p
+                        </a>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
